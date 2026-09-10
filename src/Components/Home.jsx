@@ -32,7 +32,7 @@
                 </div>
 
                 <button className="bg-lime-400 hover:bg-gray-950 px-8 py-3 cursor-pointer rounded-full text-white font-semibold">
-                  GET STARTED
+                  GET NOW
                 </button>
               </div>
             </div>
