@@ -66,7 +66,7 @@ const Header = ({active, setActive, onOpenContact}) => {
 
                 {active === item.name && (
                   <img
-                    src="src/assets/Active Indicator.png"
+                    src="src\assets\Active Indicator.png"
                     alt="active"
                     className="absolute w-7  mt-7"
                   />
@@ -91,7 +91,7 @@ const Header = ({active, setActive, onOpenContact}) => {
             REGISTER
           </button>
 
-          <img src="src\assets\Settings.png" alt="setting" className="w-5" />
+          <img src="src\assets\Setting.png" alt="setting" className="w-5" />
         </div>
       </div>
     </header>
