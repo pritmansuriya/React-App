@@ -1,4 +1,10 @@
 import React, { useState } from "react";
+import activePurple from "../assets/Activepurple.png";
+import decoration from "../assets/decoration.png";
+import chevronDown from "../assets/chevron-down.png";
+import chevronDownActive from "../assets/chevron-down (1).png";
+import newsImage from "../assets/News.png";
+import eventImage from "../assets/Event.png";
 
 const faqData = [
   {
@@ -29,13 +35,13 @@ const faqData = [
 
 const blogData = [
   {
-    image: "src/assets/News.png",
+    image: newsImage,
     title: "EVENT",
     description:
       "Sed imperdiet enim ligula, vitae viverra justo porta vel. Duis eget felis bibendum, pretium mi sed, placerat ante.",
   },
   {
-    image: "src/assets/Event.png",
+    image: eventImage,
     title: "NEWS",
     description:
       "Sed imperdiet enim ligula, vitae viverra justo porta vel. Duis eget felis bibendum, pretium mi sed, placerat ante.",
@@ -52,7 +58,7 @@ const Faq = () => {
           <div>
             <h2 className="text-5xl text-left font-light text-gray-700">FAQ</h2>
             <img
-              src="src\assets\Activepurple.png "
+              src={activePurple}
               alt="Purple Active"
               className="w-18 mt-14 mb-6 "
             />
@@ -61,7 +67,7 @@ const Faq = () => {
               odio.
             </p>
             <div className="mt-16 flex justify-start">
-              <img src="src\assets\decoration.png" alt="" className="w-75" />
+              <img src={decoration} alt="" className="w-75" />
             </div>
           </div>
           {/* Right */}
@@ -83,8 +89,8 @@ const Faq = () => {
                   <img
                     src={
                       active === index
-                        ? "src/assets/chevron-down (1).png"
-                        : "src/assets/chevron-down.png"
+                        ? {chevronDown}
+                        : {chevronDownActive}
                     }
                     alt=""
                     className={`w-4 h-4 transition-transform duration-500 ${
