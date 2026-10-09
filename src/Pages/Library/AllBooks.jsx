@@ -214,7 +214,7 @@ const AllBooks = () => {
     .reduce((total, book) => total + Number(book.copies), 0);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FC] p-6">
+    <div className="min-h-screen bg-[#EAF1FF] p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>

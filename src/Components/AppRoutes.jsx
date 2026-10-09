@@ -6,13 +6,13 @@ import AllStudents from "../Pages/Students/AllStudents";
 import AddStudent from "../Pages/Students/AddStudent";
 import StudentProfile from "../Pages/Students/StudentProfile";
 import AllTeachers from "../Pages/Teachers/AllTeacher";
+import ApplyLeave from "../Pages/Teachers/ApplyLeave";
 import MainPage from "./MainPage";
 import Register from "./Register";
 import Contact from "./Contact";
 import SignIn2 from "./SignIn2";
 import Info from "./Info";
 import Notfound from "./Notfound";
-import AddTeachers from "../Pages/Teachers/AddTeacher";
 import AllBooks from "../Pages/Library/AllBooks";
 import AddBooks from "../Pages/Library/AddBooks";
 import MyProfile from "../Pages/Account/MyProfile";
@@ -20,7 +20,7 @@ import Security from "../Pages/Account/Security";
 import ClassDetail from "../Pages/Class/ClassDetail";
 import AddClass from "../Pages/Class/AddClass";
 import SubjectDetails from "../Pages/Subjects/SubjectDetails";
-import AddSubject from "../Pages/Subjects/AddSubject";
+import SubjectAllocation from "../Pages/Subjects/SubjectAllocation";
 import Timetable from "../Pages/Routine/Timetable";
 import Lunch from "../Pages/Routine/Lunch";
 import AttendanceDetails from "../Pages/Attendance/AttendanceDetails";
@@ -51,7 +51,7 @@ const AppRoutes = () => {
 
         {/* Teacher */}
         <Route path="teachers" element = {<AllTeachers />} />
-        <Route path="teachers/add" element = {<AddTeachers />} />
+        <Route path="teachers/leave" element={<ApplyLeave />} />
 
         {/* Library */}
         <Route path = 'library' element = {<AllBooks />} />
@@ -67,7 +67,7 @@ const AppRoutes = () => {
 
         {/* Subject */}
         <Route path="subject" element = {<SubjectDetails />} />
-        <Route path = "subject/add" element = {<AddSubject />} />
+        <Route path="subject/allocate" element={<SubjectAllocation />} />
 
         {/* Routine */}
         <Route path="routine" element = {<Timetable />} />

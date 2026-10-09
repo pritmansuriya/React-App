@@ -248,7 +248,7 @@ const HostelRules = () => {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#F7F8FC] p-6 ">
+    <div className="min-h-screen bg-[#EAF1FF] p-6">
       <div className="max-w-7xl mx-auto">
         {/* =========================================
           Header

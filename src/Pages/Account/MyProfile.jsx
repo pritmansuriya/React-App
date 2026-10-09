@@ -152,7 +152,7 @@ const MyProfile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[#EAF1FF] py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6" >

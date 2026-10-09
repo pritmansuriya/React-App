@@ -234,7 +234,7 @@ const SubjectDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FC] p-6 text-left">
+    <div className="min-h-screen bg-[#EAF1FF] p-6 text-left">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>

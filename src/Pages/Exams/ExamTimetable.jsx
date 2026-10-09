@@ -276,7 +276,7 @@ const ExamTimetable = () => {
     setShowEditModal(false);
   };
   return (
-    <div className="min-h-screen bg-white rounded-2xl shadow-sm p-6">
+    <div className="min-h-screen bg-[#EAF1FF] p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">

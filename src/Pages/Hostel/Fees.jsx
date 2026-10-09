@@ -238,7 +238,7 @@ const Fee = () => {
   const totalStudents = fees.length;
 
   return (
-    <div className="min-h-screen bg-[#F7F8FC] p-6 md:p-8">
+    <div className="min-h-screen bg-[#EAF1FF] p-6 md:p-8">
 
       <div className="max-w-7xl mx-auto">
       {/* =====================================

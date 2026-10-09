@@ -3,11 +3,16 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
+  --dashboard-surface: #F8FAFF;
+  --dashboard-background: #F3F6F9;
+  --dashboard-accent: #2563EB;
+  --dashboard-accent-soft: #EFF6FF;
+  --dashboard-accent-border: #BFDBFE;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --accent: #2563EB;
+  --accent-bg: rgba(37, 99, 235, 0.1);
+  --accent-border: rgba(37, 99, 235, 0.35);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
@@ -38,9 +43,9 @@
     --bg: auto;
     --border: auto;
     --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
+    --accent: #2563EB;
+    --accent-bg: rgba(37, 99, 235, 0.1);
+    --accent-border: rgba(37, 99, 235, 0.35);
     --social-bg: rgba(47, 48, 58, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
@@ -66,6 +71,134 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+#root main :is(div, section, form, article).bg-white:is(
+  [class*="rounded-"],
+  [class*="shadow"],
+  [class*="border-y"]
+) {
+  background-color: var(--dashboard-surface);
+}
+
+#root main [class~="bg-[#EAF1FF]"] {
+  background-color: var(--dashboard-background);
+}
+
+#root main [class~="bg-teal-700"],
+#root main [class~="bg-teal-600"] {
+  background-color: var(--dashboard-accent);
+}
+
+#root main [class~="bg-teal-50"] {
+  background-color: var(--dashboard-accent-soft);
+}
+
+#root main [class~="bg-teal-100"] {
+  background-color: #DBEAFE;
+}
+
+#root main [class~="text-teal-700"],
+#root main [class~="text-teal-800"] {
+  color: var(--dashboard-accent);
+}
+
+#root main [class~="border-teal-200"] {
+  border-color: var(--dashboard-accent-border);
+}
+
+#root main [class~="hover:bg-teal-800"]:hover,
+#root main [class~="hover:bg-teal-700"]:hover {
+  background-color: #1D4ED8;
+}
+
+#root main [class~="focus:border-teal-600"]:focus {
+  border-color: var(--dashboard-accent);
+}
+
+#root main [class~="focus:ring-teal-700"]:focus {
+  --tw-ring-color: var(--dashboard-accent);
+}
+
+#root main [class~="focus:ring-teal-600/15"]:focus {
+  --tw-ring-color: rgb(37 99 235 / 0.15);
+}
+
+#root main [class~="bg-purple-50"],
+#root main [class~="bg-indigo-50"],
+#root main [class~="bg-violet-50"] {
+  background-color: var(--dashboard-accent-soft);
+}
+
+#root main [class~="bg-purple-100"],
+#root main [class~="bg-indigo-100"],
+#root main [class~="bg-violet-100"] {
+  background-color: #DBEAFE;
+}
+
+#root main [class~="bg-purple-600"],
+#root main [class~="bg-indigo-600"],
+#root main [class~="bg-violet-600"] {
+  background-color: var(--dashboard-accent);
+}
+
+#root main [class~="text-purple-500"],
+#root main [class~="text-purple-600"],
+#root main [class~="text-purple-700"],
+#root main [class~="text-indigo-500"],
+#root main [class~="text-indigo-600"],
+#root main [class~="text-violet-500"],
+#root main [class~="text-violet-600"] {
+  color: var(--dashboard-accent);
+}
+
+#root main [class~="hover:bg-purple-700"]:hover,
+#root main [class~="hover:bg-indigo-700"]:hover,
+#root main [class~="hover:bg-violet-700"]:hover {
+  background-color: #1D4ED8;
+}
+
+#root main [class~="hover:bg-purple-100"]:hover,
+#root main [class~="hover:bg-indigo-100"]:hover,
+#root main [class~="hover:bg-violet-100"]:hover {
+  background-color: #DBEAFE;
+}
+
+#root main [class~="hover:text-purple-600"]:hover,
+#root main [class~="hover:text-indigo-600"]:hover,
+#root main [class~="hover:text-violet-600"]:hover {
+  color: var(--dashboard-accent);
+}
+
+#root main [class~="focus:border-purple-500"]:focus,
+#root main [class~="focus:border-indigo-500"]:focus {
+  border-color: var(--dashboard-accent);
+}
+
+#root main [class~="focus:ring-purple-500"]:focus,
+#root main [class~="focus:ring-indigo-500"]:focus {
+  --tw-ring-color: var(--dashboard-accent);
+}
+
+#root main [class~="focus:ring-purple-100"]:focus,
+#root main [class~="focus:ring-indigo-100"]:focus {
+  --tw-ring-color: rgb(37 99 235 / 0.15);
+}
+
+#root main [class~="from-purple-500"],
+#root main [class~="from-purple-600"],
+#root main [class~="from-violet-600"],
+#root main [class~="from-indigo-500"] {
+  --tw-gradient-from: var(--dashboard-accent);
+  --tw-gradient-to: rgb(37 99 235 / 0);
+}
+
+#root main [class~="to-purple-500"] {
+  --tw-gradient-to: #3B82F6;
+}
+
+#root main [class~="to-purple-600"] {
+  --tw-gradient-to: var(--dashboard-accent);
 }
 
 h1,

@@ -9,14 +9,14 @@ const DashboardLayout = () => {
       const [collapsed, setCollapsed] = useState(true);
 
   return (
-    <div className="h-screen flex   bg-[#F7F8FC]">
+    <div className="h-screen flex bg-[#F3F6F9]">
   {/* Sidebar */}
   <aside
     className={`
       ${collapsed ? "w-24" : "w-72"}
       h-screen
-      bg-white
-      border-r
+      bg-[#084B83]
+      border-r border-[#0A4271]
       shrink-0
       relative  
       overflow-visible
@@ -33,8 +33,8 @@ const DashboardLayout = () => {
   </aside>
 
   {/* Main */}
-  <main className="flex-1 hide-scrollbar h-screen overflow-y-auto">
-    <div className="sticky top-0 z-20 bg-[#F7F8FC] border-b border-gray-200 px-6 py-4">
+  <main className="flex-1 hide-scrollbar h-screen overflow-y-auto text-[#171A1F]">
+    <div className="sticky top-0 z-20 bg-[#F3F6F9] border-b border-slate-200 px-6 py-4">
       <Header />
     </div>
 

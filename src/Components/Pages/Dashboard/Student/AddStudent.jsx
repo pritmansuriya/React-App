@@ -67,7 +67,7 @@ const AddStudent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[#EAF1FF] py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">

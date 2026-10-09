@@ -44,7 +44,7 @@ const menuItems = [
     icon: <FaChalkboardTeacher size={20} />,
     children: [
       { title: "All Teachers", path: "/dashboard/teachers" },
-      { title: "Add Teacher", path: "/dashboard/teachers/add" },
+      { title: "Apply to Leave", path: "/dashboard/teachers/leave" },
     ],
   },
   {
@@ -76,7 +76,7 @@ const menuItems = [
     icon: <MdOutlineSubject size={22} />,
     children: [
       { title: "Subject Details", path: "/dashboard/subject" },
-      { title: "Add Subject", path: "/dashboard/subject/add" },
+      { title: "Subject Allocation", path: "/dashboard/subject/allocate" },
     ],
   },
   {
@@ -107,8 +107,8 @@ const menuItems = [
     title: "Notice",
     icon: <MdOutlineNotifications size={22} />,
     children: [
-      { title: "Notice 1", path: "/dashboard/notice" },
-      { title: "Notice 2", path: "/dashboard/notice/2" },
+      { title: "Notice", path: "/dashboard/notice" },
+      { title: "Add Notice", path: "/dashboard/notice/2" },
     ],
   },
   {
@@ -133,9 +133,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   const [selectedMenu, setSelectedMenu] = useState("Dashboard");
   const [openMenu, setOpenMenu] = useState("");
   const [hoveredMenu, setHoveredMenu] = useState(null);
-  const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
   const [submenuPosition, setSubmenuPosition] = useState({ top: 0 });
-  const [activeSubmenu, setActiveSubmenu] = useState("");
   const hoverTimer = useRef(null);
 
   const handleMouseEnter = (title, event) => {
@@ -175,19 +173,16 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     setSelectedMenu(title);
     if (!collapsed) {
       setOpenMenu((prev) => (prev === title ? "" : title));
-      setActiveSubmenu(""); // Reset active submenu when changing menu
     }
   };
 
   const handleDashboardClick = () => {
     setSelectedMenu("Dashboard");
     setOpenMenu("");
-    setActiveSubmenu("");
     setHoveredMenu(null);
   };
 
-  const handleSubmenuClick = (subTitle, parentTitle) => {
-    setActiveSubmenu(subTitle);
+  const handleSubmenuClick = (parentTitle) => {
     setSelectedMenu(parentTitle); // Parent menu ko selected karo
     // Agar parent menu ka submenu open nahi hai toh open karo
     if (openMenu !== parentTitle) {
@@ -196,7 +191,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   };
 
   return (
-    <aside className="h-screen flex flex-col bg-white shadow-xl relative overflow-visible">
+    <aside className="h-screen flex flex-col bg-[#084B83] border-r border-[#0A4271] shadow-xl relative overflow-visible">
       <div
         className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3"
         style={{
@@ -223,26 +218,6 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             }
             
             /* Hover effect - only when hovering */
-            .submenu-item:hover {
-              background: linear-gradient(90deg, #eef2ff, #f5f3ff) !important;
-              transform: translateX(4px);
-            }
-            
-            .submenu-item:hover::before {
-              height: 60%;
-            }
-            
-            /* Active state - when clicked */
-            .submenu-item.active {
-              background: linear-gradient(90deg, #eef2ff, #f5f3ff) !important;
-              color: #4f46e5 !important;
-              font-weight: 600 !important;
-            }
-            
-            .submenu-item.active::before {
-              height: 60%;
-            }
-            
             .submenu-item::before {
               content: '';
               position: absolute;
@@ -251,7 +226,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
               transform: translateY(-50%);
               width: 3px;
               height: 0;
-              background: linear-gradient(180deg, #6366f1, #8b5cf6);
+              background: #2563eb;
               border-radius: 10px;
               transition: height 0.3s ease;
             }
@@ -259,12 +234,29 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             /* Normal state */
             .submenu-item.normal {
               background: transparent !important;
-              color: #6b7280 !important;
+              color: #cbd5e1 !important;
             }
             
             .submenu-item.normal:hover {
-              background: linear-gradient(90deg, #eef2ff, #f5f3ff) !important;
-              color: #4b5563 !important;
+              background: rgba(255, 255, 255, 0.08) !important;
+              color: #ffffff !important;
+            }
+
+            .submenu-item:hover {
+              background: rgba(37, 99, 235, 0.28) !important;
+              color: #ffffff !important;
+              transform: translateX(4px);
+            }
+
+            .submenu-item.active {
+              background: rgba(37, 99, 235, 0.36) !important;
+              color: #dbeafe !important;
+              font-weight: 600 !important;
+            }
+
+            .submenu-item.active::before,
+            .submenu-item:hover::before {
+              height: 60%;
             }
 
             /* Main menu hover effect */
@@ -278,26 +270,26 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             
             /* Active state - Blue background with white text */
             .main-menu-item.active {
-              background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+              background: #2563eb !important;
               color: white !important;
-              box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+              box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
             }
             
             /* Parent menu active when submenu is open - Blue background */
             .main-menu-item.parent-active {
-              background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+              background: #2563eb !important;
               color: white !important;
-              box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+              box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
             }
             
             /* Normal state - no background */
             .main-menu-item.normal {
               background: transparent !important;
-              color: #6b7280 !important;
+              color: #cbd5e1 !important;
             }
             .main-menu-item.normal:hover {
-              background: #f3f4f6 !important;
-              color: #374151 !important;
+              background: rgba(255, 255, 255, 0.08) !important;
+              color: #ffffff !important;
             }
           `}
         </style>
@@ -310,7 +302,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             alt="logo"
           />
           {!collapsed && (
-            <h1 className="ml-3 text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="ml-3 text-3xl font-bold text-white">
               Schoooli
             </h1>
           )}
@@ -318,7 +310,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
         {/* Toggle Button */}
         <button
-          className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+          className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2563EB] text-white hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
           onClick={() => {
             if (collapsed) {
               setCollapsed(false);
@@ -340,13 +332,6 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         {/* Menu Items */}
         <div className={collapsed ? "px-2" : "px-3"}>
           {menuItems.map((item) => {
-            // Check if this menu has open submenu
-            const isParentOpen = openMenu === item.title;
-            // Check if any submenu is active for this parent
-            const hasActiveSubmenu = item.children.some(
-              (sub) => activeSubmenu === sub.title,
-            );
-            // Parent should be active if selected OR if any submenu is active
             const isParentActive =
               hoveredMenu === item.title ||
               (hoveredMenu === null && selectedMenu === item.title);
@@ -409,7 +394,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     {/* Collapsed Submenu */}
                     {collapsed && hoveredMenu === item.title && (
                       <div
-                        className="fixed w-64 bg-white shadow-2xl rounded-2xl z-[9999] border border-gray-100"
+                        className="fixed w-64 bg-[#084B83] shadow-2xl rounded-2xl z-9999 border border-[#0A4271]"
                         style={{
                           left: "88px",
                           top: `${submenuPosition.top}px`,
@@ -430,9 +415,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                           `}
                         </style>
 
-                        <div className="px-5 py-4 text-sm font-semibold text-gray-900 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl sticky top-0 z-10">
+                        <div className="px-5 py-4 text-sm font-semibold text-slate-100 border-b border-[#0A4271] bg-[#084B83] rounded-t-2xl sticky top-0 z-10">
                           <span className="flex items-center gap-3">
-                            <span className="text-blue-500 text-xl">
+                            <span className="text-blue-400 text-xl">
                               {item.icon}
                             </span>
                             {item.title}
@@ -444,18 +429,17 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                             <NavLink
                               key={sub.title}
                               to={sub.path}
-                              onMouseEnter={() => setHoveredSubmenu(sub.title)}
-                              onMouseLeave={() => setHoveredSubmenu(null)}
+                              end
                               onClick={() => {
                                 setHoveredMenu(null);
-                                handleSubmenuClick(sub.title, item.title);
+                                handleSubmenuClick(item.title);
                               }}
-                              className={() =>
+                              className={({ isActive }) =>
                                 `submenu-item flex items-center h-11 px-4 mx-2 rounded-lg transition-all duration-200 text-sm
-      ${hoveredSubmenu === sub.title ? "active" : "normal"}`
+      ${isActive ? "active" : "normal"}`
                               }
                             >
-                              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 mr-3 flex-shrink-0"></span>
+                              <span className="w-2 h-2 rounded-full bg-blue-400 mr-3 shrink-0"></span>
 
                               {sub.title}
                             </NavLink>
@@ -467,21 +451,22 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                     {/* Expanded Submenu */}
                     {!collapsed && openMenu === item.title && (
                       <div className="relative ml-6 pl-4 mt-1">
-                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 rounded-full"></div>
+                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 rounded-full"></div>
                         {item.children.map((sub) => (
                           <NavLink
                             key={sub.title}
                             to={sub.path}
+                            end
                             onClick={() => {
-                              handleSubmenuClick(sub.title, item.title);
+                              handleSubmenuClick(item.title);
                             }}
                             className={({ isActive }) =>
                               `submenu-item flex items-center h-11 rounded-lg px-4 mb-0.5 transition-all duration-200 text-sm
     ${isActive ? "active" : "normal"}`
                             }
                           >
-                            <span className="absolute -left-[17px] top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-l-2 border-b-2 border-gray-200 rounded-bl-lg"></span>
-                            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 mr-3 flex-shrink-0"></span>
+                            <span className="absolute -left-4.25 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-l-2 border-b-2 border-slate-600 rounded-bl-lg"></span>
+                            <span className="w-2 h-2 rounded-full bg-blue-400 mr-3 shrink-0"></span>
                             {sub.title}
                           </NavLink>
                         ))}
@@ -493,7 +478,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   <NavLink
                     to={item.path}
                     onClick={handleDashboardClick}
-                    className={({ isActive }) =>
+                    className={() =>
                       `main-menu-item w-full flex items-center transition-all duration-300 rounded-2xl
                         ${collapsed ? "justify-center h-14" : "px-5 h-14"}
                         ${selectedMenu === "Dashboard" ? "active" : "normal"}
@@ -528,14 +513,14 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         {/* Upgrade Card */}
         {!collapsed && (
           <div className="px-3 pb-3 mt-4">
-            <div className="rounded-2xl bg-gradient-to-br from-purple-600 to-violet-500 text-white p-5 text-center shadow-lg hover:shadow-xl transition-all duration-200">
+            <div className="rounded-2xl bg-[#2563EB] text-white p-5 text-center shadow-lg hover:shadow-xl transition-all duration-200">
               <BsRocketTakeoffFill
                 size={40}
                 className="mx-auto mb-3 text-yellow-300"
               />
               <p className="text-sm font-medium">Free Plan</p>
-              <p className="text-sm mb-4 text-purple-200">Upgrade to Pro</p>
-              <button className="bg-white text-purple-700 font-semibold rounded-xl w-full py-2.5 text-sm hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg">
+              <p className="text-sm mb-4 text-blue-100">Upgrade to Pro</p>
+              <button className="bg-white text-blue-700 font-semibold rounded-xl w-full py-2.5 text-sm hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg">
                 Upgrade Now 🚀
               </button>
             </div>
