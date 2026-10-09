@@ -233,9 +233,9 @@ const AddStudent = () => {
               </form>
             )}
 
-            {/* Table with Equal Spacing in All Columns */}
+            {/* Table with Equal  in All Columns */}
             <div className="border border-gray-200 rounded-xl overflow-hidden">
-              <div className="max-h-[500px] overflow-y-auto">
+              <div className="max-h-125 overflow-y-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50 sticky top-0 z-10">
                     <tr>

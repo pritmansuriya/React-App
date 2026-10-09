@@ -204,10 +204,6 @@ const ExamTimetable = () => {
 
     return savedData ? JSON.parse(savedData) : defailtExamTimetables;
   });
-    saveActivity(
-      "Exam timetable updated",
-      `${selectedClass} exam schedule for ${editFormData.subject.trim()} was updated.`,
-    );
 
   useEffect(() => {
     localStorage.setItem("examTimetables", JSON.stringify(examTimetables));
@@ -278,6 +274,10 @@ const ExamTimetable = () => {
           : item,
       ),
     }));
+    saveActivity(
+      "Exam timetable updated",
+      `${selectedClass} exam schedule for ${editFormData.subject.trim()} was updated.`,
+    );
     setShowEditModal(false);
   };
   return (

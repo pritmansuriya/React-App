@@ -12,8 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 const Details = () => {
   const [transportFilter, setTransportFilter] = useState("All Transport");
-
-  const savedBuses = JSON.parse(localStorage.getItem("transportBuses")) || [];
   const defaultRoutes = [
     {
       id: 1,
@@ -49,28 +47,53 @@ const Details = () => {
     },
   ];
 
-  
+  const [savedBuses, setSavedBuses] = useState(() => {
+    try {
+      const storedBuses = JSON.parse(localStorage.getItem("transportBuses")) || [];
+      return Array.isArray(storedBuses) ? storedBuses : [];
+    } catch {
+      return [];
+    }
+  });
+  const [removedDefaultRouteIds, setRemovedDefaultRouteIds] = useState(() => {
+    try {
+      const storedIds = JSON.parse(localStorage.getItem("removedTransportRouteIds")) || [];
+      return Array.isArray(storedIds) ? storedIds : [];
+    } catch {
+      return [];
+    }
+  });
+
   const handleDeleteBus = (id) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this bus route?"
-  );
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this bus route?",
+    );
 
-  if (!confirmDelete) return;
+    if (!confirmDelete) return;
 
-  const savedBuses =
-    JSON.parse(localStorage.getItem("transportBuses")) || [];
+    const updatedBuses = savedBuses.filter((bus) => bus.id !== id);
+    if (updatedBuses.length !== savedBuses.length) {
+      setSavedBuses(updatedBuses);
+      localStorage.setItem("transportBuses", JSON.stringify(updatedBuses));
+    } else {
+      const updatedRemovedIds = [...new Set([...removedDefaultRouteIds, id])];
+      setRemovedDefaultRouteIds(updatedRemovedIds);
+      localStorage.setItem(
+        "removedTransportRouteIds",
+        JSON.stringify(updatedRemovedIds),
+      );
+    }
 
-  const updatedBuses = savedBuses.filter((bus) => bus.id !== id);
+    const deletedBus = routes.find((bus) => bus.id === id);
+    if (deletedBus?.bus === transportFilter) {
+      setTransportFilter("All Transport");
+    }
+  };
 
-  localStorage.setItem(
-    "transportBuses",
-    JSON.stringify(updatedBuses)
-  );
-
-  window.location.reload();
-};
-
-  const routes = [...defaultRoutes, ...savedBuses];
+  const routes = [
+    ...defaultRoutes.filter((route) => !removedDefaultRouteIds.includes(route.id)),
+    ...savedBuses,
+  ];
 
   const filteredRoute =
     transportFilter === "All Transport"
