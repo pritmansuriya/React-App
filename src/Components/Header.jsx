@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import logo from "../assets/Luxi-Saas-Logo.png";
+import activeIndicator from "../assets/Active Indicator.png";
+import settingIcon from "../assets/Setting.png";
 const menuItems = [
   { name: "Home", link: "home" },
   { name: "Feature", link: "feature2" },
@@ -30,7 +32,7 @@ const Header = ({active, setActive, onOpenContact}) => {
         {/* Logo */}
         <div className=" items-center ml-8 gap-8">
           <img
-            src="src\assets\Luxi-Saas-Logo.png"
+            src={logo}
             alt="Logo"
             className="w-14 h-14 object-contain"
           ></img>
@@ -66,7 +68,7 @@ const Header = ({active, setActive, onOpenContact}) => {
 
                 {active === item.name && (
                   <img
-                    src="src\assets\Active Indicator.png"
+                    src={activeIndicator}
                     alt="active"
                     className="absolute w-7  mt-7"
                   />
@@ -91,7 +93,7 @@ const Header = ({active, setActive, onOpenContact}) => {
             REGISTER
           </button>
 
-          <img src="src\assets\Setting.png" alt="setting" className="w-5" />
+          <img src= {settingIcon} alt="setting" className="w-5" />
         </div>
       </div>
     </header>
