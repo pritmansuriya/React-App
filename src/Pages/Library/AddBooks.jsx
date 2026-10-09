@@ -2,6 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { saveActivity } from "../hooks/useMessages";
 import { FaBook, FaArrowLeft } from "react-icons/fa";
 
 const AddBook = () => {
@@ -60,6 +61,7 @@ const AddBook = () => {
         "schoolBooks",
         JSON.stringify(updatedBooks)
       );
+      saveActivity("Book added", `${newBook.title} by ${newBook.author} was added to the library.`);
 
       // Go back to All Books
       navigate("/dashboard/library");

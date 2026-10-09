@@ -13,6 +13,7 @@ import {
   FaExclamationCircle,
   FaCheckCircle,
 } from "react-icons/fa";
+import { saveActivity } from "../hooks/useMessages";
 
 const HostelRules = () => {
   // -----------------------------
@@ -173,6 +174,7 @@ const HostelRules = () => {
               : rule,
           ),
         );
+        saveActivity("Hostel rule updated", `${values.title} was updated.`);
       } else {
         // Add new rule
         const newRule = {
@@ -181,6 +183,7 @@ const HostelRules = () => {
         };
 
         setRules((prevRules) => [...prevRules, newRule]);
+        saveActivity("Hostel rule added", `${newRule.title} was added to hostel rules.`);
       }
 
       setShowModal(false);

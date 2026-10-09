@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { saveActivity } from "../hooks/useMessages";
 
 const LunchMenu = () => {
   // Lunch menu data
@@ -107,6 +108,10 @@ const LunchMenu = () => {
 
       return newData;
     });
+    saveActivity(
+      "Lunch menu updated",
+      `${editFormData.day}'s menu was updated to ${editFormData.mainCourse.trim()} with ${editFormData.sideDish.trim()}.`,
+    );
 
     setShowEditForm(false);
   };

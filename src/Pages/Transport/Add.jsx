@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { FaBus, FaPlus } from "react-icons/fa";
+import { saveActivity } from "../hooks/useMessages";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -145,6 +146,7 @@ const Add = () => {
         "transportBuses",
         JSON.stringify([...existingBuses, newBus])
       );
+      saveActivity("Transport added", `${newBus.bus} for ${newBus.Route} was added.`);
 
       resetForm();
 

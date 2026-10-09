@@ -1,42 +1,50 @@
-import { image } from "framer-motion/client";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import LibraryItem from "./LibraryItem";
 import { FiChevronDown, FiStar, FiBookOpen } from "react-icons/fi";
 import { FaMedal } from "react-icons/fa";
 
+import literatureImage from "../../../assets/Literature.png";
+import mathsImage from "../../../assets/Maths.png";
+import englishImage from "../../../assets/English.png";
+import scienceImage from "../../../assets/Science.png";
 const books = [
   {
     id: 11,
-    image: "src/assets/Literature.png",
+    image: literatureImage,
     title: "Literature",
     files: 302,
   },
   {
     id: 12,
-    image: "src/assets/Maths.png",
+    image: mathsImage,
     title: "Mathematics",
     files: 1872,
   },
   {
     id: 13,
-    image: "src/assets/English.png",
+    image: englishImage,
     title: "English",
     files: 575,
   },
   {
     id: 14,
-    image: "src/assets/Science.png",
+    image: scienceImage,
     title: "Science",
     files: 249,
   },
 ];
+
 const Library = () => {
   const [showPopular, setShowPopular] = useState(false);
+
   return (
     <div className="bg-white rounded-xl shadow-sm h-94 px-3 py-3">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-[28px] font-bold text-gray-800">Library</h2>
+        <h2 className="text-[28px] font-bold text-gray-800">
+          Library
+        </h2>
+
         <div className="relative">
           <button
             onClick={() => setShowPopular(!showPopular)}
@@ -84,7 +92,8 @@ const Library = () => {
           )}
         </div>
       </div>
-      {/* Items */}
+
+      {/* Library Items */}
       <div className="space-y-1">
         {books.map((item) => (
           <LibraryItem

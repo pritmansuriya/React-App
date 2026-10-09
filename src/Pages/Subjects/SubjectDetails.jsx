@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { saveActivity } from "../hooks/useMessages";
 
 import {
   FaBook,
@@ -126,6 +127,8 @@ const SubjectDetails = () => {
         setSubjects(updatedSubjects);
 
         localStorage.setItem("schoolSubjects", JSON.stringify(updatedSubjects));
+  saveActivity("Subject updated", `${values.name} was updated in the subject directory.`);
+  saveActivity("Subject added", `${newSubject.name} (${newSubject.code}) was added to the subject directory.`);
 
         setShowEditModal(false);
         setSelectedSubject(null);

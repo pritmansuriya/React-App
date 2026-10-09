@@ -9,6 +9,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { useAttendance } from "./useAttendance";
+import { saveActivity } from "../hooks/useMessages";
 
 const emptyForm = { name: "", studentId: "", present: "", absent: "" };
 
@@ -70,13 +71,18 @@ const AttendanceDetails = () => {
       return;
     }
 
-    addAttendance({
+    const newRecord = {
       id: globalThis.crypto?.randomUUID?.() ?? `attendance-${Date.now()}`,
       name: formData.name.trim(),
       studentId: formData.studentId.trim(),
       present: Number(formData.present),
       absent: Number(formData.absent),
-    });
+    };
+    addAttendance(newRecord);
+    saveActivity(
+      "Attendance record added",
+      `Attendance was recorded for ${newRecord.name} (${newRecord.studentId}).`,
+    );
     setFormData(emptyForm);
     setError("");
     setShowModal(false);

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useStudents } from '../../../../Pages/hooks/useStudent';
+import { saveActivity } from '../../../../Pages/hooks/useMessages';
 
 const AddStudent = () => {
   const { students, addStudent, deleteStudent } = useStudents();
@@ -49,6 +50,7 @@ const AddStudent = () => {
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
       if (addStudent(values)) {
+          saveActivity('Student added', `${values.name.trim()} was added to class ${values.class.trim()}.`);
         resetForm();
         setShowForm(false);
       }

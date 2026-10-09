@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiGrid, FiPlus } from "react-icons/fi";
 import { useClasses } from "./useClasses";
+import { saveActivity } from "../hooks/useMessages";
 
 const AddClass = () => {
   const navigate = useNavigate();
@@ -34,7 +35,17 @@ const AddClass = () => {
       return;
     }
 
-    addClass({ ...form, grade: form.grade.trim(), classTeacher: form.classTeacher.trim(), capacity: Number(form.capacity) });
+    const newClass = {
+      ...form,
+      grade: form.grade.trim(),
+      classTeacher: form.classTeacher.trim(),
+      capacity: Number(form.capacity),
+    };
+    addClass(newClass);
+    saveActivity(
+      "Class added",
+      `${newClass.grade}, Section ${newClass.section} was added for ${newClass.academicYear}.`,
+    );
     navigate("/dashboard/class");
   };
 

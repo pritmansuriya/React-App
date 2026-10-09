@@ -8,6 +8,7 @@ import {
   FaClock,
   FaUsers,
 } from "react-icons/fa";
+import { saveActivity } from "../hooks/useMessages";
 
 const Fee = () => {
   // --------------------------------
@@ -169,6 +170,10 @@ const Fee = () => {
             : fee
         )
       );
+      saveActivity(
+        "Fee record updated",
+        `${feeData.student}'s fee record for ${feeData.className} was updated.`,
+      );
     }
 
     // Add new fee
@@ -179,6 +184,10 @@ const Fee = () => {
       };
 
       setFees((prevFees) => [...prevFees, newFee]);
+          saveActivity(
+            "Fee record added",
+            `A fee record was added for ${feeData.student} in ${feeData.className}.`,
+          );
     }
 
     setShowModal(false);

@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import Model from "./Model";
 import close from "../assets/Close.png";
 import { useNavigate } from "react-router-dom";
+import { saveMessage } from "../Pages/hooks/useMessages";
 
 
 const validationSchema = Yup.object({
@@ -57,6 +58,13 @@ export const Contact = ({ isOpen, onClose }) => {
           validationSchema={validationSchema}
           onSubmit={(values, { resetForm }) => {
             localStorage.setItem("contactData", JSON.stringify(values));
+            saveMessage({
+              name: values.name,
+              email: values.email,
+              phone: values.phone,
+              company: values.company,
+              message: values.message,
+            });
 
             alert("Message Sent Successfully");
             onClose();

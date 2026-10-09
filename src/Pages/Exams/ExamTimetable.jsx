@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { date } from "yup";
+import { saveActivity } from "../hooks/useMessages";
 
 const defailtExamTimetables = {
   "Class 5": [
@@ -203,6 +204,10 @@ const ExamTimetable = () => {
 
     return savedData ? JSON.parse(savedData) : defailtExamTimetables;
   });
+    saveActivity(
+      "Exam timetable updated",
+      `${selectedClass} exam schedule for ${editFormData.subject.trim()} was updated.`,
+    );
 
   useEffect(() => {
     localStorage.setItem("examTimetables", JSON.stringify(examTimetables));

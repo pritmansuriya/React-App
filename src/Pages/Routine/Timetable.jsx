@@ -1,3 +1,4 @@
+import { saveActivity } from "../hooks/useMessages";
 import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 
@@ -160,6 +161,10 @@ const TimeTable = () => {
       newData[selectedClass][day][periodIndex] = subject.trim();
       return newData;
     });
+    saveActivity(
+      "Timetable updated",
+      `${selectedClass} schedule for ${day} was updated to ${subject.trim()}.`,
+    );
 
     setShowEditForm(false);
   };

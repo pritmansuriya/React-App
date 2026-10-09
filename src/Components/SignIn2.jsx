@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import logo from "../assets/Luxi-Saas-Logo.png";
-// import close from "../assets/Close.png";
 import activebar from "../assets/Activepurple.png";
 
 import { FaFacebookF, FaTwitter, FaGoogle, FaTimes } from "react-icons/fa";

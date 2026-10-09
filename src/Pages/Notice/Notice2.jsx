@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FaBullhorn } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { saveActivity } from "../hooks/useMessages";
 
 const Notice2 = () => {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const Notice2 = () => {
         "schoolNotices",
         JSON.stringify(updatedNotices)
       );
+      saveActivity("Notice published", `${values.title} was published for ${values.audience}.`);
 
       resetForm();
 

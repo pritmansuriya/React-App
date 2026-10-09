@@ -6,6 +6,7 @@ import {
   FaUserGraduate,
   FaTrash,
 } from "react-icons/fa";
+import { saveActivity } from "../hooks/useMessages";
 
 const ExamGrade = () => {
   const [classFilter, setClassFilter] = useState("All Classes");
@@ -137,6 +138,10 @@ const ExamGrade = () => {
   localStorage.setItem(
     "examStudents",
     JSON.stringify(updatedStudents)
+  );
+  saveActivity(
+    "Exam grade added",
+    `${newStudent.name} received grade ${newStudent.grade} for class ${newStudent.className}.`,
   );
 
   // Clear form

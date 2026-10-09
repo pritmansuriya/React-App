@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import TeacherForm from "./TeacherForm";
 import { useTeachers } from "./useTeachers";
+import { saveActivity } from "../hooks/useMessages";
 
 const formatJoiningDate = (dateString) => {
   if (!dateString) return "Not set";
@@ -54,6 +55,7 @@ export const AllTeachers = () => {
   const handleAddTeacher = (teacherData) => {
     const teacher = addTeacher(teacherData);
     setAnnouncement(`${teacher.name} added to the teacher directory.`);
+    saveActivity("Teacher added", `${teacher.name} was added to the teacher directory.`);
     setIsDialogOpen(false);
   };
 

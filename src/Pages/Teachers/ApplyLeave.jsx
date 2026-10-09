@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCalendar, FiCheckCircle, FiClock, FiSend, FiUsers } from "react-icons/fi";
 import { useTeachers } from "./useTeachers";
+import { saveActivity } from "../hooks/useMessages";
 
 const STORAGE_KEY = "teacherLeaveApplications";
 
@@ -91,6 +92,10 @@ const ApplyLeave = () => {
     const updatedApplications = [application, ...applications];
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedApplications));
     setApplications(updatedApplications);
+    saveActivity(
+      "Leave request submitted",
+      `${teacher.name} requested ${form.leaveType} from ${form.startDate} to ${form.endDate}.`,
+    );
     setForm(emptyForm);
     setError("");
     setSuccess(`Leave request submitted for ${teacher.name}.`);

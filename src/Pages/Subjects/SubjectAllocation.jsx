@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FiBookOpen, FiCheck, FiGrid, FiPlus, FiSearch, FiUsers } from "react-icons/fi";
 import { useClasses } from "../Class/useClasses";
 import { useTeachers } from "../Teachers/useTeachers";
+import { saveActivity } from "../hooks/useMessages";
 
 const ALLOCATION_STORAGE_KEY = "schoolSubjectAllocations";
 
@@ -111,6 +112,10 @@ const SubjectAllocation = () => {
     const updatedAllocations = [allocation, ...allocations];
     window.localStorage.setItem(ALLOCATION_STORAGE_KEY, JSON.stringify(updatedAllocations));
     setAllocations(updatedAllocations);
+    saveActivity(
+      "Subject assigned",
+      `${subject.name} was assigned to ${className} with ${teacher.name} for ${form.academicYear}.`,
+    );
     setForm((current) => ({ ...current, subjectId: "", classId: "", teacherId: "" }));
     setError("");
     setNotice(`${subject.name} assigned to ${className}.`);
