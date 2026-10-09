@@ -87,13 +87,9 @@ const Faq = () => {
                   </span>
 
                   <img
-                    src={
-                      active === index
-                        ? {chevronDown}
-                        : {chevronDownActive}
-                    }
-                    alt=""
-                    className={`w-4 h-4 transition-transform duration-500 ${
+                    src={active === index ? chevronDownActive : chevronDown}
+                    alt={active === index ? "Collapse answer" : "Expand answer"}
+                    className={`w-4 h-4 object-contain transition-transform duration-300 ${
                       active === index ? "rotate-180" : ""
                     }`}
                   />

@@ -35,7 +35,7 @@ const Feature2 = () => {
             </h2>
 
             <img
-              src={feature2}
+              src={activePurple}
               alt="underline"
               className="mt-2 mb-6  w-14"
             />
