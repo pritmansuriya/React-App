@@ -22,7 +22,7 @@ import { IoChevronDown } from "react-icons/io5";
 import { BsRocketTakeoffFill } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2";
-import userImage from "E:/Software/src/assets/Luxi-Saas-Logo.png";
+import userImage from "../../assets/Luxi-Saas-Logo.png";
 
 const menuItems = [
   {

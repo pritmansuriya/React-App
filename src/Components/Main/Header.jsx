@@ -1,7 +1,7 @@
 import React from "react";
 import { FiSearch, FiBell, FiMessageSquare } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
-import  userImage from "E:/Software/src/assets/user1.png";
+import userImage from "../../assets/user1.png";
 
 const Header = () => {
   return (
