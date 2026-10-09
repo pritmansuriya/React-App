@@ -1,4 +1,7 @@
 import React from "react";
+import feature1 from "../assets/Feature 1.png";
+import activePurple from "../assets/Activepurple.png";
+import feature2 from "../assets/Feature2.png";
 
 const Feature2 = () => {
   return (
@@ -16,7 +19,7 @@ const Feature2 = () => {
             {/* Dashboard */}
 
             <img
-              src="src\assets\Feature 1.png"
+              src={feature1}
               alt=""
               className="w-full max-w-2xl hover:scale-110  rounded-xl"
             />
@@ -32,7 +35,7 @@ const Feature2 = () => {
             </h2>
 
             <img
-              src="src\assets\Activepurple.png"
+              src={feature2}
               alt="underline"
               className="mt-2 mb-6  w-14"
             />
@@ -68,7 +71,7 @@ const Feature2 = () => {
             {/* Purple Line */}
 
             <img
-              src="src\assets\Activepurple.png"
+              src={activePurple}
               alt="underline"
               className="mt-2 ml-110 mb-6 w-14"
             />
@@ -91,7 +94,7 @@ const Feature2 = () => {
             {/* Dashboard Image */}
 
             <img
-              src="src\assets\Feature2.png"
+              src={feature2}
               alt=""
               className="w-full hover:scale-110 rounded-xl"
             />

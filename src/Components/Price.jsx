@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import activepurple from "../assets/Activepurple.png"
 
 const plans = [
   {
@@ -48,7 +49,7 @@ const Price = () => {
           </h2>
 
           <img
-            src="src\assets\Activepurple.png"
+            src= {activepurple}
             alt="Purple Active"
             className="w-14 mt-4 mb-6 ml-145"
           />

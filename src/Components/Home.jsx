@@ -1,5 +1,5 @@
   import React from "react";
-
+import dashboard from "../assets/Dashboard.png";
 
   const Home = () => {
     
@@ -41,7 +41,7 @@
 
             <div className="flex justify-center">
               <img
-                src="src\assets\Dashboard.png"
+                src= {dashboard}
                 alt=""
                 className="w-full max-w-137.5 object-contain hover:scale-110 drop-shadow-2xl"
               />   

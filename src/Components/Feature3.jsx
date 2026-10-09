@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import activePurple from "../assets/Activepurple.png";
 
 
 const tabsData = [
@@ -35,7 +36,7 @@ const Feature3 = () => {
         </h2>
 
         <img
-          src="src\assets\Activepurple.png "
+          src= {activePurple}
           alt="Purple Active"
           className="w-14 mt-4 mb-6 ml-145"
         />

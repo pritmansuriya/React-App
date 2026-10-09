@@ -1,25 +1,30 @@
 import React from "react";
 
+import androidShare from "../assets/android-share.png";
+import personStalker from "../assets/person-stalker.png";
+import socialBuffer from "../assets/social-buffer.png";
+
 const stats = [
   {
     id: 21,
-    image: "src/assets/android-share.png",
+    image: androidShare,
     number: "12 Month",
     title: "Free Trial",
   },
   {
     id: 22,
-    image: "src/assets/person-stalker.png",
+    image: personStalker,
     number: "+80M",
     title: "Active Users",
   },
   {
     id: 23,
-    image: "src/assets/social-buffer.png",
+    image: socialBuffer,
     number: "+180K",
     title: "Providers",
   },
 ];
+
 const Stats = () => {
   return (
     <section className="bg-white overflow-hidden py-24">

@@ -1,10 +1,24 @@
 import React, { useState } from "react";
 
+import chromeLogo from "../assets/Chrome.png";
+import facebookLogo from "../assets/Facebook.png";
+import firefoxLogo from "../assets/Firefox.png";
+import gitLogo from "../assets/Git.png";
+import instaLogo from "../assets/Insta.png";
+import linkedinLogo from "../assets/Linkden.png";
+import twitterLogo from "../assets/Twitter.png";
+import whatsappLogo from "../assets/whstapp.png";
+import youtubeLogo from "../assets/Youtube.png";
+
+import user1 from "../assets/user1.png";
+import user2 from "../assets/user2.png";
+import user3 from "../assets/user3.png";
+
 const testimonialData = [
   {
     id: 1,
-    logo: "src/assets/Chrome.png",
-    image: "src/assets/user1.png",
+    logo: chromeLogo,
+    image: user1,
     name: "Prit Patel",
     role: "CEO, UX Maestro",
     feedback:
@@ -12,8 +26,8 @@ const testimonialData = [
   },
   {
     id: 2,
-    logo: "src/assets/Facebook.png",
-    image: "src/assets/user2.png",
+    logo: facebookLogo,
+    image: user2,
     name: "Nancy Patel",
     role: "GM, UX Maestro",
     feedback:
@@ -21,8 +35,8 @@ const testimonialData = [
   },
   {
     id: 3,
-    logo: "src/assets/Firefox.png",
-    image: "src/assets/user3.png",
+    logo: firefoxLogo,
+    image: user3,
     name: "Aryan Patel",
     role: "HR, UX Maestro",
     feedback:
@@ -30,8 +44,8 @@ const testimonialData = [
   },
   {
     id: 4,
-    logo: "src/assets/Git.png",
-    image: "src/assets/user1.png",
+    logo: gitLogo,
+    image: user1,
     name: "Pal Patel",
     role: "DA, UX Maestro",
     feedback:
@@ -39,8 +53,8 @@ const testimonialData = [
   },
   {
     id: 5,
-    logo: "src/assets/Insta.png",
-    image: "src/assets/user2.png",
+    logo: instaLogo,
+    image: user2,
     name: "Komal Patel",
     role: "SEO, UX Maestro",
     feedback:
@@ -48,8 +62,8 @@ const testimonialData = [
   },
   {
     id: 6,
-    logo: "src/assets/Linkden.png",
-    image: "src/assets/user3.png",
+    logo: linkedinLogo,
+    image: user3,
     name: "Jeel Patel",
     role: "Tester, UX Maestro",
     feedback:
@@ -57,8 +71,8 @@ const testimonialData = [
   },
   {
     id: 7,
-    logo: "src/assets/Twitter.png",
-    image: "src/assets/user1.png",
+    logo: twitterLogo,
+    image: user1,
     name: "Dhyey Patel",
     role: "Sales, UX Maestro",
     feedback:
@@ -66,8 +80,8 @@ const testimonialData = [
   },
   {
     id: 8,
-    logo: "src/assets/whstapp.png",
-    image: "src/assets/user2.png",
+    logo: whatsappLogo,
+    image: user2,
     name: "Vishva Patel",
     role: "Tester, UX Maestro",
     feedback:
@@ -75,8 +89,8 @@ const testimonialData = [
   },
   {
     id: 9,
-    logo: "src/assets/Youtube.png",
-    image: "src/assets/user3.png",
+    logo: youtubeLogo,
+    image: user3,
     name: "Khush Patel",
     role: "BDE, UX Maestro",
     feedback:
