@@ -2,9 +2,9 @@
 import React from "react";
 import { IoChevronDown } from "react-icons/io5";
 
-import user1 from "../assets/user1.png";
-import user2 from "../assets/user2.png";
-import user3 from "../assets/user3.png";
+import user1 from "../../../assets/user1.png";
+import user2 from "../../../assets/user2.png";
+import user3 from "../../../assets/user3.png";
 
 const perfomer = [
   {
