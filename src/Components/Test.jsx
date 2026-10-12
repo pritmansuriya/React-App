@@ -135,7 +135,7 @@ const Test = () => {
               />
               <div>
                 <h3 className="font-bold text-white">{testimonialData[active].name}</h3>
-                <p className="mt-1 text-sm text-purple-200">{testimonialData[active].role}</p>
+                <p className="mt-1 text-sm text-left text-purple-200">{testimonialData[active].role}</p>
               </div>
             </div>
           </article>

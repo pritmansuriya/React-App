@@ -1,4 +1,5 @@
 import React from 'react'
+import API from "../../../assets/API.png";
 
 const NewCourse = () => {
   return (
@@ -8,7 +9,7 @@ const NewCourse = () => {
         {/* Image */}
         <div className='w-24 h-40 rounded-xl overflow-hidden shrink-0'>
             <img
-                src='src\assets\API.png'
+                src= {API}
                 alt='API Course'
                 className='w-full h-full object-cover'
             />
