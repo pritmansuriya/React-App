@@ -11,15 +11,33 @@ const Footer = () => {
   const footerGroups = [
     {
       title: "Company",
-      links: ["About us", "Careers", "Contact", "Resources"],
+      links: [
+        { name: "About Us", href: "#about" },
+        {
+          name: "My Portfolio",
+          href: "https://prit-portfolio-r61gbvr4t-prit23.vercel.app/",
+        },
+        { name: "GitHub", href: "https://github.com/pritmansuriya/" },
+        { name: "Contact", href: "#contact" },
+      ],
     },
     {
       title: "Features",
-      links: ["Student records", "Attendance", "Reports", "Scheduling"],
+      links: [
+        { name: "Student Records", href: "#feature2" },
+        { name: "Attendance", href: "#attendance" },
+        { name: "Reports", href: "#reports" },
+        { name: "Scheduling", href: "#scheduling" },
+      ],
     },
     {
       title: "Support",
-      links: ["Help center", "Privacy policy", "Terms", "Accessibility"],
+      links: [
+        { name: "Help Center", href: "#help" },
+        { name: "Privacy Policy", href: "#privacy" },
+        { name: "Terms", href: "#terms" },
+        { name: "Accessibility", href: "#accessibility" },
+      ],
     },
   ];
 
@@ -27,7 +45,11 @@ const Footer = () => {
     { icon: <FaFacebookF />, label: "Facebook", href: "https://facebook.com" },
     { icon: <FaLinkedinIn />, label: "LinkedIn", href: "https://linkedin.com" },
     { icon: <FaTwitter />, label: "Twitter", href: "https://twitter.com" },
-    { icon: <FaInstagram />, label: "Instagram", href: "https://instagram.com" },
+    {
+      icon: <FaInstagram />,
+      label: "Instagram",
+      href: "https://instagram.com",
+    },
   ];
 
   return (
@@ -36,14 +58,21 @@ const Footer = () => {
         <div className="flex flex-col gap-8 border-b border-slate-800 pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-10 lg:pb-12">
           <div>
             <div className="flex items-center gap-3">
-              <img src={logo} alt="School management logo" className="h-12 w-12 object-contain" />
+              <img
+                src={logo}
+                alt="School management logo"
+                className="h-12 w-12 object-contain"
+              />
               <div>
                 <h3 className="text-xl font-bold text-white">SchoolFlow</h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Management</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                  Management
+                </p>
               </div>
             </div>
             <p className="mt-5 max-w-md text-left text-sm leading-7 text-slate-400">
-              A smarter workspace for school administration, communication, and student success.
+              A smarter workspace for school administration, communication, and
+              student success.
             </p>
           </div>
 
@@ -66,20 +95,36 @@ const Footer = () => {
         <div className="mt-10 grid gap-8 md:grid-cols-3 lg:mt-12 lg:grid-cols-4 lg:gap-10">
           {footerGroups.map((group) => (
             <div key={group.title}>
-              <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">{group.title}</h4>
-              <ul className="mt-5 space-y-3 text-sm text-slate-400">
-                {group.links.map((link) => (
-                  <li key={link} className="transition hover:text-white">
-                    <a href="#" className="cursor-pointer">{link}</a>
-                  </li>
-                ))}
+              <h4 className="text-left text-sm font-semibold uppercase tracking-[0.2em] text-white">
+                {group.title}
+              </h4>
+              <ul className="mt-5 space-y-3 text-left text-sm text-slate-400">
+                {group.links.map((link) => {
+                  const isExternal =
+                    typeof link.href === "string" &&
+                    link.href.startsWith("https://");
+
+                  return (
+                    <li key={link.name} className="transition hover:text-white">
+                      <a
+                        href={link.href}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                        className="cursor-pointer"
+                      >
+                        {link.name}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
-
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Contact</h4>
-            <ul className="mt-5 space-y-3 text-sm text-slate-400">
+            <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-left text-white">
+              Contact
+            </h4>
+            <ul className="mt-5 text-left space-y-3 text-sm text-slate-400">
               <li>pritmansuriya@gmail.com</li>
               <li>+91 6356324903</li>
               <li>245 Learning Avenue, Suite 300</li>
@@ -90,9 +135,13 @@ const Footer = () => {
         <div className="mt-10 flex flex-col gap-3 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between lg:mt-12">
           <p>© 2026 SchoolFlow. All rights reserved.</p>
           <div className="flex gap-5">
-            <a className="transition hover:text-white">Privacy</a>
-            <a className="transition hover:text-white">Terms</a>
-            <a  className="transition hover:text-white">Cookies</a>
+            <a className="transition cursor-pointer hover:text-white">
+              Privacy
+            </a>
+            <a className="transition cursor-pointer hover:text-white">Terms</a>
+            <a className="transition cursor-pointer hover:text-white">
+              Cookies
+            </a>
           </div>
         </div>
       </div>

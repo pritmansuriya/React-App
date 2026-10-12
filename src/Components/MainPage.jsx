@@ -6,10 +6,11 @@ import Feature2 from "./Feature2";
 import Feature3 from "./Feature3";
 import Test from "./Test";
 import Price from "./Price";
-import Faq from "./Faq";
 import Footer from "./Footer";
 import Contact from "./Contact";
+import NewsEvents from "./Faq";
 import Home from "./Home";
+import AboutContact from "./AboutContact";
 
 const MainPage = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -31,7 +32,8 @@ const MainPage = () => {
       <Feature2 />
       <Test />
       <Price />
-      <Faq />
+      <NewsEvents />
+      <AboutContact />
       <Footer />
 
       <Contact

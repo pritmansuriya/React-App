@@ -20,82 +20,82 @@ const testimonialData = [
     id: 1,
     logo: GraduationCap,
     image: user1,
-    name: "Sample Principal",
+    name: " Principal",
     role: "School Administrator",
     feedback:
-      "Sample testimonial for UI development: the dashboard brings daily school tasks into one view and makes communication much simpler.",
+      "Sample testimonial for UI development: The dashboard brings daily school tasks into one view and makes communication much simpler.",
   },
   {
     id: 2,
     logo: BookOpen,
     image: user2,
-    name: "Sample Teacher",
+    name: " Teacher",
     role: "Class Coordinator",
     feedback:
-      "Sample feedback for demo purposes: attendance and reporting are easier to manage when everything is connected in one place.",
+      "Sample feedback for demo purposes: Attendance and reporting are easier to manage when everything is connected in one place.",
   },
   {
     id: 3,
     logo: Users,
     image: user3,
-    name: "Sample Parent",
+    name: " Parent",
     role: "Parent Liaison",
     feedback:
-      "Sample review for prototype testing: updates and announcements are clearer, and follow-up is much more organized.",
+      "Sample review for prototype testing: Updates and announcements are clearer, and follow-up is much more organized.",
   },
   {
     id: 4,
     logo: School,
     image: user1,
-    name: "Sample Admin",
+    name: " Admin",
     role: "Operations Lead",
     feedback:
-      "Sample testimonial for design review: the system helps reduce manual admin work without creating extra complexity.",
+      "Sample testimonial for design review: The system helps reduce manual admin work without creating extra complexity.",
   },
   {
     id: 5,
     logo: ClipboardCheck,
     image: user2,
-    name: "Sample Office Staff",
+    name: " Office Staff",
     role: "Admissions Team",
     feedback:
-      "Sample content only: it is easier to keep student records consistent when core forms and schedules live in one place.",
+      "Sample content only: It is easier to keep student records consistent when core forms and schedules live in one place.",
   },
   {
     id: 6,
     logo: BriefcaseBusiness,
     image: user3,
-    name: "Sample Manager",
+    name: " Manager",
     role: "Academic Support",
     feedback:
-      "Sample feedback for prototype review: task tracking and communication feel more streamlined, especially for busy school teams.",
+      "Sample feedback for prototype review: Task tracking and communication feel more streamlined, especially for busy school teams.",
   },
   {
     id: 7,
     logo: Library,
     image: user1,
-    name: "Sample Librarian",
+    name: " Librarian",
     role: "Library Team",
     feedback:
-      "Sample testimonial for demo purposes: managing requests and records is more organized when the workflow is centralized.",
+      "Sample testimonial for demo purposes: Managing requests and records is more organized when the workflow is centralized.",
   },
   {
     id: 8,
     logo: HeartHandshake,
     image: user2,
-    name: "Sample Counselor",
+    name: " Counselor",
     role: "Student Support",
     feedback:
-      "Sample review: the interface makes it easier to keep updates visible and follow through quickly on important tasks.",
+      "Sample review: The interface makes it easier to keep updates visible and follow through quickly on important tasks.",
   },
   {
     id: 9,
     logo: UserRound,
     image: user3,
-    name: "Sample Supervisor",
+    name: " Supervisor",
     role: "School Operations",
     feedback:
-      "Sample content only: the product helps teams move faster when records, scheduling, and notifications are connected.",
+      "Sample content only: The product helps teams move faster when records, scheduling, and notifications are connected.",
   },
 ];
 
@@ -108,7 +108,7 @@ const Test = () => {
     <section id="test" className="w-full overflow-hidden bg-slate-50 py-14 sm:py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mb-10 text-center lg:mb-12">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-purple-700">
+          <p className="inline-flex self-start rounded-full border border-violet-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700 shadow-sm">
             Sample feedback for development
           </p>
           <h2 className="mt-4 text-4xl font-black leading-tight text-slate-900 sm:text-5xl">
@@ -134,7 +134,7 @@ const Test = () => {
                 alt=""
               />
               <div>
-                <h3 className="font-bold text-white">{testimonialData[active].name}</h3>
+                <h3 className="font-bold text-left text-white">{testimonialData[active].name}</h3>
                 <p className="mt-1 text-sm text-left text-purple-200">{testimonialData[active].role}</p>
               </div>
             </div>

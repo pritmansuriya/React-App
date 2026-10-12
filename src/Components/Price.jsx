@@ -33,7 +33,7 @@ const Price = () => {
     <section id="price" className="relative overflow-hidden bg-white py-14 lg:py-20">
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="mb-10 text-center lg:mb-14">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Sample pricing</p>
+          <p className="inline-flex self-start rounded-full border border-violet-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700 shadow-sm">Sample pricing</p>
           <h2 className="mt-4 text-5xl font-bold text-gray-800">
             <span className="text-gray-500">Simple plans</span> for every stage
           </h2>

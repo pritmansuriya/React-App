@@ -8,8 +8,8 @@ const menuItems = [
   { name: "Features", link: "feature2" },
   { name: "Testimonials", link: "test" },
   { name: "Pricing", link: "price" },
-  { name: "News & Events", link: "faq" },
-  { name: "About", link: "footer" },
+  { name: "News & Events", link: "news-events" },
+  { name: "About", link: "about" },
 ];
 
 const Header = ({ active, setActive, onOpenContact }) => {
@@ -33,7 +33,7 @@ const Header = ({ active, setActive, onOpenContact }) => {
           <img src={logo} alt="School management logo" className="w-12 h-12 object-contain" />
           <div className="leading-tight">
             <p className="text-lg font-extrabold tracking-tight text-slate-900">SchoolFlow</p>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-600">
+            <p className="text-[10px] text-left font-semibold uppercase tracking-[0.2em] text-blue-600">
               Management
             </p>
           </div>
