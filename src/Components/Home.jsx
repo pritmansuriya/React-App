@@ -1,63 +1,63 @@
-  import React from "react";
+import React from "react";
 import dashboard from "../assets/Dashboard.png";
 
-  const Home = () => {
-    
-    
-    return (
-      <section id="home" className="min-h-screen pt-32 left-0 bg-linear-to-r right-0 from-violet-700 via-purple-600 to-fuchsia-500 overflow-x-hidden relative">
-        
-        <div className="w-full mx-auto px-10 pt-12">
-          <div className="grid lg:grid-cols-2 items-center gap-10">
+const Home = () => {
+  return (
+    <section
+      id="home"
+      className="relative overflow-hidden bg-gradient-to-br from-violet-50 via-white to-purple-50 pt-28 sm:pt-32"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 pb-14 pt-8 sm:pb-16 lg:px-8 lg:pb-24 lg:pt-12">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+          <div className="py-2 sm:py-5">
+            <span className="inline-flex rounded-full border border-violet-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-violet-700 shadow-sm">
+              School Management Platform
+            </span>
 
-            <div className="py-5">
-              <h1 className="text-white text-5xl text-left leading-tight font-semibold">
-                Sed Imperdiet Enim Ii
-                <br />
-                Vitae <span className="font-bold">Viverra Justo</span>
-              </h1>
+            <h1 className="mt-6 max-w-xl text-left text-4xl font-black leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              Manage Your School,
+              <span className="block text-violet-700">All in One Place.</span>
+            </h1>
 
-              <p className="text-white/80 mt-8 text-lg text-left leading-8 max-w-md">
-                Nam sollicitudin nunc, cursus eros vulputate sed. Vestibulum sit
-                amet tortor sit amet libero lobortis.
-              </p>
+            <p className="mt-6 max-w-lg text-left text-lg leading-8 text-slate-600">
+              Streamline admissions, attendance, classes, exams, and communication in a single smart dashboard designed for modern schools.
+            </p>
 
-              <div className="flex items-center text-left gap-8 mt-10">
-                <div className="flex items-center gap-3 cursor-pointer">
-                  <img src="src\assets\Play.png" alt="" className="w-10" />
+            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              <button className="rounded-full bg-violet-700 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-violet-700/20 transition-colors duration-200 hover:bg-violet-800">
+                Get Started
+              </button>
 
-                  <span className="text-white hover:text-gray-950 text-sm">
-                    WATCH VIDEO
-                  </span>
-                </div>
-
-                <button className="bg-lime-400 hover:bg-gray-950 px-8 py-3 cursor-pointer rounded-full text-white font-semibold">
-                  GET NOW
-                </button>
-              </div>
+              <a
+                href="#feature2"
+                className="inline-flex items-center text-base font-semibold text-slate-700 transition-colors duration-200 hover:text-violet-700"
+              >
+                Explore Features
+              </a>
             </div>
+          </div>
 
-            {/* Right */}
-
-            <div className="flex justify-center">
+          <div className="flex justify-center">
+            <div className="relative w-full max-w-2xl">
+              <div className="absolute -left-8 top-10 h-32 w-32 rounded-full bg-violet-200/70 blur-3xl" />
+              <div className="absolute -right-6 bottom-10 h-36 w-36 rounded-full bg-purple-200/70 blur-3xl" />
               <img
-                src= {dashboard}
-                alt=""
-                className="w-full max-w-137.5 object-contain hover:scale-110 drop-shadow-2xl"
-              />   
+                src={dashboard}
+                alt="School management dashboard preview"
+                className="relative w-full rounded-2xl border border-violet-100 bg-white/80 p-2 shadow-[0_24px_60px_rgba(76,29,149,0.12)] transition duration-200"
+              />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Wave */}
+      <div className="absolute bottom-0 left-0 w-full pointer-events-none">
+        <svg preserveAspectRatio="none" viewBox="0 0 1440 220" className="w-full" fill="#f8fafc">
+          <path d="M0,160L80,181.3C160,203,320,245,480,229.3C640,213,800,139,960,138.7C1120,139,1280,213,1360,250.7L1440,288V320H1360C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320H0Z" />
+        </svg>
+      </div>
+    </section>
+  );
+};
 
-        <div className="absolute bottom-0 left-0 w-full pointer-events-none">
-          <svg preserveAspectRatio="none" viewBox="0 0 1440 220" className="w-full" fill="white">
-            <path d="M0,160L80,181.3C160,203,320,245,480,229.3C640,213,800,139,960,138.7C1120,139,1280,213,1360,250.7L1440,288V320H1360C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320H0Z" />
-          </svg>
-        </div>
-      </section>
-    );
-  };
-
-  export default Home;
+export default Home;

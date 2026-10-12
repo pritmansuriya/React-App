@@ -29,7 +29,6 @@ const MainPage = () => {
       <Home />
       <Stats />
       <Feature2 />
-      <Feature3 />
       <Test />
       <Price />
       <Faq />

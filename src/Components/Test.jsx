@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-
-import chromeLogo from "../assets/Chrome.png";
-import facebookLogo from "../assets/Facebook.png";
-import firefoxLogo from "../assets/Firefox.png";
-import gitLogo from "../assets/Git.png";
-import instaLogo from "../assets/Insta.png";
-import linkedinLogo from "../assets/Linkden.png";
-import twitterLogo from "../assets/Twitter.png";
-import whatsappLogo from "../assets/whstapp.png";
-import youtubeLogo from "../assets/Youtube.png";
+import {
+  GraduationCap,
+  BookOpen,
+  School,
+  Users,
+  ClipboardCheck,
+  Library,
+  HeartHandshake,
+  UserRound,
+  BriefcaseBusiness,
+} from "lucide-react";
 
 import user1 from "../assets/user1.png";
 import user2 from "../assets/user2.png";
@@ -17,172 +18,151 @@ import user3 from "../assets/user3.png";
 const testimonialData = [
   {
     id: 1,
-    logo: chromeLogo,
+    logo: GraduationCap,
     image: user1,
-    name: "Prit Patel",
-    role: "CEO, UX Maestro",
+    name: "Sample Principal",
+    role: "School Administrator",
     feedback:
-      "Vivamus sit amet interdum elit. Proin lacinia erat ac velit tempus auctor.",
+      "Sample testimonial for UI development: the dashboard brings daily school tasks into one view and makes communication much simpler.",
   },
   {
     id: 2,
-    logo: facebookLogo,
+    logo: BookOpen,
     image: user2,
-    name: "Nancy Patel",
-    role: "GM, UX Maestro",
+    name: "Sample Teacher",
+    role: "Class Coordinator",
     feedback:
-      "Donec feugiat nisi vitae mauris vulputate, sed tincidunt magna gravida.",
+      "Sample feedback for demo purposes: attendance and reporting are easier to manage when everything is connected in one place.",
   },
   {
     id: 3,
-    logo: firefoxLogo,
+    logo: Users,
     image: user3,
-    name: "Aryan Patel",
-    role: "HR, UX Maestro",
+    name: "Sample Parent",
+    role: "Parent Liaison",
     feedback:
-      "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere.",
+      "Sample review for prototype testing: updates and announcements are clearer, and follow-up is much more organized.",
   },
   {
     id: 4,
-    logo: gitLogo,
+    logo: School,
     image: user1,
-    name: "Pal Patel",
-    role: "DA, UX Maestro",
+    name: "Sample Admin",
+    role: "Operations Lead",
     feedback:
-      "Vivamus sit amet interdum elit. Proin lacinia erat ac velit tempus auctor.",
+      "Sample testimonial for design review: the system helps reduce manual admin work without creating extra complexity.",
   },
   {
     id: 5,
-    logo: instaLogo,
+    logo: ClipboardCheck,
     image: user2,
-    name: "Komal Patel",
-    role: "SEO, UX Maestro",
+    name: "Sample Office Staff",
+    role: "Admissions Team",
     feedback:
-      "Donec feugiat nisi vitae mauris vulputate, sed tincidunt magna gravida.",
+      "Sample content only: it is easier to keep student records consistent when core forms and schedules live in one place.",
   },
   {
     id: 6,
-    logo: linkedinLogo,
+    logo: BriefcaseBusiness,
     image: user3,
-    name: "Jeel Patel",
-    role: "Tester, UX Maestro",
+    name: "Sample Manager",
+    role: "Academic Support",
     feedback:
-      "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere.",
+      "Sample feedback for prototype review: task tracking and communication feel more streamlined, especially for busy school teams.",
   },
   {
     id: 7,
-    logo: twitterLogo,
+    logo: Library,
     image: user1,
-    name: "Dhyey Patel",
-    role: "Sales, UX Maestro",
+    name: "Sample Librarian",
+    role: "Library Team",
     feedback:
-      "Vivamus sit amet interdum elit. Proin lacinia erat ac velit tempus auctor",
+      "Sample testimonial for demo purposes: managing requests and records is more organized when the workflow is centralized.",
   },
   {
     id: 8,
-    logo: whatsappLogo,
+    logo: HeartHandshake,
     image: user2,
-    name: "Vishva Patel",
-    role: "Tester, UX Maestro",
+    name: "Sample Counselor",
+    role: "Student Support",
     feedback:
-      "Donec feugiat nisi vitae mauris vulputate, sed tincidunt magna gravida.",
+      "Sample review: the interface makes it easier to keep updates visible and follow through quickly on important tasks.",
   },
   {
     id: 9,
-    logo: youtubeLogo,
+    logo: UserRound,
     image: user3,
-    name: "Khush Patel",
-    role: "BDE, UX Maestro",
+    name: "Sample Supervisor",
+    role: "School Operations",
     feedback:
-      "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere.",
+      "Sample content only: the product helps teams move faster when records, scheduling, and notifications are connected.",
   },
 ];
+
 const Test = () => {
   const [active, setActive] = useState(
     testimonialData.findIndex((item) => item.id === 5),
   );
+
   return (
-    <section id="test" className="bg-white w-full overflow-hidden py-28">
-      <div className="mx-auto grid lg:grid-cols-2 ml-2 items-center ">
-        {/* Left */}
-        <div className="relative max-w-7xl h-full">
-          <svg
-            className="absolute inset-0 max-w-7xl h-full"
-            viewBox="0 0 720 520"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="
-              M15,70
-              C120,20 210,70 340,55
-              C520,30 630,90 700,240
-              C735,340 720,470 620,470
-              C500,470 390,420 260,485
-              C140,535 30,470 0,420
-              C-15,320 -10,170 15,70
-              "
-              fill="url(#grad)"
-            />
-            <defs>
-              <linearGradient id="grad">
-                <stop offset="0%" stopColor="#B51CFF" />
-                <stop offset="100%" stopColor="#6817C8" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div className="relative z-10 py-14 px-10 ml-7  text-white">
-            <div className="mt-12">
-              <h2 className="text-4xl text-left leading-tight">
-                What Our Customers
-                <br />
-                <span className="font-bold text-4xl">Testimonial</span>
-              </h2>
-            </div>
-
-            <div className="flex items-start gap-10 mt-24">
-              <div className="flex flex-col items-center mt-18 w-30">
-                <img
-                  src={testimonialData[active].image}
-                  className="w-16 h-16 rounded-full object-cover"
-                  alt=""
-                />
-                <h4 className="mt-3 text-[22px] text-white text-left font-bold">
-                  {testimonialData[active].name}
-                </h4>
-
-                <p className="text-purple-200 text-sm text-left">
-                  {testimonialData[active].role}
-                </p>
-              </div>
-              <div className="max-w-75">
-                <div className="text-7xl text-purple-300 items-start opacity-30 leading-none">
-                  "
-                </div>
-
-                <p className="text-xl leading-8 text-left mt-3 text-purple-100 ">
-                  {testimonialData[active].feedback}
-                </p>
-              </div>
-            </div>
-          </div>
+    <section id="test" className="w-full overflow-hidden bg-slate-50 py-14 sm:py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mb-10 text-center lg:mb-12">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-purple-700">
+            Sample feedback for development
+          </p>
+          <h2 className="mt-4 text-4xl font-black leading-tight text-slate-900 sm:text-5xl">
+            What schools say about the platform
+          </h2>
         </div>
 
-        {/* Right */}
-        <div className="grid grid-cols-3 gap-10 place-items-center">
-          {testimonialData.map((item, index) => (
-            <button
-              key={item.id}
-              onClick={() => setActive(index)}
-              className={`p-5 rounded-xl transition-all duration-300
-                  ${
-                    active == index
-                      ? "bg-white scale-110"
-                      : "opacity-40 hover:opacity-100"
-                  }`}
-            >
-              <img src={item.logo} className="w-24 hover:scale-105 object-contain" alt="" />
-            </button>
-          ))}
+        <div className="grid items-stretch gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
+          <article className="flex min-h-80 flex-col justify-between rounded-2xl bg-gradient-to-br from-violet-700 to-purple-800 p-6 text-white shadow-xl shadow-purple-900/10 sm:p-8 lg:min-h-96">
+            <div>
+              <div className="text-7xl leading-none text-purple-200/60" aria-hidden="true">
+                “
+              </div>
+              <p className="mt-3 max-w-2xl text-left text-lg leading-8 text-purple-50 sm:text-xl">
+                {testimonialData[active].feedback}
+              </p>
+            </div>
+
+            <div className="mt-10 flex items-center gap-4 border-t border-white/20 pt-6">
+              <img
+                src={testimonialData[active].image}
+                className="h-14 w-14 rounded-full border-2 border-white/70 object-cover"
+                alt=""
+              />
+              <div>
+                <h3 className="font-bold text-white">{testimonialData[active].name}</h3>
+                <p className="mt-1 text-sm text-purple-200">{testimonialData[active].role}</p>
+              </div>
+            </div>
+          </article>
+
+          <div className="flex items-center rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="grid w-full grid-cols-3 justify-items-center gap-3 sm:gap-4">
+          {testimonialData.map((item, index) => {
+            const Icon = item.logo;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActive(index)}
+                aria-label={`View testimonial from ${item.name}`}
+                aria-pressed={active === index}
+                className={`flex aspect-square w-full max-w-28 items-center justify-center rounded-xl border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 ${
+                  active === index
+                    ? "border-purple-300 bg-purple-100 text-purple-700 shadow-lg shadow-purple-100"
+                    : "border-gray-200 bg-white text-gray-400 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-600"
+                }`}
+              >
+                <Icon size={32} strokeWidth={1.7} aria-hidden="true" />
+              </button>
+            );
+          })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

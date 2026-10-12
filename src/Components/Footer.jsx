@@ -1,157 +1,102 @@
-import React, { useState } from "react";
-
+import React from "react";
+import logo from "../assets/SchoolLogo.png";
 import {
   FaFacebookF,
   FaLinkedinIn,
-  FaTwitterSquare,
+  FaTwitter,
   FaInstagram,
 } from "react-icons/fa";
-import { IoGlobeOutline, IoChevronDown } from "react-icons/io5";
 
 const Footer = () => {
-  const [language, setLanguage] = useState("English - En");
-  const [open, setOpen] = useState(false);
-
-  const socialIcons = [
+  const footerGroups = [
     {
-      icon: <FaFacebookF />,
-      bg: "bg-purple-500",
-      hover: "hover:bg-blue-600",
+      title: "Company",
+      links: ["About us", "Careers", "Contact", "Resources"],
     },
     {
-      icon: <FaLinkedinIn />,
-      bg: "bg-purple-500",
-      hover: "hover:bg-blue-700",
+      title: "Features",
+      links: ["Student records", "Attendance", "Reports", "Scheduling"],
     },
     {
-      icon: <FaTwitterSquare />,
-      bg: "bg-purple-500",
-      hover: "hover:bg-sky-500",
-    },
-    {
-      icon: <FaInstagram />,
-      bg: "bg-purple-500",
-      hover: "hover:bg-pink-500",
+      title: "Support",
+      links: ["Help center", "Privacy policy", "Terms", "Accessibility"],
     },
   ];
 
-  const languages = [
-    "English - En",
-    "Hindi - Hi",
-    "Gujarati - Gu",
-    "French - Fr",
-    "German - Gr",
+  const socialLinks = [
+    { icon: <FaFacebookF />, label: "Facebook", href: "https://facebook.com" },
+    { icon: <FaLinkedinIn />, label: "LinkedIn", href: "https://linkedin.com" },
+    { icon: <FaTwitter />, label: "Twitter", href: "https://twitter.com" },
+    { icon: <FaInstagram />, label: "Instagram", href: "https://instagram.com" },
   ];
+
   return (
-    <section id="footer" className="relative bg-purple-600 py-24 overflow-visible">
-      <div className="max-w-7xl mx-auto">
-        {/* Heading */}
-        <h2 className="text-center text-white text-5xl font-semibold">
-          What are you waiting for?
-        </h2>
-        <div className="flex justify-center mt-10">
-          <button className="bg-lime-500 text-white px-8 py-3 cursor-pointer rounded-full text-sm hover:bg-gray-950 duration-300">
-            GET STARTED
-          </button>
-        </div>
-        {/* Footer */}
-        <div className="grid lg:grid-cols-5 gap-12 mt-24">
-          {/* Logo */}
+    <footer id="footer" className="bg-slate-950 py-14 text-slate-200 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex flex-col gap-8 border-b border-slate-800 pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-10 lg:pb-12">
           <div>
-            <img src="src\assets\Luxi-Saas-Logo.png" alt="" className="w-20" />
-            <h3 className="text-white font-semibold text-left mt-2">
-              Software
-            </h3>
-            <div className="mt-14">
-              <p className="text-white/70 text-left text-sm mt-8">
-                © Luvi Theme 2019
-              </p>
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="School management logo" className="h-12 w-12 object-contain" />
+              <div>
+                <h3 className="text-xl font-bold text-white">SchoolFlow</h3>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Management</p>
+              </div>
             </div>
+            <p className="mt-5 max-w-md text-left text-sm leading-7 text-slate-400">
+              A smarter workspace for school administration, communication, and student success.
+            </p>
           </div>
-          {/* Company */}
-          <div className="mt-8">
-            <h4 className="text-white text-left font-semibold mb-6">COMPANY</h4>
-            <ul className="space-y-3 text-sm text-left text-white/80 cursor-pointer">
-              <li className="hover:text-gray-950">Donec dignissim</li>
-              <li className="hover:text-gray-950">Curabitur egestas</li>
-              <li className="hover:text-gray-950">Nam posuere</li>
-              <li className="hover:text-gray-950">Aenean facilisis</li>
-            </ul>
-          </div>
-          {/* Services */}
-          <div className="mt-8">
-            <h4 className="text-white text-left font-semibold mb-6">
-              SERVICES
-            </h4>
-            <ul className="space-y-3 text-sm text-left text-white/80 cursor-pointer">
-              <li className="hover:text-gray-950">Cras convallis</li>
-              <li className="hover:text-gray-950">Vestibulum faucibus</li>
-              <li className="hover:text-gray-950">Quisque lacinia purus</li>
-              <li className="hover:text-gray-950">Aliquam nec ex</li>
-            </ul>
-          </div>
-          {/* Legal */}
-          <div className="mt-8">
-            <h4 className="text-white text-left font-semibold mb-6">LEGAL</h4>
-            <ul className="space-y-3 text-sm text-left text-white/80 cursor-pointer">
-              <li className="hover:text-gray-950">Suspendisse porttitor</li>
-              <li className="hover:text-gray-950">Nam posuere</li>
-              <li className="hover:text-gray-950">Curabitur egestas</li>
-            </ul>
-          </div>
-          {/* Right side */}
-          <div className="flex flex-col items-start mt-8">
-            {/* Images */}
-            <div className="flex items-center justify-center gap-5">
-              {socialIcons.map((item, index) => (
-                <button
-                  key={index}
-                  className={` ${item.bg} ${item.hover} w-9 h-9 rounded-full cursor-pointer  flex items-center justify-center transition-all duration-300 hover:scale-110`}
-                >
-                  <span className="text-white text-2xl">{item.icon}</span>
-                </button>
-              ))}
-            </div>
-            {/* Language */}
-            <div className="relative mt-12 w-52 overflow-visible">
-              <button
-                onClick={() => setOpen(!open)}
-                className="w-full border h-14  border-white/40 rounded-lg px-5 py-2 flex items-center transition cursor-pointer  justify-between text-gray-950"
-              >
-                <div className="flex items-center gap-2">
-                  <IoGlobeOutline className="text-white text-xl" />
-                  <span className="text-white text-lg">{language}</span>
-                </div>
 
-                <IoChevronDown
-                  className={`text-white text-lg transition-transform duration-300 ${
-                    open ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {open && (
-                <div className="absolute left-0 top-full mt-2 w-full bg-[#A020F0] rounded-xl shadow-2xl border border-white/20 overflow-hidden z-9999">
-                  {languages.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => {  
-                        setLanguage(item);
-                        setOpen(false);
-                      }}
-                      className="flex items-center gap-2 px-4 py-3 text-white cursor-pointer hover:bg-purple-700 transition-colors"
-                    >
-                      <IoGlobeOutline className="text-lg" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+          <div className="flex items-center gap-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={link.label}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-lg text-white transition-colors duration-200 hover:border-blue-500 hover:text-blue-400"
+              >
+                {link.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10 grid gap-8 md:grid-cols-3 lg:mt-12 lg:grid-cols-4 lg:gap-10">
+          {footerGroups.map((group) => (
+            <div key={group.title}>
+              <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">{group.title}</h4>
+              <ul className="mt-5 space-y-3 text-sm text-slate-400">
+                {group.links.map((link) => (
+                  <li key={link} className="transition hover:text-white">
+                    <a href="#" className="cursor-pointer">{link}</a>
+                  </li>
+                ))}
+              </ul>
             </div>
+          ))}
+
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Contact</h4>
+            <ul className="mt-5 space-y-3 text-sm text-slate-400">
+              <li>pritmansuriya@gmail.com</li>
+              <li>+91 6356324903</li>
+              <li>245 Learning Avenue, Suite 300</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-3 border-t border-slate-800 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between lg:mt-12">
+          <p>© 2026 SchoolFlow. All rights reserved.</p>
+          <div className="flex gap-5">
+            <a className="transition hover:text-white">Privacy</a>
+            <a className="transition hover:text-white">Terms</a>
+            <a  className="transition hover:text-white">Cookies</a>
           </div>
         </div>
       </div>
-      {/* </div> */}
-    </section>
+    </footer>
   );
 };
 

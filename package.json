@@ -14,6 +14,7 @@
     "apexcharts": "^6.6.1",
     "formik": "^2.4.9",
     "framer-motion": "^12.43.0",
+    "lucide-react": "^1.55.0",
     "react": "^19.2.7",
     "react-apexcharts": "^2.1.1",
     "react-circular-progressbar": "^2.2.0",

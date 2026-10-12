@@ -1,148 +1,102 @@
 import React, { useState } from "react";
-import activepurple from "../assets/Activepurple.png"
+import activepurple from "../assets/Activepurple.png";
 
 const plans = [
   {
-    title: "Basic",
-    price: "Free",
-    color: "text-green-600",
-    button: "bg-lime-500",
-    featured: false,
+    title: "Starter",
+    price: "$0",
+    description: "For small pilot programs",
+    highlight: false,
+    features: ["Student records", "Basic attendance", "Single admin user", "Email support"],
   },
   {
-    title: "Best Value",
-    price: "$24",
-    color: "text-purple-600",
-    button: "bg-purple-600",
-    featured: true,
+    title: "School",
+    price: "$29",
+    description: "Most popular for growing schools",
+    highlight: true,
+    features: ["Everything in Starter", "Performance tracking", "Class scheduling", "Parent notifications", "Priority support"],
   },
   {
-    title: "Pro",
-    price: "$54",
-    color: "text-purple-600",
-    button: "bg-purple-600",
-    featured: false,
-  },
-  {
-    title: "Enterprise",
-    price: "$99",
-    color: "text-purple-600",
-    button: "bg-purple-600",
-    featured: false,
+    title: "Campus",
+    price: "$79",
+    description: "For multi-department operations",
+    highlight: false,
+    features: ["Everything in School", "Advanced reporting", "Library tools", "Custom roles", "Dedicated onboarding"],
   },
 ];
+
 const Price = () => {
   const [active, setActive] = useState(1);
   const [hovered, setHovered] = useState(null);
+
   return (
-    <section id="price" className="relative overflow-hidden  bg-white py-24">
-      {/* Background Blur */}
-      {/* <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-purple-200 opacity-40 blur-3xl"></div>
-
-       <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-purple-300 opacity-30 blur-3xl"></div> */}
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Heading */}
-        <div className="text-center items-center mb-16">
-          <h2 className="text-5xl font-bold text-gray-800">
-            <span className="text-gray-500"> Pricing &</span> Plan
+    <section id="price" className="relative overflow-hidden bg-white py-14 lg:py-20">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <div className="mb-10 text-center lg:mb-14">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Sample pricing</p>
+          <h2 className="mt-4 text-5xl font-bold text-gray-800">
+            <span className="text-gray-500">Simple plans</span> for every stage
           </h2>
-
-          <img
-            src= {activepurple}
-            alt="Purple Active"
-            className="w-14 mt-4 mb-6 ml-145"
-          />
+          <img src={activepurple} alt="Active pricing indicator" className="mt-4 mb-6 ml-auto mr-auto w-14" />
         </div>
 
-        {/* Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {plans.map((plan, index) => {
-            const isActive =
-              hovered !== null ? hovered === index : active === index;
+            const isActive = hovered !== null ? hovered === index : active === index;
+
             return (
-              <div
-                key={index}
+              <article
+                key={plan.title}
                 onClick={() => setActive(index)}
                 onMouseEnter={() => setHovered(index)}
                 onMouseLeave={() => setHovered(null)}
-                className={`
-    rounded-[28px]
-    overflow-hidden
-    bg-white
-    cursor-pointer
-    transition-all
-    border
-    border-white
-    duration-500
-    shadow-2xl
-    ${
-      isActive
-        ? "-translate-y-5 scale-105 border border-purple-600 z-20 relative"
-        : "hover:shadow-2xl"
-    }
-  `}
+                className={`rounded-2xl border bg-white p-1 shadow-xl transition-all duration-200 ${
+                  isActive ? "-translate-y-0.5 border-purple-600" : "border-slate-200 hover:border-blue-200"
+                }`}
               >
-                <div
-  className={`text-center transition-all duration-500 overflow-hidden ${
-    isActive
-      ? "bg-linear-to-r from-fuchsia-600 to-purple-700 text-white py-8 rounded-b-[90px]"
-      : "py-10 bg-linear-to-r from-lime-500 to-lime-200 text-white rounded-b-[90px]"
-  }`}
->
-                  <p
-                    className={`uppercase font-semibold transition-colors duration-300 ${
-                      isActive ? "text-white" : plan.color
-                    }`}
-                  >
-                    {plan.title}
-                  </p>
+                <div className={`rounded-xl border p-6 ${isActive ? "bg-gradient-to-br from-violet-700 to-purple-700 text-white" : "bg-slate-50 text-slate-900"}`}>
+                  <div className="flex items-center justify-between gap-4">
+                    <p className={`text-sm font-semibold uppercase tracking-[0.2em] ${isActive ? "text-purple-100" : "text-slate-500"}`}>
+                      {plan.title}
+                    </p>
+                    {plan.highlight && (
+                      <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+                        Best value
+                      </span>
+                    )}
+                  </div>
 
-                  <h3
-                    className={`text-4xl font-bold mt-2 ${
-                      isActive ? "text-white" : "text-gray-700"
-                    }`}
-                  >
-                    {plan.price}
-                  </h3>
+                  <div className="mt-6 flex items-end gap-2">
+                    <span className="text-4xl font-black">{plan.price}</span>
+                    <span className={isActive ? "text-purple-100" : "text-slate-500"}>{plan.price === "$0" ? "" : "/mo"}</span>
+                  </div>
+
+                  <p className={`mt-3 text-sm ${isActive ? "text-purple-100" : "text-slate-600"}`}>
+                    {plan.description}
+                  </p>
                 </div>
 
-                {/* Content */}
+                <div className="px-6 pb-6 pt-5">
+                  <ul className="space-y-3">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3 text-sm text-slate-600">
+                        <span className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                <div className="px-8 py-8 text-center">
-                  {[
-                    "Nam sollicitudin dignissim",
-                    "Cras convallis lacus",
-                    "Quisque ut metus",
-                    "Vivamus sit amet",
-                    "Cras convallis lacus orci",
-                  ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="py-3 border-b border-dashed text-gray-500 text-sm"
-                    >
-                      {item}
-                    </div>
-                  ))}
-
-                  <p className="text-xs text-gray-400 mt-8">
-                    Interdum et malesuada fames ac ante ipsum primis in
-                    faucibus.
-                  </p>
                   <button
-                    className={`mt-8 px-8 py-3 rounded-full text-white font-semibold transition-all duration-300
-  ${
-    isActive
-      ? "bg-linear-to-r from-fuchsia-600 to-purple-700 hover:bg-none hover:bg-gray-950"
-      : index === 0
-        ? "bg-lime-500 "
-        : "bg-lime-500"
-  }`}
+                    className={`mt-7 w-full rounded-full px-5 py-3 text-sm font-semibold transition ${
+                      isActive
+                        ? "bg-gradient-to-r from-fuchsia-600 to-purple-700 text-white hover:bg-gray-900"
+                        : "bg-slate-900 text-white hover:bg-blue-700"
+                    }`}
                   >
-                    CHOOSE PLAN
+                    {plan.price === "$0" ? "Start free" : "Choose plan"}
                   </button>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
