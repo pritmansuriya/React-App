@@ -21,109 +21,113 @@ import Growth from "./Growth";
 
 const Dashboard = () => {
   return (
-    <>
-      <Welcome />
+    <main className="w-full min-w-0 space-y-6 overflow-x-hidden p-3 sm:space-y-8 sm:p-5 lg:p-6 xl:p-8">
+      {/* Welcome Section */}
+      <section className="w-full min-w-0">
+        <Welcome />
+      </section>
 
-      <Stats1 />
+      {/* Statistics Cards */}
+      <section className="w-full min-w-0">
+        <Stats1 />
+      </section>
 
-      {/* Row 1 */}
-      <div className="grid grid-cols-12 gap-6 mt-8">
-        <div className="col-span-6">
+      {/* Row 1: Class Routine, Library, Course Statistics */}
+      <section className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-12 xl:gap-6">
+        <div className="min-w-0 md:col-span-2 xl:col-span-6">
           <ClassRoutine />
         </div>
 
-        <div className="col-span-3">
+        <div className="min-w-0 xl:col-span-3">
           <Library />
         </div>
 
-        <div className="col-span-3">
+        <div className="min-w-0 xl:col-span-3">
           <CourseStatistics />
         </div>
-      </div>
+      </section>
 
-      {/* Row 2 */}
-      <div className="grid grid-cols-12 gap-6 mt-6">
-
-        <div className="col-span-6 flex flex-col gap-6">
+      {/* Row 2: Students, Notifications and Performance */}
+      <section className="grid min-w-0 grid-cols-1 gap-5 xl:grid-cols-2 xl:gap-6">
+        {/* Left Column */}
+        <div className="flex min-w-0 flex-col gap-5 xl:gap-6">
           <StarStudent />
           <Notification />
         </div>
 
-        <div className="col-span-6 grid grid-cols-2 gap-6">
-
-          <TotalExam />
-
-          <NewCourse />
-
-          <div className="col-span-2">
-            <BestPerfomer />
+        {/* Right Column */}
+        <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-2 xl:gap-6">
+          <div className="min-w-0">
+            <TotalExam />
           </div>
 
+          <div className="min-w-0">
+            <NewCourse />
+          </div>
+
+          <div className="min-w-0 sm:col-span-2">
+            <BestPerfomer />
+          </div>
         </div>
-      {/* Row 3 */}
-      </div>
-       <div className="mt-8">
+      </section>
+
+      {/* Summary */}
+      <section className="w-full min-w-0">
         <Summary />
-      </div>
+      </section>
 
-      {/* Row 4 */}
-      <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Student Chart</h1>
-      </div>
-
+      {/* Student Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Student Chart</SectionHeading>
         <StudentChart />
-      </div>
+      </section>
 
-      {/* Row 5 */}
-      <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Fees & Admission Chart</h1>
-      </div>
-
+      {/* Fees & Admission Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Fees & Admission Chart</SectionHeading>
         <Admission />
-      </div>
+      </section>
 
-        {/* Row 6 */}
-       <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Subject Chart</h1>
-      </div>
+      {/* Subject Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Subject Chart</SectionHeading>
         <Subject />
-      </div>
+      </section>
 
-       {/* Row 7 */}
-       <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Teacher & Library Chart</h1>
-      </div>
+      {/* Teacher & Library Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Teacher & Library Chart</SectionHeading>
         <TeacherChart />
-      </div>
+      </section>
 
-      {/* Row 8 */}
-      <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Transport & Income-Expense Chart</h1>
-      </div>
+      {/* Transport & Income-Expense Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>
+          Transport & Income-Expense Chart
+        </SectionHeading>
         <Transport />
-      </div>
+      </section>
 
-      {/* Row 9 */}
-      <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Exam Result Chart</h1>
-      </div>
+      {/* Exam Result Chart */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Exam Result Chart</SectionHeading>
         <ExamChart />
-      </div>
+      </section>
 
-      {/* Row 9 */}
-      <div className="mt-8">
-        <div className="mb-8 ml-3">
-        <h1 className="text-3xl font-bold text-left text-gray-800">Top 10 Students & Growth</h1>
-      </div>
+      {/* Top Students & Growth */}
+      <section className="w-full min-w-0">
+        <SectionHeading>Top 10 Students & Growth</SectionHeading>
         <Growth />
-      </div>
-    </>
+      </section>
+    </main>
+  );
+};
+
+const SectionHeading = ({ children }) => {
+  return (
+    <h2 className="mb-4 text-xl font-bold leading-tight text-gray-800 sm:mb-6 sm:text-2xl lg:text-3xl">
+      {children}
+    </h2>
   );
 };
 

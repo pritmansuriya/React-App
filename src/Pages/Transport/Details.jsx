@@ -212,18 +212,18 @@ const Details = () => {
           {filteredRoute.map((item) => (
             <div key={item.id} className="bg-white rounded-2xl p-6 shadow-sm">
               {/* Bus Header */}
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-3">
+              <div className="mb-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-3">
                   <div className="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center">
                     <FaBus className="text-purple-600 text-lg" />
                   </div>
 
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="font-semibold text-left text-lg text-gray-800">
                       {item.bus}
                     </h3>
 
-                    <p className="text-sm text-gray-500">
+                    <p className="wrap-break-word text-sm text-gray-500">
                       {item.Route} - {item.driver}
                     </p>
                   </div>
@@ -231,12 +231,12 @@ const Details = () => {
 
                 {/* Status */}
                 {item.status === "On Route" ? (
-                  <span className="flex items-center  gap-2 px-3 py-1.5 rounded-full bg-green-50 text-green-600 text-xs font-medium">
+                  <span className="flex shrink-0 items-center gap-2 rounded-full bg-green-50 px-3 py-1.5 text-xs font-medium text-green-600">
                     <FaClock size={12} />
                     On Route
                   </span>
                 ) : (
-                  <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-green-600 text-xs font-medium">
+                  <span className="flex shrink-0 items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-green-600">
                     <FaCheckCircle size={12} />
                     Completed
                   </span>
@@ -244,7 +244,7 @@ const Details = () => {
               </div>
 
               {/* Time */}
-              <div className="grid grid-cols-4 gap-3 mb-3">
+              <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {item.times.map((time, index) => (
                   <div key={index} className="text-center">
                     <p className="text-sm font-medium text-gray-700">{time}</p>
@@ -253,7 +253,8 @@ const Details = () => {
               </div>
 
               {/* Route Line */}
-              <div className="flex items-center px-3">
+              <div className="overflow-x-auto">
+                <div className="flex min-w-max items-center px-3">
                 {item.stops.map((stop, index) => (
                   <React.Fragment key={index}>
                     <div className="flex flex-col items-center">
@@ -275,6 +276,7 @@ const Details = () => {
                     )}
                   </React.Fragment>
                 ))}
+                </div>
               </div>
 
               {/* Students */}

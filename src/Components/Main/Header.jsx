@@ -132,8 +132,8 @@ const Header = () => {
 
   return (
     <>
-      <header className="flex items-center justify-between border-r border-gray-200 px-2">
-        <div ref={searchRef} className="relative w-80 max-w-[42vw]">
+      <header className="flex min-w-0 items-center justify-between gap-2 border-r border-gray-200 px-2">
+        <div ref={searchRef} className="relative min-w-0 w-80 max-w-[42vw] flex-1">
           <input
             type="search"
             role="combobox"
@@ -186,7 +186,7 @@ const Header = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           {/* <button
             type="button"
             aria-label="Notifications"

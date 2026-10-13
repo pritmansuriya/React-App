@@ -2,47 +2,49 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../Main/Header";
 import Sidebar from "../Main/Sidebar";
-import { tr } from "framer-motion/client";
-
+import { HiOutlineBars3 } from "react-icons/hi2";
 
 const DashboardLayout = () => {
-      const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="h-screen flex bg-[#F3F6F9]">
-  {/* Sidebar */}
-  <aside
-    className={`
-      ${collapsed ? "w-24" : "w-72"}
-      h-screen
-      bg-[#084B83]
-      border-r border-[#0A4271]
-      shrink-0
-      relative  
-      overflow-visible
-      transition-all
-      duration-300
-      z-40
-      hide-scrollbar
-    `}
-  >
-    <Sidebar
-      collapsed={collapsed}
-      setCollapsed={setCollapsed}
-    />
-  </aside>
+    <div className="flex h-dvh min-h-0 overflow-hidden bg-[#F3F6F9]">
+      {/* Sidebar */}
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
 
-  {/* Main */}
-  <main className="flex-1 hide-scrollbar h-screen overflow-y-auto text-[#171A1F]">
-    <div className="sticky top-0 z-20 bg-[#F3F6F9] border-b border-slate-200 px-6 py-4">
-      <Header />
-    </div>
+      {/* Main Content */}
+      <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden text-[#171A1F]">
+        {/* Header */}
+        <header className="sticky top-0 z-30 flex shrink-0 items-center gap-3 border-b border-slate-200 bg-[#F3F6F9] px-3 py-3 sm:px-6 sm:py-4">
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(true)}
+            className="rounded-lg p-2 text-[#084B83] transition hover:bg-blue-100 lg:hidden"
+          >
+            <HiOutlineBars3 size={26} />
+          </button>
 
-    <div className="p-6">
-      <Outlet />
+          {/* Header Content */}
+          <div className="min-w-0 flex-1">
+            <Header />
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <div className="min-w-0 flex-1 p-3 sm:p-5 lg:p-6">
+          <Outlet />
+        </div>
+      </main>
     </div>
-  </main>
-</div>
   );
 };
 

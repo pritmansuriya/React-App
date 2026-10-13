@@ -24,7 +24,7 @@ const Footer = () => {
     {
       title: "Features",
       links: [
-        { name: "Student Records", href: "#feature2" },
+        { name: "Student Records", href: "#feature2" }, 
         { name: "Attendance", href: "#attendance" },
         { name: "Reports", href: "#reports" },
         { name: "Scheduling", href: "#scheduling" },

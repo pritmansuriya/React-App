@@ -85,18 +85,18 @@ const Subject = () => {
 
       {/* Box 1: Subject-wise Performance */}
       <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
               <FaBook size={24} />
             </div>
             <h2 className="text-lg font-bold text-gray-800">Subject-wise Performance</h2>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <select
               value={box1Year}
               onChange={(e) => setBox1Year(Number(e.target.value))}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+              className="min-w-0 flex-1 cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:flex-none"
             >
               {last5Years.map((year) => (
                 <option key={year} value={year}>{year}</option>
@@ -105,14 +105,14 @@ const Subject = () => {
             <select
               value={box1Semester}
               onChange={(e) => setBox1Semester(Number(e.target.value))}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+              className="min-w-0 flex-1 cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:flex-none"
             >
               <option value={1}>Semester 1</option>
               <option value={2}>Semester 2</option>
             </select>
           </div>
         </div>
-        <div className="h-[300px] w-full">
+        <div className="h-75 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart layout="vertical" data={subjectData} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f3f4f6" />
@@ -134,7 +134,7 @@ const Subject = () => {
 
       {/* Box 2: Pass vs Fail Ratio (Hover FOLLOWS MOUSE EXACTLY) */}
       <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 relative">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-50 text-green-600 rounded-lg flex gap-1">
               <FaCheckCircle size={24} />
@@ -142,11 +142,11 @@ const Subject = () => {
             </div>
             <h2 className="text-lg font-bold text-gray-800">Pass vs Fail Ratio</h2>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <select
               value={box2Year}
               onChange={(e) => setBox2Year(Number(e.target.value))}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
+              className="min-w-0 flex-1 cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 sm:flex-none"
             >
               {last5Years.map((year) => (
                 <option key={year} value={year}>{year}</option>
@@ -155,7 +155,7 @@ const Subject = () => {
             <select
               value={box2Semester}
               onChange={(e) => setBox2Semester(Number(e.target.value))}
-              className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
+              className="min-w-0 flex-1 cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 sm:flex-none"
             >
               <option value={1}>Semester 1</option>
               <option value={2}>Semester 2</option>
@@ -163,15 +163,16 @@ const Subject = () => {
           </div>
         </div>
 
-        <div className="h-[300px] w-full relative flex justify-center items-center">
-          <div className="w-[400px] h-[300px] flex items-center justify-center">
-            <PieChart width={400} height={300}>
+        <div className="relative flex h-75 w-full min-w-0 items-center justify-center">
+          <div className="h-75 w-full max-w-100">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
               <Pie
                 data={passFailData}
                 cx="50%"
                 cy="50%"
-                innerRadius={80}
-                outerRadius={120}
+                innerRadius="54%"
+                outerRadius="80%"
                 fill="#8884d8"
                 paddingAngle={5}
                 dataKey="value"
@@ -201,7 +202,8 @@ const Subject = () => {
                 }}
               />
               <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(value) => <span className="text-sm font-medium text-gray-700">{value}</span>} />
-            </PieChart>
+              </PieChart>
+            </ResponsiveContainer>
           </div>
 
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-20">

@@ -7,7 +7,6 @@ import activebar from "../assets/Activepurple.png";
 import { FaFacebookF, FaTwitter, FaGoogle, FaTimes } from "react-icons/fa";
 import { IoEyeOutline, IoEyeOffOutline, IoArrowForward } from "react-icons/io5";
 
-
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(3, "Name must be at least 3 characters")
@@ -34,84 +33,73 @@ const Register = () => {
 
   const navigate = useNavigate();
   return (
-    <section className="min-h-screen bg-[#6A1BB1] flex items-center justify-center px-5 py-10">
-      <div className="max-w-6xl w-full rounded-[30px] overflow-hidden shadow-2xl grid lg:grid-cols-2 animate-modal">
+    <section className="min-h-screen bg-[#6A1BB1] flex items-center justify-center px-3 sm:px-5 py-6 sm:py-10">
+      <div className="max-w-6xl w-full rounded-2xl sm:rounded-[30px] overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2 animate-modal">
         {/* ================= Left Side ================= */}
 
-        <div className="relative bg-[#7422B7] text-white overflow-hidden flex flex-col items-center justify-center px-10 py-14">
-          {/* Background Curves */}
-
-          {/* <div className="absolute -left-24 -top-24 w-72 h-200 rounded-full bg-white/10 rotate-12"></div> */}
-
-          {/* <div className="absolute -right-30 -bottom-37.5 w-80 h-150 rounded-full bg-black/10 rotate-12"></div> */}
-
-          {/* Close */}
-
+        <div className="relative bg-[#7422B7] text-white overflow-hidden flex flex-col items-center justify-center px-6 sm:px-10 py-10 sm:py-14">
           <FaTimes
             onClick={() => navigate("/")}
-            className="absolute top-8 left-8 text-white text-3xl cursor-pointer z-20 hover:text-gray-900 transition"
+            className="absolute top-5 left-5 sm:top-8 sm:left-8 text-2xl sm:text-3xl cursor-pointer z-20 hover:text-gray-900 transition"
           />
 
-          {/* Logo */}
+          <img src={logo} alt="logo" className="w-20 sm:w-24 z-10" />
 
-          <img src={logo} alt="logo" className="w-24 z-10" />
-
-          <h2 className="text-[50px] font-light mt-16 z-10">
+          <h2 className="text-3xl sm:text-4xl lg:text-[50px] font-light mt-10 sm:mt-16 z-10 text-center">
             Nice to meet you
           </h2>
 
-          <p className="text-xl text-gray-200 mt-3 z-10">
+          <p className="text-base sm:text-xl text-gray-200 mt-3 z-10 text-center">
             Just register to join with us
           </p>
         </div>
 
         {/* ================= Right Side ================= */}
 
-        <div className="bg-white px-12 py-10">
+        <div className="bg-white px-5 sm:px-8 lg:px-12 py-8 sm:py-10 min-w-0">
           {/* Header */}
 
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div>
-              <h2 className="text-5xl font-bold text-gray-800">Register</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800">
+                Register
+              </h2>
 
               <img src={activebar} alt="" className="w-14 mt-3" />
             </div>
 
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-start sm:justify-center sm:mt-8">
               <Link
                 to="/signin"
-                className="flex items-center gap-2 text-purple-500 hover:text-purple-700 transition"
+                className="flex items-center gap-2 text-purple-500 hover:text-purple-700 transition text-sm sm:text-base"
               >
-                <IoArrowForward className="text-xl" />
-                <span className="">Already have account?</span>
+                <IoArrowForward className="text-xl shrink-0" />
+                <span>Already have account?</span>
               </Link>
             </div>
           </div>
 
           {/* Social Buttons */}
 
-          <div className="flex gap-4 mt-10">
-            <button className="flex items-center cursor-pointer gap-2 bg-blue-600 text-white rounded-full px-5 py-2">
-              <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mt-8 sm:mt-10">
+            <button className="flex items-center justify-center gap-2 bg-blue-600 text-white rounded-full px-4 py-2.5 flex-1 min-w-0">
+              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
                 <FaFacebookF className="text-sm" />
               </span>
-
               <span className="text-sm">FACEBOOK</span>
             </button>
 
-            <button className="flex items-center cursor-pointer gap-2 bg-sky-500 text-white rounded-full px-5 py-2">
-              <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center">
+            <button className="flex items-center justify-center gap-2 bg-sky-500 text-white rounded-full px-4 py-2.5 flex-1 min-w-0">
+              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
                 <FaTwitter className="text-sm" />
               </span>
-
               <span className="text-sm">TWITTER</span>
             </button>
 
-            <button className="flex items-center cursor-pointer gap-2 bg-red-500 text-white rounded-full px-5 py-2">
-              <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center">
+            <button className="flex items-center justify-center gap-2 bg-red-500 text-white rounded-full px-4 py-2.5 flex-1 min-w-0">
+              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
                 <FaGoogle className="text-sm" />
               </span>
-
               <span className="text-sm">GOOGLE</span>
             </button>
           </div>
@@ -178,7 +166,7 @@ const Register = () => {
                     className="text-red-500 text-sm mt-2"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 ">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <div className="relative">
                       <Field
@@ -235,7 +223,7 @@ const Register = () => {
 
                 {/* Bottom */}
 
-                <div className="flex items-center justify-between pt-5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-5">
                   <div>
                     <label className="flex items-start gap-3 text-sm">
                       <Field
@@ -260,7 +248,7 @@ const Register = () => {
                   </div>
                   <button
                     type="submit"
-                    className="bg-lime-400 cursor-pointer hover:bg-gray-900 text-white px-10 py-3 rounded-full font-semibold"
+                    className="bg-lime-400 cursor-pointer hover:bg-gray-900 text-white w-full sm:w-auto px-8 sm:px-10 py-3 rounded-full font-semibold transition"
                   >
                     CONTINUE
                   </button>

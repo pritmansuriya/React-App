@@ -43,10 +43,10 @@ export const StarStudent = () => {
   const [openMenu, setOpenMenu] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 h-85 w-full">
+    <div className="h-auto w-full rounded-2xl bg-white p-4 shadow-sm sm:h-85 sm:p-6">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">
+      <div className="mb-4 flex items-start justify-between sm:mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">
           Star Students
         </h2>
 
@@ -110,8 +110,48 @@ export const StarStudent = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Mobile list */}
+      <div className="divide-y divide-gray-100 sm:hidden">
+        {students.map((item) => (
+          <div key={item.id} className="py-3 first:pt-0 last:pb-0">
+            <div className="flex min-w-0 items-center gap-3">
+              <input
+                type="checkbox"
+                checked={selectedId === item.id}
+                onChange={() =>
+                  setSelectedId(selectedId === item.id ? null : item.id)
+                }
+                aria-label={`Select ${item.name}`}
+                className="h-4 w-4 shrink-0 cursor-pointer border border-gray-300 accent-purple-600"
+              />
+              <img
+                src={item.image}
+                alt=""
+                className="h-10 w-10 shrink-0 rounded-full object-cover"
+              />
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-semibold text-gray-800">
+                  {item.name}
+                </h3>
+                <p className="mt-0.5 text-xs text-gray-500">ID: {item.studentId}</p>
+              </div>
+            </div>
+            <dl className="ml-17 mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <dt className="text-xs text-gray-500">Marks</dt>
+                <dd className="text-sm font-semibold text-gray-800">{item.marks}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-gray-500">Percent</dt>
+                <dd className="text-sm font-semibold text-gray-800">{item.percent}</dd>
+              </div>
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full rounded-2xl">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500 text-sm">

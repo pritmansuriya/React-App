@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MdDashboard,
   MdPeople,
@@ -20,7 +20,7 @@ import {
 
 import { IoChevronDown } from "react-icons/io5";
 import { BsRocketTakeoffFill } from "react-icons/bs";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2";
 import userImage from "../../assets/SchoolLogo.png";
 
@@ -129,405 +129,388 @@ const menuItems = [
   },
 ];
 
-const Sidebar = ({ collapsed, setCollapsed }) => {
-  const [selectedMenu, setSelectedMenu] = useState("Dashboard");
+const Sidebar = ({
+  collapsed = false,
+  setCollapsed = () => {},
+  mobileOpen = false,
+  onClose = () => {},
+}) => {
   const [openMenu, setOpenMenu] = useState("");
-  const [hoveredMenu, setHoveredMenu] = useState(null);
-  const [submenuPosition, setSubmenuPosition] = useState({ top: 0 });
-  const hoverTimer = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const sidebarRef = useRef(null);
+  const location = useLocation();
 
-  const handleMouseEnter = (title, event) => {
-    if (!collapsed) return;
-
-    // Cancel closing timer
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current);
+  // Check whether the current route belongs to a menu item.
+  const isMenuActive = (item) => {
+    if (item.path) {
+      return (
+        location.pathname === item.path ||
+        (item.path !== "/dashboard" &&
+          location.pathname.startsWith(`${item.path}/`))
+      );
     }
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-
-    const submenuHeight = 170;
-    const padding = 10;
-
-    let top = rect.top;
-
-    if (top + submenuHeight > viewportHeight - padding) {
-      top = viewportHeight - submenuHeight - padding;
-    }
-
-    if (top < padding) {
-      top = padding;
-    }
-
-    setSubmenuPosition({ top });
-    setHoveredMenu(title);
+    return item.children?.some(
+      (child) =>
+        location.pathname === child.path ||
+        location.pathname.startsWith(`${child.path}/`)
+    );
   };
 
-  const handleMouseLeave = () => {
-    if (collapsed) {
-      setHoveredMenu(null);
+  // Automatically open the submenu for the current route.
+  useEffect(() => {
+    const activeParent = menuItems.find(
+      (item) => item.children?.length && isMenuActive(item)
+    );
+
+    if (activeParent) {
+      setOpenMenu(activeParent.title);
+    } else if (location.pathname === "/dashboard") {
+      setOpenMenu("");
     }
-  };
-  const handleMenuClick = (title) => {
-    setSelectedMenu(title);
-    if (!collapsed) {
-      setOpenMenu((prev) => (prev === title ? "" : title));
+  }, [location.pathname]);
+
+  // Detect desktop and mobile screens.
+  useEffect(() => {
+    const checkScreen = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  // Close the mobile drawer when clicking outside it.
+  useEffect(() => {
+    if (!isMobile || !mobileOpen) return;
+
+    const handleOutsideClick = (event) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isMobile, mobileOpen, onClose]);
+
+  // On mobile, always show menu labels and inline submenus.
+  const isCollapsed = isMobile ? false : collapsed;
+
+  const handleMenuClick = (item) => {
+    if (!item.children?.length) {
+      setOpenMenu("");
+      onClose();
+      return;
     }
+
+    // Expand or collapse the selected submenu.
+    setOpenMenu((previous) =>
+      previous === item.title ? "" : item.title
+    );
   };
 
-  const handleDashboardClick = () => {
-    setSelectedMenu("Dashboard");
-    setOpenMenu("");
-    setHoveredMenu(null);
-  };
-
-  const handleSubmenuClick = (parentTitle) => {
-    setSelectedMenu(parentTitle); // Parent menu ko selected karo
-    // Agar parent menu ka submenu open nahi hai toh open karo
-    if (openMenu !== parentTitle) {
-      setOpenMenu(parentTitle);
+  const handleNavigation = () => {
+    if (isMobile) {
+      onClose();
     }
   };
 
   return (
-    <aside className="h-screen flex flex-col bg-[#084B83] border-r border-[#0A4271] shadow-xl relative overflow-visible">
-      <div
-        className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
-      >
-        <style>
-          {`
-            .overflow-y-auto::-webkit-scrollbar {
-              display: none;
-            }
-            
-            .overflow-y-auto {
-              scrollbar-width: none;
-            }
-
-            /* Submenu styles */
-            .submenu-item {
-              position: relative;
-              transition: all 0.3s ease;
-              padding-left: 12px;
-              cursor: pointer;
-            }
-            
-            /* Hover effect - only when hovering */
-            .submenu-item::before {
-              content: '';
-              position: absolute;
-              left: 0;
-              top: 50%;
-              transform: translateY(-50%);
-              width: 3px;
-              height: 0;
-              background: #2563eb;
-              border-radius: 10px;
-              transition: height 0.3s ease;
-            }
-            
-            /* Normal state */
-            .submenu-item.normal {
-              background: transparent !important;
-              color: #cbd5e1 !important;
-            }
-            
-            .submenu-item.normal:hover {
-              background: rgba(255, 255, 255, 0.08) !important;
-              color: #ffffff !important;
-            }
-
-            .submenu-item:hover {
-              background: rgba(37, 99, 235, 0.28) !important;
-              color: #ffffff !important;
-              transform: translateX(4px);
-            }
-
-            .submenu-item.active {
-              background: rgba(37, 99, 235, 0.36) !important;
-              color: #dbeafe !important;
-              font-weight: 600 !important;
-            }
-
-            .submenu-item.active::before,
-            .submenu-item:hover::before {
-              height: 60%;
-            }
-
-            /* Main menu hover effect */
-            .main-menu-item {
-              transition: all 0.3s ease;
-              cursor: pointer;
-            }
-            .main-menu-item:hover {
-              transform: scale(1.02);
-            }
-            
-            /* Active state - Blue background with white text */
-            .main-menu-item.active {
-              background: #2563eb !important;
-              color: white !important;
-              box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
-            }
-            
-            /* Parent menu active when submenu is open - Blue background */
-            .main-menu-item.parent-active {
-              background: #2563eb !important;
-              color: white !important;
-              box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
-            }
-            
-            /* Normal state - no background */
-            .main-menu-item.normal {
-              background: transparent !important;
-              color: #cbd5e1 !important;
-            }
-            .main-menu-item.normal:hover {
-              background: rgba(255, 255, 255, 0.08) !important;
-              color: #ffffff !important;
-            }
-          `}
-        </style>
-
-        {/* Logo */}
-        <div className="flex items-center justify-center py-6">
-          <img
-            src={userImage}
-            className="w-14 h-14 object-contain"
-            alt="logo"
-          />
-          {!collapsed && (
-            <h1 className="ml-3 text-3xl font-bold text-white">
-              Schoooli
-            </h1>
-          )}
-        </div>
-
-        {/* Toggle Button */}
+    <>
+      {/* Mobile overlay */}
+      {isMobile && mobileOpen && (
         <button
-          className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2563EB] text-white hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
-          onClick={() => {
-            if (collapsed) {
-              setCollapsed(false);
-            } else {
-              setCollapsed(true);
-              setOpenMenu("");
-              setActiveSubmenu("");
-              setHoveredMenu(null);
-            }
-          }}
+          type="button"
+          aria-label="Close navigation overlay"
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-black/60"
+        />
+      )}
+
+      <aside
+        ref={sidebarRef}
+        className={`
+          fixed left-0 top-0 z-50 flex h-dvh flex-col
+          overflow-hidden border-r border-[#0A4271]
+          bg-[#084B83] text-white shadow-xl
+          transition-[width,transform] duration-300 ease-in-out
+          lg:sticky lg:top-0 lg:h-screen lg:translate-x-0
+          ${
+            isMobile
+              ? `w-72 max-w-[85vw] ${
+                  mobileOpen ? "translate-x-0" : "-translate-x-full"
+                }`
+              : isCollapsed
+                ? "w-20"
+                : "w-64"
+          }
+        `}
+      >
+        <div
+          className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3"
+          style={{ scrollbarWidth: "none" }}
         >
-          {collapsed ? (
-            <HiOutlineBars3 size={24} />
-          ) : (
-            <HiOutlineXMark size={24} />
-          )}
-        </button>
+          {/* Logo */}
+          <div
+            className={`flex items-center ${
+              isCollapsed ? "justify-center" : "justify-center"
+            } gap-3 px-2 py-6`}
+          >
+            <img
+              src={userImage}
+              alt="School logo"
+              className="h-14 w-14 shrink-0 object-contain"
+            />
 
-        {/* Menu Items */}
-        <div className={collapsed ? "px-2" : "px-3"}>
-          {menuItems.map((item) => {
-            const isParentActive =
-              hoveredMenu === item.title ||
-              (hoveredMenu === null && selectedMenu === item.title);
+            {!isCollapsed && (
+              <h1 className="text-2xl font-bold tracking-wide text-white">
+                Schoooli
+              </h1>
+            )}
+          </div>
 
-            return (
-              <div
-                key={item.title}
-                className="relative mb-2"
-                onMouseEnter={(e) => handleMouseEnter(item.title, e)}
-                onMouseLeave={handleMouseLeave}
-              >
-                {item.children && item.children.length > 0 ? (
-                  <>
-                    <div className="relative group">
+          {/* Sidebar toggle */}
+          <div className="mb-5 flex justify-center">
+            <button
+              type="button"
+              aria-label={
+                isMobile
+                  ? "Close sidebar"
+                  : isCollapsed
+                    ? "Expand sidebar"
+                    : "Collapse sidebar"
+              }
+              onClick={() => {
+                if (isMobile) {
+                  onClose();
+                } else {
+                  setCollapsed(!collapsed);
+                  setOpenMenu("");
+                }
+              }}
+              className="flex h-12 w-12 items-center justify-center rounded-xl
+                bg-[#2563EB] text-white shadow-md transition
+                hover:bg-blue-700 hover:shadow-lg"
+            >
+              {isMobile || !isCollapsed ? (
+                <HiOutlineXMark size={25} />
+              ) : (
+                <HiOutlineBars3 size={25} />
+              )}
+            </button>
+          </div>
+
+          {/* Menu items */}
+          <nav className="space-y-2 px-1">
+            {menuItems.map((item) => {
+              const hasChildren = Boolean(item.children?.length);
+              const active = isMenuActive(item);
+              const expanded = openMenu === item.title;
+
+              return (
+                <div
+                  key={item.title}
+                  className={
+                    isCollapsed && !isMobile && hasChildren
+                      ? "group relative"
+                      : ""
+                  }
+                >
+                  {hasChildren ? (
+                    <>
                       <button
-                        onClick={() => handleMenuClick(item.title)}
-                        className={`main-menu-item w-full flex items-center transition-all duration-300 rounded-2xl
+                        type="button"
+                        aria-expanded={expanded}
+                        onClick={() => handleMenuClick(item)}
+                        title={isCollapsed ? item.title : undefined}
+                        className={`
+                          flex h-14 w-full items-center rounded-2xl
+                          transition-all duration-200
                           ${
-                            collapsed
-                              ? "justify-center h-14"
-                              : "justify-between px-5 h-14"
+                            isCollapsed
+                              ? "justify-center px-2"
+                              : "justify-between px-4"
                           }
                           ${
-                            isParentActive
-                              ? "parent-active" // Blue background when submenu open or active
-                              : "normal" // Normal state
+                            active || expanded
+                              ? "bg-[#2563EB] text-white shadow-lg shadow-blue-950/20"
+                              : "text-slate-200 hover:bg-white/10 hover:text-white"
                           }
                         `}
                       >
-                        <div
-                          className={`flex items-center ${
-                            collapsed ? "justify-center" : "gap-4"
+                        <span
+                          className={`flex min-w-0 items-center ${
+                            isCollapsed ? "justify-center" : "gap-4"
                           }`}
                         >
-                          <span
-                            className={`${
-                              collapsed ? "text-3xl" : "text-2xl"
-                            } ${isParentActive ? "text-white" : ""}`}
-                          >
-                            {item.icon}
-                          </span>
-                          {!collapsed && (
-                            <span
-                              className={`font-medium text-base ${isParentActive ? "text-white" : ""}`}
-                            >
+                          <span className="shrink-0">{item.icon}</span>
+
+                          {!isCollapsed && (
+                            <span className="truncate text-left text-sm font-medium">
                               {item.title}
                             </span>
                           )}
-                        </div>
-                        {!collapsed && (
+                        </span>
+
+                        {!isCollapsed && (
                           <IoChevronDown
-                            className={`transition-transform duration-200 ${
-                              openMenu === item.title ? "rotate-180" : ""
-                            } ${isParentActive ? "text-white" : ""}`}
+                            className={`shrink-0 transition-transform duration-200 ${
+                              expanded ? "rotate-180" : ""
+                            }`}
                           />
                         )}
                       </button>
-                    </div>
 
-                    {/* Collapsed Submenu */}
-                    {collapsed && hoveredMenu === item.title && (
-                      <div
-                        className="fixed w-64 bg-[#084B83] shadow-2xl rounded-2xl z-9999 border border-[#0A4271]"
-                        style={{
-                          left: "88px",
-                          top: `${submenuPosition.top}px`,
-                          maxHeight: "calc(100vh - 20px)",
-                          overflowY: "auto",
-                          scrollbarWidth: "none",
-                          msOverflowStyle: "none",
-                        }}
-                      >
-                        <style>
-                          {`
-                            .fixed::-webkit-scrollbar {
-                              display: none;
-                            }
-                            .fixed {
-                              scrollbar-width: none;
+                      {/* Inline submenu: visible on expanded sidebar and mobile */}
+                      {!isCollapsed && (
+                        <div
+                          className={`
+                            grid transition-[grid-template-rows] duration-300
+                            ${
+                              expanded
+                                ? "grid-rows-[1fr]"
+                                : "grid-rows-[0fr]"
                             }
                           `}
-                        </style>
-
-                        <div className="px-5 py-4 text-sm font-semibold text-slate-100 border-b border-[#0A4271] bg-[#084B83] rounded-t-2xl sticky top-0 z-10">
-                          <span className="flex items-center gap-3">
-                            <span className="text-blue-400 text-xl">
-                              {item.icon}
-                            </span>
-                            {item.title}
-                          </span>
-                        </div>
-
-                        <div className="py-2">
-                          {item.children.map((sub) => (
-                            <NavLink
-                              key={sub.title}
-                              to={sub.path}
-                              end
-                              onClick={() => {
-                                setHoveredMenu(null);
-                                handleSubmenuClick(item.title);
-                              }}
-                              className={({ isActive }) =>
-                                `submenu-item flex items-center h-11 px-4 mx-2 rounded-lg transition-all duration-200 text-sm
-      ${isActive ? "active" : "normal"}`
-                              }
-                            >
-                              <span className="w-2 h-2 rounded-full bg-blue-400 mr-3 shrink-0"></span>
-
-                              {sub.title}
-                            </NavLink>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Expanded Submenu */}
-                    {!collapsed && openMenu === item.title && (
-                      <div className="relative ml-6 pl-4 mt-1">
-                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-500 rounded-full"></div>
-                        {item.children.map((sub) => (
-                          <NavLink
-                            key={sub.title}
-                            to={sub.path}
-                            end
-                            onClick={() => {
-                              handleSubmenuClick(item.title);
-                            }}
-                            className={({ isActive }) =>
-                              `submenu-item flex items-center h-11 rounded-lg px-4 mb-0.5 transition-all duration-200 text-sm
-    ${isActive ? "active" : "normal"}`
-                            }
-                          >
-                            <span className="absolute -left-4.25 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-l-2 border-b-2 border-slate-600 rounded-bl-lg"></span>
-                            <span className="w-2 h-2 rounded-full bg-blue-400 mr-3 shrink-0"></span>
-                            {sub.title}
-                          </NavLink>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  /* Dashboard */
-                  <NavLink
-                    to={item.path}
-                    onClick={handleDashboardClick}
-                    className={() =>
-                      `main-menu-item w-full flex items-center transition-all duration-300 rounded-2xl
-                        ${collapsed ? "justify-center h-14" : "px-5 h-14"}
-                        ${selectedMenu === "Dashboard" ? "active" : "normal"}
-                      `
-                    }
-                  >
-                    <div
-                      className={`flex items-center ${
-                        collapsed ? "justify-center" : "gap-4"
-                      }`}
-                    >
-                      <span
-                        className={`${collapsed ? "text-3xl" : "text-2xl"} ${selectedMenu === "Dashboard" ? "text-white" : ""}`}
-                      >
-                        {item.icon}
-                      </span>
-                      {!collapsed && (
-                        <span
-                          className={`font-medium text-base ${selectedMenu === "Dashboard" ? "text-white" : ""}`}
                         >
+                          <div className="min-h-0 overflow-hidden">
+                            <div className="relative ml-6 mt-2 space-y-1 border-l-2 border-blue-400/50 py-1 pl-3">
+                              {item.children.map((sub) => (
+                                <NavLink
+                                  key={sub.path}
+                                  to={sub.path}
+                                  end
+                                  onClick={handleNavigation}
+                                  className={({ isActive }) => `
+                                    flex min-h-10 items-center rounded-lg
+                                    px-3 py-2 text-sm transition-all duration-200
+                                    ${
+                                      isActive
+                                        ? "bg-blue-500/30 font-semibold text-white"
+                                        : "text-blue-100 hover:translate-x-1 hover:bg-white/10 hover:text-white"
+                                    }
+                                  `}
+                                >
+                                  <span className="mr-3 h-2 w-2 shrink-0 rounded-full bg-blue-300" />
+                                  <span>{sub.title}</span>
+                                </NavLink>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Collapsed desktop submenu: show on hover */}
+                      {isCollapsed && !isMobile && (
+                        <div
+                          className="invisible absolute left-full top-0 z-100 ml-2
+                            w-60 rounded-xl border border-[#0A4271] bg-[#084B83]
+                            p-3 opacity-0 shadow-2xl transition-all duration-200
+                            group-hover:visible group-hover:opacity-100
+                            group-focus-within:visible group-focus-within:opacity-100"
+                        >
+                            <p className="mb-2 border-b border-white/10 px-2 pb-3 text-sm font-semibold">
+                              {item.title}
+                            </p>
+
+                            <div className="space-y-1">
+                              {item.children.map((sub) => (
+                                <NavLink
+                                  key={sub.path}
+                                  to={sub.path}
+                                  end
+                                  onClick={handleNavigation}
+                                  className={({ isActive }) => `
+                                    block rounded-lg px-3 py-2.5 text-sm
+                                    transition-colors
+                                    ${
+                                      isActive
+                                        ? "bg-blue-600 text-white"
+                                        : "text-blue-100 hover:bg-white/10 hover:text-white"
+                                    }
+                                  `}
+                                >
+                                  {sub.title}
+                                </NavLink>
+                              ))}
+                            </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <NavLink
+                      to={item.path}
+                      end
+                      onClick={() => {
+                        setOpenMenu("");
+                        handleNavigation();
+                      }}
+                      title={isCollapsed ? item.title : undefined}
+                      className={({ isActive }) => `
+                        flex h-14 items-center rounded-2xl
+                        transition-all duration-200
+                        ${
+                          isCollapsed
+                            ? "justify-center px-2"
+                            : "gap-4 px-4"
+                        }
+                        ${
+                          isActive
+                            ? "bg-[#2563EB] text-white shadow-lg shadow-blue-950/20"
+                            : "text-slate-200 hover:bg-white/10 hover:text-white"
+                        }
+                      `}
+                    >
+                      <span className="shrink-0">{item.icon}</span>
+
+                      {!isCollapsed && (
+                        <span className="text-sm font-medium">
                           {item.title}
                         </span>
                       )}
-                    </div>
-                  </NavLink>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                    </NavLink>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
 
-        {/* Upgrade Card */}
-        {!collapsed && (
-          <div className="px-3 pb-3 mt-4">
-            <div className="rounded-2xl bg-[#2563EB] text-white p-5 text-center shadow-lg hover:shadow-xl transition-all duration-200">
-              <BsRocketTakeoffFill
-                size={40}
-                className="mx-auto mb-3 text-yellow-300"
-              />
-              <p className="text-sm font-medium">Free Plan</p>
-              <p className="text-sm mb-4 text-blue-100">Upgrade to Pro</p>
-              <button className="bg-white text-blue-700 font-semibold rounded-xl w-full py-2.5 text-sm hover:bg-gray-50 transition-all duration-200 shadow-md hover:shadow-lg">
-                Upgrade Now 🚀
-              </button>
+          {/* Upgrade card */}
+          {!isCollapsed && (
+            <div className="mt-6 px-1 pb-4">
+              <div className="rounded-2xl bg-[#2563EB] p-5 text-center text-white shadow-lg">
+                <BsRocketTakeoffFill
+                  size={36}
+                  className="mx-auto mb-3 text-yellow-300"
+                />
+
+                <p className="text-sm font-semibold">Free Plan</p>
+                <p className="mb-4 mt-1 text-sm text-blue-100">
+                  Upgrade to Pro
+                </p>
+
+                <button
+                  type="button"
+                  className="w-full rounded-xl bg-white py-2.5 text-sm
+                    font-semibold text-blue-700 transition hover:bg-blue-50"
+                >
+                  Upgrade Now 🚀
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </aside>
+          )}
+        </div>
+      </aside>
+    </>
   );
 };
 

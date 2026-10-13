@@ -88,7 +88,7 @@ const Transport = () => {
       
        {/* Box 1 */}
       <div className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-orange-50 text-orange-600 rounded-lg">
               <FaBus size={24} />
@@ -98,7 +98,7 @@ const Transport = () => {
           <select 
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+            className="w-full cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 sm:w-auto"
           >
             {months.map((month, index) => (
               <option key={month} value={index}>{month}</option>
@@ -107,14 +107,14 @@ const Transport = () => {
         </div>
         
         <div className="h-[380px] w-full flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%" minWidth={350} minHeight={350}>
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={transportData}
                 cx="50%" 
                 cy="48%" 
                 innerRadius={0}
-                outerRadius={130} 
+                outerRadius="70%" 
                 fill="#8884d8"
                 dataKey="value"
                 label={({ name, percent }) => 
