@@ -1,9 +1,12 @@
-import { time } from "framer-motion";
-import { pre } from "framer-motion/client";
 import React, { useEffect, useState } from "react";
-import { FiEdit2 } from "react-icons/fi";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiClock,
+  FiEdit2,
+  FiMapPin,
+} from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
-import { date } from "yup";
 import { saveActivity } from "../hooks/useMessages";
 
 const defailtExamTimetables = {
@@ -32,7 +35,7 @@ const defailtExamTimetables = {
     {
       date: "Oct 23",
       day: "Thursday",
-      subject: "Histroy",
+      subject: "History",
       room: "Room 07",
       time: "9:00 - 11:00",
     },
@@ -77,7 +80,7 @@ const defailtExamTimetables = {
     {
       date: "Oct 24",
       day: "Friday",
-      subject: "Histroy",
+      subject: "History",
       room: "Room 13",
       time: "9:00 - 10:30",
     },
@@ -108,7 +111,7 @@ const defailtExamTimetables = {
     {
       date: "Oct 23",
       day: "Thursday",
-      subject: "Histroy",
+      subject: "History",
       room: "Room 23",
       time: "9:00 - 12:00",
     },
@@ -125,7 +128,7 @@ const defailtExamTimetables = {
     {
       date: "Oct 20",
       day: "Monday",
-      subject: "Histroy",
+      subject: "History",
       room: "Room 30",
       time: "9:00 - 12:00",
     },
@@ -191,7 +194,7 @@ const defailtExamTimetables = {
     {
       date: "Oct 24",
       day: "Friday",
-      subject: "Histroy",
+      subject: "History",
       room: "Room 43",
       time: "9:00 - 11:30",
     },
@@ -280,215 +283,233 @@ const ExamTimetable = () => {
     );
     setShowEditModal(false);
   };
-  return (
-    <div className="min-h-screen bg-[#EAF1FF] p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Exam Timetable
-          </h2>
-          {/* Drop down */}
-          <div className="flex items-center gap-3">
-            {/* <label className='text-sm font-medium text-gray-600'>
-              Select  Class
-            </label> */}
+  const classExams = examTimetables[selectedClass] ?? [];
 
-            <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl outline-none "
-            >
-              <option value="Class 5">Class 5</option>
-              <option value="Class 6">Class 6</option>
-              <option value="Class 7">Class 7</option>
-              <option value="Class 8">Class 8</option>
-              <option value="Class 9">Class 9</option>
-            </select>
+  return (
+    <div className="min-h-full">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-white to-blue-50 shadow-sm">
+          <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-blue-700">
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                Academic schedule
+              </div>
+              <h2 className="text-2xl font-bold text-left tracking-tight text-slate-900 sm:text-3xl">
+                Exam Timetable
+              </h2>
+              <p className="mt-2 text-sm text-slate-500">
+                View exam dates, subjects, rooms, and timings by class.
+              </p>
+            </div>
+
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-slate-600">
+              Select class
+              <select
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                className="min-w-44 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              >
+                {Object.keys(defailtExamTimetables).map((className) => (
+                  <option key={className} value={className}>
+                    {className}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section className="grid gap-4 sm:grid-cols-3">
+          <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+              <FiBookOpen size={22} />
+            </span>
+            <div>
+              <p className="text-sm text-slate-500">Scheduled exams</p>
+              <p className="mt-1 text-2xl font-bold text-slate-900">
+                {classExams.length}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+              <FiCalendar size={22} />
+            </span>
+            <div>
+              <p className="text-sm text-slate-500">Schedule period</p>
+              <p className="mt-1 text-lg font-bold text-slate-900">
+                {classExams.length
+                  ? `${classExams[0].date} – ${classExams[classExams.length - 1].date}`
+                  : "No exams scheduled"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+              <FiClock size={22} />
+            </span>
+            <div>
+              <p className="text-sm text-slate-500">First exam</p>
+              <p className="mt-1 text-lg font-bold text-slate-900">
+                {classExams[0]?.time ?? "Not scheduled"}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-4 sm:px-6">
+            <h3 className="font-semibold text-slate-900">{selectedClass} schedule</h3>
+            <p className="text-sm text-slate-500">
+              {classExams.length} exam{classExams.length === 1 ? "" : "s"} listed
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] text-left">
+              <thead className="bg-slate-50">
+                <tr className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <th className="px-5 py-4 sm:px-6">Date</th>
+                  <th className="px-5 py-4">Subject</th>
+                  <th className="px-5 py-4">Room</th>
+                  <th className="px-5 py-4">Exam time</th>
+                  <th className="px-5 py-4 text-right sm:px-6">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {classExams.map((item, index) => (
+                  <tr
+                    key={`${selectedClass}-${item.date}-${item.subject}`}
+                    className="transition-colors hover:bg-blue-50/50"
+                  >
+                    <td className="whitespace-nowrap px-5 py-4 sm:px-6">
+                      <p className="font-semibold text-slate-800">{item.date}</p>
+                      <p className="mt-0.5 text-xs text-slate-500">{item.day}</p>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4">
+                      <span className="inline-flex items-center gap-2 font-medium text-slate-800">
+                        <span className="h-2 w-2 rounded-full bg-blue-500" />
+                        {item.subject}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-600">
+                      <span className="inline-flex items-center gap-2">
+                        <FiMapPin className="text-slate-400" />
+                        {item.room}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-600">
+                      <span className="inline-flex items-center gap-2">
+                        <FiClock className="text-slate-400" />
+                        {item.time}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-right sm:px-6">
+                      <button
+                        type="button"
+                        aria-label={`Edit ${item.subject} exam`}
+                        onClick={() => openEditModal(item, index)}
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                      >
+                        <FiEdit2 size={17} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {classExams.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="px-6 py-12 text-center text-sm text-slate-500"
+                    >
+                      No exams are scheduled for this class.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      {showEditModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-sm"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setShowEditModal(false);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-exam-title"
+            className="my-auto w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-7"
+          >
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+               
+                <h3 id="edit-exam-title" className="text-xl text-left font-bold text-slate-900">
+                  Edit exam schedule
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Update the date, subject, room, or exam time.
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close edit dialog"
+                onClick={() => setShowEditModal(false)}
+                className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+              >
+                <IoClose size={22} />
+              </button>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                { label: "Date", name: "date" },
+                { label: "Day", name: "day" },
+                { label: "Subject", name: "subject" },
+                { label: "Room", name: "room" },
+                { label: "Exam time", name: "time" },
+              ].map(({ label, name }) => (
+                <label
+                  key={name}
+                  className={`flex flex-col gap-1.5 text-sm font-medium text-slate-700 ${
+                    name === "subject" ? "sm:col-span-2" : ""
+                  }`}
+                >
+                  {label}
+                  <input
+                    type="text"
+                    name={name}
+                    value={editFormData[name]}
+                    onChange={handleFormChange}
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  />
+                </label>
+              ))}
+            </div>
+
+            <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setShowEditModal(false)}
+                className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveEdit}
+                className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200"
+              >
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto rounded-2xl shadow-lg">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-800">
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Date
-                </th>
-
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Day
-                </th>
-
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Subject
-                </th>
-
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Room
-                </th>
-
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Exam Time
-                </th>
-
-                <th className="px-5 py-4 text-center text-lg font-semibold text-white">
-                  Action
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {examTimetables[selectedClass].map((item, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition"
-                >
-                  <td className="px-5 py-4 items-center text-gray-700">
-                    {item.date}
-                  </td>
-
-                  <td className="px-5 py-4 items-center text-gray-700">
-                    {item.day}
-                  </td>
-
-                  <td className="px-5 py-4 items-center text-gray-700">
-                    {item.subject}
-                  </td>
-
-                  <td className="px-5 py-4 items-center text-gray-700">
-                    {item.room}
-                  </td>
-
-                  <td className="px-5 py-4 items-center text-gray-700">
-                    {item.time}
-                  </td>
-
-                  <td className="px-5 py-4 text-center">
-                    <button onClick={() => openEditModal(item, index)}
-                            className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition"
-                    >
-                      <FiEdit2 size={17} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* EditModal */}
-          {showEditModal && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-              <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-xl">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-gray-800">
-                    Edit Exam Timetable
-                  </h3>
-
-                  <button
-                    onClick={() => setShowEditModal(false)}
-                    className="text-gray-500 hover:text-gray-800 text-2xl"
-                  >
-                    <IoClose />
-                  </button>
-                </div>
-
-                {/* Date */}
-                <div className="mb-4">
-                  <label className="block text-sm text-left font-medium text-gray-700 mb-2">
-                    Date
-                  </label>
-
-                  <input
-                    type="text"
-                    name="date"
-                    value={editFormData.date}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* Day */}
-                <div className="mb-4">
-                  <label className="block text-sm text-left font-medium text-gray-700 mb-2">
-                    Day
-                  </label>
-
-                  <input
-                    type="text"
-                    name="day"
-                    value={editFormData.day}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* subject */}
-                <div className="mb-4">
-                  <label className="block text-sm text-left font-medium text-gray-700 mb-2">
-                    Subject
-                  </label>
-
-                  <input
-                    type="text"
-                    name="subject"
-                    value={editFormData.subject}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* Room */}
-                <div className="mb-4">
-                  <label className="block text-sm text-left font-medium text-gray-700 mb-2">
-                    Room
-                  </label>
-
-                  <input
-                    type="text"
-                    name="room"
-                    value={editFormData.room}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* Time */}
-                <div className="mb-4">
-                  <label className="block text-sm text-left font-medium text-gray-700 mb-2">
-                    Exam Time
-                  </label>
-
-                  <input
-                    type="text"
-                    name="time"
-                    value={editFormData.time}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* Buttons */}
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={() => setShowEditModal(false)}
-                    className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    onClick={handleSaveEdit}
-                    className="px-5 py-2.5 rounded-xl bg-purple-600 text-white hover:bg-purple-700"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

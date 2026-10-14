@@ -121,7 +121,7 @@ const AddStudent = () => {
           {/* Header */}
           <div className="flex flex-col gap-4 border-b border-gray-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl text-left font-semibold text-gray-800">
                 Add Student
               </h2>
               <p className="mt-1 text-sm text-gray-500">

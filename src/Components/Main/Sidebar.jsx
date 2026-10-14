@@ -22,6 +22,7 @@ import { IoChevronDown } from "react-icons/io5";
 import { BsRocketTakeoffFill } from "react-icons/bs";
 import { NavLink, useLocation } from "react-router-dom";
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2";
+import { createPortal } from "react-dom";
 import userImage from "../../assets/SchoolLogo.png";
 
 const menuItems = [
@@ -137,7 +138,9 @@ const Sidebar = ({
 }) => {
   const [openMenu, setOpenMenu] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
   const sidebarRef = useRef(null);
+  const submenuCloseTimeout = useRef(null);
   const location = useLocation();
 
   // Check whether the current route belongs to a menu item.
@@ -219,10 +222,52 @@ const Sidebar = ({
   };
 
   const handleNavigation = () => {
+    setHoveredSubmenu(null);
     if (isMobile) {
       onClose();
     }
   };
+
+  const openCollapsedSubmenu = (event, item) => {
+    if (submenuCloseTimeout.current) {
+      window.clearTimeout(submenuCloseTimeout.current);
+      submenuCloseTimeout.current = null;
+    }
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    setHoveredSubmenu({
+      item,
+      left: bounds.right + 8,
+      top: Math.max(8, Math.min(bounds.top, window.innerHeight - 170)),
+    });
+  };
+
+  const scheduleSubmenuClose = () => {
+    if (submenuCloseTimeout.current) {
+      window.clearTimeout(submenuCloseTimeout.current);
+    }
+
+    submenuCloseTimeout.current = window.setTimeout(() => {
+      setHoveredSubmenu(null);
+      submenuCloseTimeout.current = null;
+    }, 120);
+  };
+
+  const keepSubmenuOpen = () => {
+    if (submenuCloseTimeout.current) {
+      window.clearTimeout(submenuCloseTimeout.current);
+      submenuCloseTimeout.current = null;
+    }
+  };
+
+  useEffect(
+    () => () => {
+      if (submenuCloseTimeout.current) {
+        window.clearTimeout(submenuCloseTimeout.current);
+      }
+    },
+    []
+  );
 
   return (
     <>
@@ -258,6 +303,7 @@ const Sidebar = ({
         <div
           className="flex-1 overflow-y-auto overflow-x-hidden px-2 py-3"
           style={{ scrollbarWidth: "none" }}
+          onScroll={() => setHoveredSubmenu(null)}
         >
           {/* Logo */}
           <div
@@ -321,8 +367,28 @@ const Sidebar = ({
                   key={item.title}
                   className={
                     isCollapsed && !isMobile && hasChildren
-                      ? "group relative"
+                      ? "relative"
                       : ""
+                  }
+                  onMouseEnter={
+                    isCollapsed && !isMobile && hasChildren
+                      ? (event) => openCollapsedSubmenu(event, item)
+                      : undefined
+                  }
+                  onMouseLeave={
+                    isCollapsed && !isMobile && hasChildren
+                      ? scheduleSubmenuClose
+                      : undefined
+                  }
+                  onFocusCapture={
+                    isCollapsed && !isMobile && hasChildren
+                      ? (event) => openCollapsedSubmenu(event, item)
+                      : undefined
+                  }
+                  onBlurCapture={
+                    isCollapsed && !isMobile && hasChildren
+                      ? scheduleSubmenuClose
+                      : undefined
                   }
                 >
                   {hasChildren ? (
@@ -341,9 +407,11 @@ const Sidebar = ({
                               : "justify-between px-4"
                           }
                           ${
-                            active || expanded
+                            active
                               ? "bg-[#2563EB] text-white shadow-lg shadow-blue-950/20"
-                              : "text-slate-200 hover:bg-white/10 hover:text-white"
+                              : expanded
+                                ? "bg-white/10 text-white"
+                                : "text-slate-200 hover:bg-white/10 hover:text-white"
                           }
                         `}
                       >
@@ -395,13 +463,23 @@ const Sidebar = ({
                                     px-3 py-2 text-sm transition-all duration-200
                                     ${
                                       isActive
-                                        ? "bg-blue-500/30 font-semibold text-white"
+                                        ? "translate-x-1 bg-gradient-to-r from-blue-400/40 via-blue-500/25 to-blue-500/10 font-semibold text-white shadow-md shadow-blue-950/20 ring-1 ring-inset ring-blue-200/30"
                                         : "text-blue-100 hover:translate-x-1 hover:bg-white/10 hover:text-white"
                                     }
                                   `}
                                 >
-                                  <span className="mr-3 h-2 w-2 shrink-0 rounded-full bg-blue-300" />
-                                  <span>{sub.title}</span>
+                                  {({ isActive }) => (
+                                    <>
+                                      <span
+                                        className={`mr-3 h-2 w-2 shrink-0 rounded-full transition-all ${
+                                          isActive
+                                            ? "bg-white shadow-[0_0_0_3px_rgba(147,197,253,0.3)]"
+                                            : "bg-blue-300"
+                                        }`}
+                                      />
+                                      <span>{sub.title}</span>
+                                    </>
+                                  )}
                                 </NavLink>
                               ))}
                             </div>
@@ -409,42 +487,6 @@ const Sidebar = ({
                         </div>
                       )}
 
-                      {/* Collapsed desktop submenu: show on hover */}
-                      {isCollapsed && !isMobile && (
-                        <div
-                          className="invisible absolute left-full top-0 z-100 ml-2
-                            w-60 rounded-xl border border-[#0A4271] bg-[#084B83]
-                            p-3 opacity-0 shadow-2xl transition-all duration-200
-                            group-hover:visible group-hover:opacity-100
-                            group-focus-within:visible group-focus-within:opacity-100"
-                        >
-                            <p className="mb-2 border-b border-white/10 px-2 pb-3 text-sm font-semibold">
-                              {item.title}
-                            </p>
-
-                            <div className="space-y-1">
-                              {item.children.map((sub) => (
-                                <NavLink
-                                  key={sub.path}
-                                  to={sub.path}
-                                  end
-                                  onClick={handleNavigation}
-                                  className={({ isActive }) => `
-                                    block rounded-lg px-3 py-2.5 text-sm
-                                    transition-colors
-                                    ${
-                                      isActive
-                                        ? "bg-blue-600 text-white"
-                                        : "text-blue-100 hover:bg-white/10 hover:text-white"
-                                    }
-                                  `}
-                                >
-                                  {sub.title}
-                                </NavLink>
-                              ))}
-                            </div>
-                        </div>
-                      )}
                     </>
                   ) : (
                     <NavLink
@@ -510,6 +552,63 @@ const Sidebar = ({
           )}
         </div>
       </aside>
+      {hoveredSubmenu &&
+        !isMobile &&
+        isCollapsed &&
+        createPortal(
+          <div
+            className="fixed z-[60] w-60 rounded-xl border border-[#0A4271]
+              bg-[#084B83] p-3 text-white shadow-2xl"
+            style={{
+              left: hoveredSubmenu.left,
+              top: hoveredSubmenu.top,
+              maxHeight: "calc(100vh - 16px)",
+              overflowY: "auto",
+            }}
+            onMouseEnter={keepSubmenuOpen}
+            onMouseLeave={scheduleSubmenuClose}
+            onFocusCapture={keepSubmenuOpen}
+            onBlurCapture={scheduleSubmenuClose}
+          >
+            <p className="mb-2 border-b border-white/10 px-2 pb-3 text-sm font-semibold">
+              {hoveredSubmenu.item.title}
+            </p>
+
+            <div className="space-y-1">
+              {hoveredSubmenu.item.children.map((sub) => (
+                <NavLink
+                  key={sub.path}
+                  to={sub.path}
+                  end
+                  onClick={handleNavigation}
+                  className={({ isActive }) => `
+                    flex min-h-10 items-center rounded-lg px-3 py-2.5 text-sm
+                    transition-all duration-200
+                    ${
+                      isActive
+                        ? "translate-x-1 bg-gradient-to-r from-blue-400/40 via-blue-500/25 to-blue-500/10 font-semibold text-white shadow-md shadow-blue-950/20 ring-1 ring-inset ring-blue-200/30"
+                        : "text-blue-100 hover:translate-x-1 hover:bg-white/10 hover:text-white"
+                    }
+                  `}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`mr-3 h-2 w-2 shrink-0 rounded-full transition-all ${
+                          isActive
+                            ? "bg-white shadow-[0_0_0_3px_rgba(147,197,253,0.3)]"
+                            : "bg-blue-300"
+                        }`}
+                      />
+                      {sub.title}
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 };

@@ -19,7 +19,9 @@ const DashboardLayout = () => {
       />
 
       {/* Main Content */}
-      <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden text-[#171A1F]">
+      <main
+        className="dashboard-scrollbar flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden text-[#171A1F]"
+      >
         {/* Header */}
         <header className="sticky top-0 z-30 flex shrink-0 items-center gap-3 border-b border-slate-200 bg-[#F3F6F9] px-3 py-3 sm:px-6 sm:py-4">
           {/* Mobile Menu Button */}

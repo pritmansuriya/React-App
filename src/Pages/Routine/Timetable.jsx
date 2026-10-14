@@ -1,6 +1,7 @@
 import { saveActivity } from "../hooks/useMessages";
 import React, { useState, useEffect } from "react";
 import { IoClose } from "react-icons/io5";
+import { FiBookOpen, FiCalendar, FiClock, FiEdit2 } from "react-icons/fi";
 
 const TimeTable = () => {
   // Time slots (periods)
@@ -100,17 +101,15 @@ const TimeTable = () => {
   }, [timetable]);
 
   const currentTimetable = timetable[selectedClass] || timetableData['10-A'];
+  const subjectCount = new Set(
+    Object.values(currentTimetable).flat().filter((subject) => subject !== "Break")
+  ).size;
 
   const handleClassChange = (event) => {
     setSelectedClass(event.target.value);
   };
 
   const openEditForm = (day, subject, periodIndex) => {
-    if (subject === "Break") {
-      alert(' Break period cannot be edited!');
-      return;
-    }
-
     setEditFormData({
       day: day,
       periodIndex: periodIndex,
@@ -149,11 +148,6 @@ const TimeTable = () => {
       return;
     }
 
-    if (editFormData.subject === 'Break') {
-      alert(' Cannot set subject as Break!');
-      return;
-    }
-
     const { day, periodIndex, subject } = editFormData;
 
     setTimetable(prev => {
@@ -170,201 +164,240 @@ const TimeTable = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF1FF] py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 relative">
-          <div className="absolute right-0 top-0 flex gap-2">
-            <button
-              onClick={() => setShowEditForm(!showEditForm)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
-                showEditForm 
-                  ? 'bg-green-600 text-white hover:bg-green-700' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              {showEditForm ? ' Editing' : ' Edit'}
-            </button>
+    <div className="min-h-full">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-white to-blue-50 shadow-sm">
+          <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+            <div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-blue-700">
+                <span className="h-2 w-2 rounded-full bg-blue-600" />
+                Weekly schedule
+              </div>
+              <h1 className="text-2xl text-left font-bold tracking-tight text-slate-900 sm:text-3xl">
+                Class Timetable
+              </h1>
+              <p className="mt-2 text-sm text-slate-500">
+                Academic Year 2025–26 <span className="mx-1 text-slate-300">/</span> {selectedClass}
+              </p>
+            </div>
 
-            <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
-              <select
-                value={selectedClass}
-                onChange={handleClassChange}
-                className="px-3 py-1 border-0 bg-transparent text-gray-700 font-medium rounded-md outline-none cursor-pointer"
+            <div className="flex flex-col gap-3 min-[420px]:flex-row">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-slate-600">
+                Select class
+                <select
+                  value={selectedClass}
+                  onChange={handleClassChange}
+                  className="min-w-36 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                >
+                  {Object.keys(timetableData).map((className) => (
+                    <option key={className} value={className}>{className}</option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                aria-pressed={showEditForm}
+                onClick={() => setShowEditForm((isEditing) => !isEditing)}
+                className={`self-end inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-4 ${
+                  showEditForm
+                    ? "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-100"
+                    : "bg-blue-600 text-white shadow-sm hover:bg-blue-700 focus:ring-blue-200"
+                }`}
               >
-                <option value="10-A">10-A</option>
-                <option value="10-B">10-B</option>
-                <option value="10-C">10-C</option>
-                <option value="11-A">11-A</option>
-                <option value="11-B">11-B</option>
-              </select>
+                <FiEdit2 size={16} />
+                {showEditForm ? "Done editing" : "Edit timetable"}
+              </button>
             </div>
           </div>
+        </section>
 
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800">Class Time Table</h1>
-            <p className="text-sm text-gray-500 mt-3">
-              Academic Year 2025-26 - {selectedClass}
-            </p>
-          </div>
-        </div>
+        <section className="grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              label: "School days",
+              value: days.length,
+              icon: <FiCalendar size={21} />,
+              tone: "bg-blue-50 text-blue-600",
+            },
+            {
+              label: "Periods per day",
+              value: periods.length,
+              icon: <FiClock size={21} />,
+              tone: "bg-indigo-50 text-indigo-600",
+            },
+            {
+              label: "Subjects this week",
+              value: subjectCount,
+              icon: <FiBookOpen size={21} />,
+              tone: "bg-sky-50 text-sky-600",
+            },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.tone}`}>
+                {stat.icon}
+              </span>
+              <div>
+                <p className="text-sm text-slate-500">{stat.label}</p>
+                <p className="mt-1 text-2xl font-bold text-slate-900">{stat.value}</p>
+              </div>
+            </div>
+          ))}
+        </section>
 
-        {/* Edit Form */}
         {showEditForm && (
-          <div className="mb-6 bg-white rounded-2xl shadow-lg p-6 border-2 border-blue-200">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-gray-800"> Edit Subject</h2>
+          <section className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
+            <div className="mb-5 flex items-start justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">Edit a lesson</h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Choose the day and period, then enter the subject.
+                </p>
+              </div>
               <button
+                type="button"
+                aria-label="Close edit form"
                 onClick={() => setShowEditForm(false)}
-                className="text-gray-400 hover:text-gray-600 text-2xl"
+                className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
               >
-                <IoClose />
+                <IoClose size={21} />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
-                  Select Day
-                </label>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-slate-700">
+                Day
                 <select
                   value={editFormData.day}
                   onChange={handleDayChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                 >
-                  {days.map((day) => (
-                    <option key={day} value={day}>{day}</option>
-                  ))}
+                  {days.map((day) => <option key={day} value={day}>{day}</option>)}
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm text-left font-medium text-gray-700 mb-1">
-                  Select Period
-                </label>
+              </label>
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-slate-700">
+                Period
                 <select
                   value={editFormData.periodIndex}
                   onChange={handlePeriodChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                 >
                   {periods.map((period, index) => (
-                    <option key={index} value={index}>{period}</option>
+                    <option key={period} value={index}>{period}</option>
                   ))}
                 </select>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-left text-sm font-medium text-gray-700 mb-1">
-                  Subject Name
-                </label>
+              </label>
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-slate-700 sm:col-span-2 lg:col-span-1">
+                Subject
                 <input
                   type="text"
                   name="subject"
                   value={editFormData.subject}
                   onChange={handleFormChange}
-                  placeholder="Enter subject name..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter subject name"
+                  className="rounded-xl border border-slate-200 px-3.5 py-2.5 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                 />
-              </div>
+              </label>
             </div>
 
-            <div className="mt-4 flex gap-2">
+            <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
-                onClick={handleSaveEdit}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-              >
-                Save Changes
-              </button>
-              <button
+                type="button"
                 onClick={() => setShowEditForm(false)}
-                className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium"
+                className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
               >
                 Cancel
               </button>
+              <button
+                type="button"
+                onClick={handleSaveEdit}
+                className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200"
+              >
+                Save changes
+              </button>
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Time Table */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-4 sm:px-6">
+            <h2 className="font-semibold text-slate-900">{selectedClass} weekly schedule</h2>
+            <p className="text-sm text-slate-500">
+              {showEditForm
+                ? "Select any lesson or break cell to edit it."
+                : "Select Edit timetable to make changes to a lesson."}
+            </p>
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[960px] border-separate border-spacing-0 text-left">
               <thead>
-                <tr className="bg-gray-800">
-                  <th className="px-4 py-3 text-center text-xs font-medium text-white uppercase tracking-wider border-r border-gray-700">
+                <tr className="bg-slate-50">
+                  <th className="sticky left-0 z-10 min-w-32 border-b border-r border-slate-200 bg-slate-50 px-4 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Time
                   </th>
                   {days.map((day) => (
                     <th
                       key={day}
-                      className="px-4 py-3 text-center text-xs font-medium text-white uppercase tracking-wider border-r border-gray-700 last:border-r-0"
+                      className="min-w-32 border-b border-r border-slate-200 px-4 py-4 text-center text-xs font-semibold uppercase tracking-wide text-slate-500 last:border-r-0"
                     >
                       {day}
                     </th>
                   ))}
                 </tr>
               </thead>
-
               <tbody>
-                {periods.map((period, periodIndex) => {
-                  const isBreakPeriod = days.some(
-                    (day) => currentTimetable[day][periodIndex] === "Break",
-                  );
+                {periods.map((period, periodIndex) => (
+                  <tr key={period} className="group">
+                    <th className="sticky left-0 z-10 whitespace-nowrap border-b border-r border-slate-100 bg-white px-4 py-3 text-left text-xs font-medium text-slate-500 group-hover:bg-slate-50">
+                      {period}
+                    </th>
+                    {days.map((day) => {
+                      const subject = currentTimetable[day][periodIndex];
+                      const isBreak = subject === "Break";
 
-                  return (
-                    <tr
-                      key={periodIndex}
-                      className={`hover:bg-gray-50 transition ${
-                        isBreakPeriod ? "bg-red-50" : ""
-                      }`}
-                    >
-                      <td
-                        className={`px-4 py-3 text-sm font-medium border-r border-gray-200 whitespace-nowrap ${
-                          isBreakPeriod
-                            ? "text-red-600 font-bold bg-red-50"
-                            : "text-gray-600 bg-gray-50"
-                        }`}
-                      >
-                        {period}
-                      </td>
-
-                      {days.map((day) => {
-                        const subject = currentTimetable[day][periodIndex];
-                        const isBreak = subject === "Break";
-
-                        return (
-                          <td
-                            key={`${day}-${periodIndex}`}
-                            className={`px-4 py-3 text-center border-r border-gray-200 last:border-r-0 ${
-                              isBreakPeriod ? "bg-red-50" : ""
-                            } ${!isBreak && showEditForm ? 'cursor-pointer hover:bg-blue-50' : ''}`}
-                            onClick={() => {
-                              if (showEditForm) {
-                                openEditForm(day, subject, periodIndex);
-                              }
-                            }}
-                          >
-                            {isBreak ? (
-                              <span className="text-sm font-bold text-red-600">
-                                Break
-                              </span>
-                            ) : (
-                              <span className={`text-sm font-medium ${
-                                showEditForm ? 'text-blue-600' : 'text-gray-700'
-                              }`}>
-                                {subject}
-                              </span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
+                      return (
+                        <td
+                          key={`${day}-${periodIndex}`}
+                          className="border-b border-r border-slate-100 p-2 text-center last:border-r-0"
+                        >
+                          {showEditForm ? (
+                            <button
+                              type="button"
+                              aria-label={`Edit ${isBreak ? "break" : subject} period for ${day}, ${period}`}
+                              onClick={() => openEditForm(day, subject, periodIndex)}
+                              className={`inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl px-2 py-2 text-xs font-semibold transition focus:outline-none focus:ring-4 sm:text-sm ${
+                                isBreak
+                                  ? "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200 hover:bg-amber-100 focus:ring-amber-100"
+                                  : "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-100 hover:bg-blue-100 focus:ring-blue-100"
+                              }`}
+                            >
+                              {isBreak && <FiClock className="shrink-0" size={13} />}
+                              <span>{subject}</span>
+                              <FiEdit2 className="ml-1 shrink-0 opacity-60" size={12} />
+                            </button>
+                          ) : (
+                            <span
+                              className={`inline-flex min-h-10 w-full items-center justify-center rounded-xl px-2 py-2 text-xs font-semibold sm:text-sm ${
+                                isBreak
+                                  ? "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-100"
+                                  : "bg-slate-50 text-slate-700 group-hover:bg-white"
+                              }`}
+                            >
+                              {isBreak && <FiClock className="mr-1.5 shrink-0" size={13} />}
+                              {subject}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

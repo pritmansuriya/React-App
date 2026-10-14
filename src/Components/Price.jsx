@@ -71,7 +71,7 @@ const Price = () => {
                     <span className={isActive ? "text-purple-100" : "text-slate-500"}>{plan.price === "$0" ? "" : "/mo"}</span>
                   </div>
 
-                  <p className={`mt-3 text-sm ${isActive ? "text-purple-100" : "text-slate-600"}`}>
+                  <p className={`mt-3 text-left text-sm ${isActive ? "text-purple-100" : "text-slate-600"}`}>
                     {plan.description}
                   </p>
                 </div>
