@@ -126,9 +126,9 @@ const Register = () => {
 
             <button
               type="button"
-              className="flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2.5 text-slate-700 transition hover:border-red-200 hover:bg-red-50"
+              className="flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-red-500 px-3 py-2.5 text-slate-700 transition hover:border-red-200 hover:bg-red-50"
             >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-red-500">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
                 <FaGoogle className="text-sm" />
               </span>
               <span className="text-xs sm:text-sm">GOOGLE</span>
