@@ -9,7 +9,6 @@ import AllTeachers from "../Pages/Teachers/AllTeacher";
 import ApplyLeave from "../Pages/Teachers/ApplyLeave";
 import MainPage from "./MainPage";
 import Register from "./Register";
-import Contact from "./Contact";
 import SignIn2 from "./SignIn2";
 import Info from "./Info";
 import Notfound from "./Notfound";
@@ -40,7 +39,6 @@ const AppRoutes = () => {
       <Route path="/" element={<MainPage />} />
       <Route path="/signin" element={<SignIn2 />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/contact" element={<Contact />} />
       <Route path="/info1" element={<Info />} />
 
       <Route path="/dashboard" element={<DashboardLayout />}>

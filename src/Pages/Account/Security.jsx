@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   FiAlertCircle,
@@ -14,21 +15,26 @@ import {
 
 const readPreference = (key, defaultValue) => {
   if (typeof window === "undefined") return defaultValue;
+
   const storedValue = window.localStorage.getItem(key);
+
   return storedValue === null ? defaultValue : storedValue === "true";
 };
 
 const Security = () => {
   const [twoStepEnabled, setTwoStepEnabled] = useState(() =>
-    readPreference("accountTwoStepEnabled", false),
+    readPreference("accountTwoStepEnabled", false)
   );
+
   const [signInAlertsEnabled, setSignInAlertsEnabled] = useState(() =>
-    readPreference("accountSignInAlertsEnabled", true),
+    readPreference("accountSignInAlertsEnabled", true)
   );
+
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
   const [passwords, setPasswords] = useState({
     current: "",
     next: "",
@@ -36,31 +42,100 @@ const Security = () => {
   });
 
   const updatePreference = (key, value, setter) => {
-    window.localStorage.setItem(key, String(value));
+    localStorage.setItem(key, String(value));
     setter(value);
   };
 
   const handlePasswordSubmit = (event) => {
     event.preventDefault();
-    setPasswordMessage("");
-
-    if (passwords.next.length < 8) {
-      setPasswordError("Use at least 8 characters for your new password.");
-      return;
-    }
-    if (passwords.next !== passwords.confirm) {
-      setPasswordError("The new password and confirmation do not match.");
-      return;
-    }
-    if (passwords.next === passwords.current) {
-      setPasswordError("Choose a new password that differs from the current one.");
-      return;
-    }
 
     setPasswordError("");
-    setPasswordMessage(
-      "Password changes are not connected to an account service yet.",
-    );
+    setPasswordMessage("");
+
+    try {
+      // Read registered users.
+      const storedUsers = JSON.parse(
+        localStorage.getItem("users") || "[]"
+      );
+
+      // Support both the old single-user format and the users array.
+      const users = Array.isArray(storedUsers)
+        ? storedUsers
+        : storedUsers?.email
+          ? [storedUsers]
+          : [];
+
+      // Read the current login session.
+      const loggedInUser = JSON.parse(
+        localStorage.getItem("loggedInUser") || "null"
+      );
+
+      if (!loggedInUser?.email) {
+        throw new Error(
+          "No logged-in account found. Please log in again."
+        );
+      }
+
+      // Find the account by email.
+      const userIndex = users.findIndex(
+        (user) =>
+          user.email?.trim().toLowerCase() ===
+          loggedInUser.email.trim().toLowerCase()
+      );
+
+      if (userIndex === -1) {
+        throw new Error(
+          "Account not found. Please log out, register an account, and log in again."
+        );
+      }
+
+      // Check the current password.
+      if (users[userIndex].password !== passwords.current) {
+        throw new Error("Your current password is incorrect.");
+      }
+
+      // Validate the new password.
+      if (passwords.next.length < 8) {
+        throw new Error(
+          "Your new password must contain at least 8 characters."
+        );
+      }
+
+      if (passwords.next !== passwords.confirm) {
+        throw new Error(
+          "The new password and confirmation do not match."
+        );
+      }
+
+      if (passwords.next === passwords.current) {
+        throw new Error(
+          "Choose a new password that differs from your current password."
+        );
+      }
+
+      // Save the new password to the registered account.
+      users[userIndex].password = passwords.next;
+
+      localStorage.setItem("users", JSON.stringify(users));
+
+      setPasswordMessage(
+        "Password updated successfully! You can now log in with your new password."
+      );
+
+      setPasswords({
+        current: "",
+        next: "",
+        confirm: "",
+      });
+
+      setShowPasswords(false);
+    } catch (error) {
+      setPasswordError(
+        error instanceof Error
+          ? error.message
+          : "Unable to update password. Please try again."
+      );
+    }
   };
 
   const toggleClassName = (enabled) =>
@@ -77,7 +152,11 @@ const Security = () => {
         <p className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-teal-700">
           Account
         </p>
-        <h1 className="text-3xl font-semibold text-slate-900">Security</h1>
+
+        <h1 className="text-3xl font-semibold text-slate-900">
+          Security
+        </h1>
+
         <p className="mt-2 text-sm text-slate-500">
           Manage your sign-in protection and account access.
         </p>
@@ -91,10 +170,14 @@ const Security = () => {
             <FiShield size={21} aria-hidden="true" />
           )}
         </span>
+
         <div>
           <p className="text-sm font-semibold text-slate-900">
-            {twoStepEnabled ? "Two-step verification is enabled" : "Protect your account"}
+            {twoStepEnabled
+              ? "Two-step verification is enabled"
+              : "Protect your account"}
           </p>
+
           <p className="mt-1 text-sm text-slate-600">
             {twoStepEnabled
               ? "Your account has an additional sign-in protection setting enabled."
@@ -104,17 +187,25 @@ const Security = () => {
       </div>
 
       <div className="space-y-6">
+        {/* Change password */}
         <section className="border-y border-slate-200 bg-white">
           <div className="flex items-start gap-4 px-5 py-5 sm:px-6">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-slate-100 text-slate-700">
               <FiKey aria-hidden="true" />
             </span>
+
             <div className="min-w-0 flex-1">
               <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Password</h2>
-                  <p className="mt-1 text-sm text-slate-500">Update your account password.</p>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    Password
+                  </h2>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Update your account password.
+                  </p>
                 </div>
+
                 <button
                   type="button"
                   onClick={() => {
@@ -130,7 +221,10 @@ const Security = () => {
               </div>
 
               {showPasswordForm && (
-                <form onSubmit={handlePasswordSubmit} className="mt-6 border-t border-slate-200 pt-5">
+                <form
+                  onSubmit={handlePasswordSubmit}
+                  className="mt-6 border-t border-slate-200 pt-5"
+                >
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <label className="block text-sm font-medium text-slate-700 sm:col-span-2">
                       Current password
@@ -140,11 +234,15 @@ const Security = () => {
                         autoComplete="current-password"
                         value={passwords.current}
                         onChange={(event) =>
-                          setPasswords((current) => ({ ...current, current: event.target.value }))
+                          setPasswords((current) => ({
+                            ...current,
+                            current: event.target.value,
+                          }))
                         }
                         className={passwordFieldClassName}
                       />
                     </label>
+
                     <label className="block text-sm font-medium text-slate-700">
                       New password
                       <input
@@ -154,11 +252,15 @@ const Security = () => {
                         autoComplete="new-password"
                         value={passwords.next}
                         onChange={(event) =>
-                          setPasswords((current) => ({ ...current, next: event.target.value }))
+                          setPasswords((current) => ({
+                            ...current,
+                            next: event.target.value,
+                          }))
                         }
                         className={passwordFieldClassName}
                       />
                     </label>
+
                     <label className="block text-sm font-medium text-slate-700">
                       Confirm new password
                       <input
@@ -168,7 +270,10 @@ const Security = () => {
                         autoComplete="new-password"
                         value={passwords.confirm}
                         onChange={(event) =>
-                          setPasswords((current) => ({ ...current, confirm: event.target.value }))
+                          setPasswords((current) => ({
+                            ...current,
+                            confirm: event.target.value,
+                          }))
                         }
                         className={passwordFieldClassName}
                       />
@@ -177,22 +282,36 @@ const Security = () => {
 
                   <button
                     type="button"
-                    onClick={() => setShowPasswords((current) => !current)}
+                    onClick={() =>
+                      setShowPasswords((current) => !current)
+                    }
                     className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
                   >
-                    {showPasswords ? <FiEyeOff aria-hidden="true" /> : <FiEye aria-hidden="true" />}
+                    {showPasswords ? (
+                      <FiEyeOff aria-hidden="true" />
+                    ) : (
+                      <FiEye aria-hidden="true" />
+                    )}
+
                     {showPasswords ? "Hide passwords" : "Show passwords"}
                   </button>
 
                   {passwordError && (
-                    <p role="alert" className="mt-3 flex items-center gap-2 text-sm text-rose-700">
+                    <p
+                      role="alert"
+                      className="mt-3 flex items-center gap-2 text-sm text-rose-700"
+                    >
                       <FiAlertCircle aria-hidden="true" />
                       {passwordError}
                     </p>
                   )}
+
                   {passwordMessage && (
-                    <p role="status" className="mt-3 flex items-center gap-2 text-sm text-amber-800">
-                      <FiAlertCircle aria-hidden="true" />
+                    <p
+                      role="status"
+                      className="mt-3 flex items-center gap-2 text-sm text-emerald-700"
+                    >
+                      <FiCheckCircle aria-hidden="true" />
                       {passwordMessage}
                     </p>
                   )}
@@ -212,21 +331,29 @@ const Security = () => {
           </div>
         </section>
 
+        {/* Sign-in protection */}
         <section className="border-y border-slate-200 bg-white">
           <div className="flex items-start gap-4 px-5 py-5 sm:px-6">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-teal-50 text-teal-700">
               <FiSmartphone aria-hidden="true" />
             </span>
+
             <div className="min-w-0 flex-1">
-              <h2 className="text-base font-semibold text-slate-900">Sign-in protection</h2>
+              <h2 className="text-base font-semibold text-slate-900">
+                Sign-in protection
+              </h2>
+
               <div className="mt-4 divide-y divide-slate-200">
                 <div className="flex items-center justify-between gap-5 py-4 first:pt-0">
                   <div>
-                    <p className="text-sm font-medium text-slate-800">Two-step verification</p>
+                    <p className="text-sm font-medium text-slate-800">
+                      Two-step verification
+                    </p>
                     <p className="mt-1 text-sm text-slate-500">
                       Require an additional verification step when signing in.
                     </p>
                   </div>
+
                   <button
                     type="button"
                     role="switch"
@@ -236,7 +363,7 @@ const Security = () => {
                       updatePreference(
                         "accountTwoStepEnabled",
                         !twoStepEnabled,
-                        setTwoStepEnabled,
+                        setTwoStepEnabled
                       )
                     }
                     className={toggleClassName(twoStepEnabled)}
@@ -248,13 +375,17 @@ const Security = () => {
                     />
                   </button>
                 </div>
+
                 <div className="flex items-center justify-between gap-5 py-4 last:pb-0">
                   <div>
-                    <p className="text-sm font-medium text-slate-800">New sign-in alerts</p>
+                    <p className="text-sm font-medium text-slate-800">
+                      New sign-in alerts
+                    </p>
                     <p className="mt-1 text-sm text-slate-500">
                       Get notified when your account is accessed from a new device.
                     </p>
                   </div>
+
                   <button
                     type="button"
                     role="switch"
@@ -264,7 +395,7 @@ const Security = () => {
                       updatePreference(
                         "accountSignInAlertsEnabled",
                         !signInAlertsEnabled,
-                        setSignInAlertsEnabled,
+                        setSignInAlertsEnabled
                       )
                     }
                     className={toggleClassName(signInAlertsEnabled)}
@@ -281,17 +412,24 @@ const Security = () => {
           </div>
         </section>
 
+        {/* Active session */}
         <section className="border-y border-slate-200 bg-white">
           <div className="flex items-start gap-4 px-5 py-5 sm:px-6">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-sky-50 text-sky-700">
               <FiMonitor aria-hidden="true" />
             </span>
+
             <div className="min-w-0 flex-1">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                 <div>
-                  <h2 className="text-base font-semibold text-slate-900">Active session</h2>
-                  <p className="mt-1 text-sm text-slate-500">Current browser</p>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    Active session
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">
+                    Current browser
+                  </p>
                 </div>
+
                 <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                   <span className="h-1.5 w-1.5 rounded-full bg-current" />
                   This device

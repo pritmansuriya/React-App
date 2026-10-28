@@ -33,52 +33,61 @@ const Feature3 = () => {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative py-24 overflow-hidden bg-white">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <section className="relative overflow-hidden bg-white py-16 transition-colors duration-300 dark:bg-slate-950 sm:py-20 lg:py-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         {/* Heading */}
-        <h2 className="text-7xl font-bold text-gray-800 text-center">
-          <span className="text-gray-500">Quisque ut</span> Metus
+        <h2 className="text-center text-4xl font-bold text-gray-800 transition-colors duration-300 dark:text-white sm:text-5xl lg:text-7xl">
+          <span className="text-gray-500 dark:text-slate-400">
+            Quisque ut
+          </span>{" "}
+          Metus
         </h2>
 
         <img
           src={activePurple}
           alt="Purple Active"
-          className="w-14 mt-4 mb-6 mx-auto"
+          className="mx-auto mb-6 mt-4 w-14"
         />
 
-        {/* Buttons */}
-        <div className="flex justify-center mt-12">
-          <div className="inline-flex gap-12 border-b">
+        {/* Tabs */}
+        <div className="mt-12 flex justify-center">
+          <div className="flex max-w-full gap-6 overflow-x-auto border-b border-gray-200 dark:border-slate-700 sm:gap-10 lg:gap-12">
             {tabsData.map((tab, index) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActive(index)}
-                className={`pb-4 font-semibold transition-all relative ${
+                aria-selected={active === index}
+                role="tab"
+                className={`relative shrink-0 pb-4 text-sm font-semibold transition-colors duration-200 sm:text-base ${
                   active === index
-                    ? "text-purple-600"
-                    : "text-gray-500"
+                    ? "text-purple-600 dark:text-purple-400"
+                    : "text-gray-500 hover:text-gray-800 dark:text-slate-400 dark:hover:text-slate-200"
                 }`}
               >
                 {tab.title}
 
                 {active === index && (
-                  <span className="absolute left-0 bottom-0 w-full h-1 bg-purple-600 rounded-full"></span>
+                  <span className="absolute bottom-0 left-0 h-1 w-full rounded-full bg-purple-600 dark:bg-purple-400" />
                 )}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Content */}
-        <div className="text-center mt-14">
-          <h3 className="text-gray-700 mt-6 max-w-7xl text-5xl leading-13 mx-auto">
+        {/* Tab Content */}
+        <div className="mt-10 text-center sm:mt-14">
+          <h3
+            role="tabpanel"
+            className="mx-auto mt-6 max-w-5xl text-2xl leading-relaxed text-gray-700 transition-colors duration-300 dark:text-slate-200 sm:text-3xl lg:text-5xl"
+          >
             {tabsData[active].description}
           </h3>
 
           <img
             src={tabsData[active].image}
             alt={tabsData[active].title}
-            className="mx-auto mt-14 hover:scale-110 transition-transform duration-300 rounded-3xl"
+            className="mx-auto mt-10 h-auto max-w-full rounded-3xl transition-transform duration-300 hover:scale-[1.02] sm:mt-14"
           />
         </div>
       </div>

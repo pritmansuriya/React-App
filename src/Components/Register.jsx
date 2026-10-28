@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+
 import logo from "../assets/SchoolLogo.png";
+
 import {
   FaFacebookF,
   FaTwitter,
   FaGoogle,
   FaTimes,
 } from "react-icons/fa";
+
 import {
   IoEyeOutline,
   IoEyeOffOutline,
@@ -18,90 +21,134 @@ import {
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(3, "Name must be at least 3 characters")
-    .required("Name is requried"),
+    .required("Name is required"),
 
   email: Yup.string()
-    .email("Invalid emial")
-    .required("Email is requried"),
+    .email("Invalid email")
+    .required("Email is required"),
 
   password: Yup.string()
     .matches(
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%*]).{8,}$/,
-      "Password must contain at least one uppercase latter,one lowercase letter,one number and one special character.",
+      "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character."
     )
-    .required("Password is requried"),
+    .required("Password is required"),
 
   repeatPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Password do not match")
-    .required("Repeat Password is requried"),
+    .oneOf([Yup.ref("password")], "Passwords do not match")
+    .required("Repeat password is required"),
 
   terms: Yup.boolean().oneOf(
     [true],
-    "Please accept Terms & Privacy Policy",
+    "Please accept Terms & Privacy Policy"
   ),
 });
 
+const saveRegisteredUser = (values) => {
+  const savedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+
+  // Support array storage and the older single-user format.
+  const users = Array.isArray(savedUsers)
+    ? savedUsers
+    : savedUsers?.email
+      ? [savedUsers]
+      : [];
+
+  const email = values.email.trim().toLowerCase();
+
+  const existingUser = users.find(
+    (user) => user.email?.trim().toLowerCase() === email
+  );
+
+  if (existingUser) {
+    throw new Error("An account with this email already exists.");
+  }
+
+  const newUser = {
+    id: crypto.randomUUID(),
+    name: values.name.trim(),
+    email,
+    password: values.password,
+  };
+
+  users.push(newUser);
+  localStorage.setItem("users", JSON.stringify(users));
+};
+
 const Register = () => {
-  const [showPassword, setShowPasswod] = useState(false);
-  const [showRepeatPassword, setShowRepeatPasswod] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const navigate = useNavigate();
 
+  const inputClass =
+    "w-full min-w-0 rounded-md border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-violet-400 dark:focus:ring-violet-500/20";
+
+  const socialButtonClass =
+    "flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-white transition";
+
   return (
-    <section className="min-h-screen bg-[#EDE9FE] flex items-center justify-center px-3 sm:px-5 py-6 sm:py-10">
-      <div className="max-w-6xl w-full rounded-2xl sm:rounded-[30px] overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2 animate-modal">
+    <section className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#EDE9FE] via-[#F5F3FF] to-[#E0E7FF] px-3 py-6 transition-colors duration-300 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 sm:px-5 sm:py-10">
+      {/* Main card */}
+      <div className="animate-modal grid w-full max-w-6xl grid-cols-1 overflow-hidden rounded-2xl border border-white/80 bg-white shadow-2xl transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30 sm:rounded-[30px] lg:grid-cols-2">
+        {/* Left side */}
+        <div className="relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#7C3AED] to-[#4F46E5] px-6 py-10 text-white sm:px-10 sm:py-14">
+          <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-400/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-indigo-300/20 blur-3xl" />
 
-        {/* ================= Left Side ================= */}
-
-        <div className="relative bg-gradient-to-br from-[#7C3AED] to-[#4F46E5] text-white overflow-hidden flex flex-col items-center justify-center px-6 sm:px-10 py-10 sm:py-14">
-          <FaTimes
+          <button
+            type="button"
             onClick={() => navigate("/")}
-            className="absolute top-5 left-5 sm:top-8 sm:left-8 text-2xl sm:text-3xl cursor-pointer z-20 hover:text-gray-200 transition"
+            aria-label="Return to home"
+            className="absolute left-5 top-5 z-20 cursor-pointer text-2xl transition hover:rotate-90 hover:text-violet-200 sm:left-8 sm:top-8 sm:text-3xl"
+          >
+            <FaTimes />
+          </button>
+
+          <img
+            src={logo}
+            alt="SchoolFlow logo"
+            className="relative z-10 w-20 rounded-lg bg-white p-2 shadow-lg sm:w-24"
           />
 
-          <img src={logo} alt="logo" className="w-20 sm:w-24 z-10" />
-
-          <h2 className="text-3xl sm:text-4xl lg:text-[50px] font-light mt-10 sm:mt-16 z-10 text-center">
+          <h2 className="relative z-10 mt-10 text-center text-3xl font-light sm:mt-16 sm:text-4xl lg:text-[50px]">
             Nice to meet you
           </h2>
 
-          <p className="text-base sm:text-xl text-violet-100 mt-3 z-10 text-center">
+          <p className="relative z-10 mt-3 text-center text-base text-violet-100 sm:text-xl">
             Just register to join with us
           </p>
+
+          <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-fuchsia-300 via-violet-200 to-indigo-300" />
         </div>
 
-        {/* ================= Right Side ================= */}
-
-        <div className="bg-white px-5 sm:px-8 lg:px-12 py-8 sm:py-10 min-w-0">
-
+        {/* Right side */}
+        <div className="min-w-0 bg-white px-5 py-8 transition-colors duration-300 dark:bg-slate-900 sm:px-8 sm:py-10 lg:px-12">
           {/* Header */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-white sm:text-4xl lg:text-5xl">
+              Register
+            </h2>
 
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-            <div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800">
-                Register
-              </h2>
-            </div>
-
-            <div className="flex justify-start sm:justify-center sm:mt-8">
+            <div className="flex justify-start sm:mt-8 sm:justify-center">
               <Link
                 to="/signin"
-                className="flex items-center gap-2 text-[#7C3AED] hover:text-[#4F46E5] transition text-sm sm:text-base"
+                className="flex items-center gap-2 text-sm text-[#7C3AED] transition hover:text-[#4F46E5] dark:text-violet-400 dark:hover:text-violet-300 sm:text-base"
               >
-                <IoArrowForward className="text-xl shrink-0" />
+                <IoArrowForward className="shrink-0 text-xl" />
                 <span>Already have account?</span>
               </Link>
             </div>
           </div>
 
-          {/* Social Buttons */}
-
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mt-8 sm:mt-10">
+          {/* Social buttons */}
+          <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:gap-4">
             <button
               type="button"
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 py-2.5 flex-1 min-w-0 transition"
+              onClick={() => alert("Facebook registration is not connected yet.")}
+              className={`${socialButtonClass} bg-blue-600 hover:bg-blue-700`}
             >
-              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
                 <FaFacebookF className="text-sm" />
               </span>
               <span className="text-sm">FACEBOOK</span>
@@ -109,9 +156,10 @@ const Register = () => {
 
             <button
               type="button"
-              className="flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 text-white rounded-full px-4 py-2.5 flex-1 min-w-0 transition"
+              onClick={() => alert("Twitter registration is not connected yet.")}
+              className={`${socialButtonClass} bg-sky-500 hover:bg-sky-600`}
             >
-              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
                 <FaTwitter className="text-sm" />
               </span>
               <span className="text-sm">TWITTER</span>
@@ -119,9 +167,10 @@ const Register = () => {
 
             <button
               type="button"
-              className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2.5 flex-1 min-w-0 transition"
+              onClick={() => alert("Google registration is not connected yet.")}
+              className={`${socialButtonClass} bg-red-500 hover:bg-red-600`}
             >
-              <span className="w-6 h-6 shrink-0 rounded-full bg-white text-black flex items-center justify-center">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
                 <FaGoogle className="text-sm" />
               </span>
               <span className="text-sm">GOOGLE</span>
@@ -129,19 +178,17 @@ const Register = () => {
           </div>
 
           {/* Divider */}
+          <div className="my-8 flex items-center gap-3 sm:my-10">
+            <div className="flex-1 border-t border-slate-200 dark:border-slate-700" />
 
-          <div className="flex items-center my-10">
-            <div className="flex-1 border-t border-slate-200"></div>
-
-            <span className="mx-5 text-slate-400 text-sm whitespace-nowrap">
+            <span className="whitespace-nowrap text-center text-sm text-slate-400 dark:text-slate-500">
               Or register with email
             </span>
 
-            <div className="flex-1 border-t border-slate-200"></div>
+            <div className="flex-1 border-t border-slate-200 dark:border-slate-700" />
           </div>
 
-          {/* Form */}
-
+          {/* Registration form */}
           <Formik
             initialValues={{
               name: "",
@@ -151,75 +198,80 @@ const Register = () => {
               terms: false,
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              localStorage.setItem("users", JSON.stringify(values));
-
-              alert("Registration Successful");
-
-              navigate("/signin");
+            onSubmit={(values, { setSubmitting, setFieldError }) => {
+              try {
+                saveRegisteredUser(values);
+                alert("Registration successful");
+                navigate("/signin");
+              } catch (error) {
+                setFieldError("email", error.message);
+              } finally {
+                setSubmitting(false);
+              }
             }}
           >
-            {() => (
+            {({ isSubmitting }) => (
               <Form className="space-y-5">
-
+                {/* Name */}
                 <div>
                   <Field
                     type="text"
                     name="name"
                     placeholder="Name"
-                    className="w-full border border-slate-200 rounded-md px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                    autoComplete="name"
+                    className={inputClass}
                   />
 
                   <ErrorMessage
                     name="name"
                     component="p"
-                    className="text-red-500 text-sm mt-2"
+                    className="mt-2 text-sm text-red-500"
                   />
                 </div>
 
+                {/* Email */}
                 <div>
                   <Field
-                    type="text"
+                    type="email"
                     name="email"
                     placeholder="Email"
-                    className="w-full border border-slate-200 rounded-md px-4 py-3 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                    autoComplete="email"
+                    className={inputClass}
                   />
 
                   <ErrorMessage
                     name="email"
                     component="p"
-                    className="text-red-500 text-sm mt-2"
+                    className="mt-2 text-sm text-red-500"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
+                {/* Password fields */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <div className="relative">
                       <Field
                         type={showPassword ? "text" : "password"}
                         name="password"
                         placeholder="Password"
-                        className="w-full border border-slate-200 rounded-md px-4 py-3 pr-11 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                        autoComplete="new-password"
+                        className={`${inputClass} pr-11`}
                       />
 
                       <button
                         type="button"
-                        onClick={() => setShowPasswod(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-sm cursor-pointer text-[#7C3AED] z-10 font-medium"
+                        onClick={() => setShowPassword((previous) => !previous)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-lg text-[#7C3AED] transition hover:text-[#4F46E5] dark:text-violet-400 dark:hover:text-violet-300"
                       >
-                        {showPassword ? (
-                          <IoEyeOffOutline />
-                        ) : (
-                          <IoEyeOutline />
-                        )}
+                        {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
                       </button>
                     </div>
 
                     <ErrorMessage
                       name="password"
                       component="p"
-                      className="text-red-500 text-sm mt-2"
+                      className="mt-2 text-sm text-red-500"
                     />
                   </div>
 
@@ -229,15 +281,21 @@ const Register = () => {
                         type={showRepeatPassword ? "text" : "password"}
                         name="repeatPassword"
                         placeholder="Repeat Password"
-                        className="w-full border border-slate-200 rounded-md px-4 py-3 pr-11 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
+                        autoComplete="new-password"
+                        className={`${inputClass} pr-11`}
                       />
 
                       <button
                         type="button"
                         onClick={() =>
-                          setShowRepeatPasswod(!showRepeatPassword)
+                          setShowRepeatPassword((previous) => !previous)
                         }
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-sm cursor-pointer text-[#7C3AED] z-10 font-medium"
+                        aria-label={
+                          showRepeatPassword
+                            ? "Hide repeat password"
+                            : "Show repeat password"
+                        }
+                        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer text-lg text-[#7C3AED] transition hover:text-[#4F46E5] dark:text-violet-400 dark:hover:text-violet-300"
                       >
                         {showRepeatPassword ? (
                           <IoEyeOffOutline />
@@ -250,28 +308,25 @@ const Register = () => {
                     <ErrorMessage
                       name="repeatPassword"
                       component="p"
-                      className="text-red-500 text-sm mt-2"
+                      className="mt-2 text-sm text-red-500"
                     />
                   </div>
-
                 </div>
 
-                {/* Bottom */}
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 pt-5">
-                  <div>
-                    <label className="flex items-start gap-3 text-sm">
+                {/* Terms and submit */}
+                <div className="flex flex-col gap-5 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <label className="flex cursor-pointer items-start gap-3 text-sm">
                       <Field
                         type="checkbox"
                         name="terms"
-                        className="accent-violet-600 cursor-pointer mt-1"
+                        className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-violet-600"
                       />
 
-                      <span className="text-slate-500 text-left">
+                      <span className="text-left text-slate-500 dark:text-slate-400">
                         I have read and accept the Terms of
-                        <span className="text-violet-600 whitespace-nowrap">
-                          {" "}
-                          Service & Privacy Policy *
+                        <span className="whitespace-nowrap text-violet-600 dark:text-violet-400">
+                          {" "}Service & Privacy Policy *
                         </span>
                       </span>
                     </label>
@@ -279,18 +334,18 @@ const Register = () => {
                     <ErrorMessage
                       name="terms"
                       component="p"
-                      className="text-red-500 text-sm mt-2"
+                      className="mt-2 text-sm text-red-500"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="bg-[#4F46E5] cursor-pointer hover:bg-[#4338CA] text-white w-full sm:w-auto px-8 sm:px-10 py-3 rounded-full font-semibold transition shadow-md hover:shadow-lg"
+                    disabled={isSubmitting}
+                    className="w-full shrink-0 cursor-pointer rounded-full bg-[#4F46E5] px-8 py-3 font-semibold text-white shadow-md transition hover:bg-[#4338CA] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-10"
                   >
-                    CONTINUE
+                    {isSubmitting ? "PLEASE WAIT..." : "CONTINUE"}
                   </button>
                 </div>
-
               </Form>
             )}
           </Formik>

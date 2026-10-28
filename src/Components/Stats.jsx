@@ -27,31 +27,34 @@ const stats = [
 
 const Stats = () => {
   return (
-    <section className="bg-white overflow-hidden py-24">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between">
+    <section className="overflow-hidden bg-white py-16 transition-colors duration-300 dark:bg-slate-950 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="flex flex-col items-center justify-between md:flex-row">
           {stats.map((item, index) => (
             <React.Fragment key={item.id}>
-              {/* Card */}
-              <div className="flex flex-col items-center w-full py-6">
-                <h2 className="text-4xl font-bold text-purple-700">
+              {/* Statistics Card */}
+              <div className="flex w-full flex-col items-center py-6">
+                <h2 className="text-4xl font-bold text-purple-700 transition-colors duration-300 dark:text-purple-400">
                   {item.number}
                 </h2>
 
-                <div className="flex items-center gap-3 mt-3">
+                <div className="mt-3 flex items-center gap-3">
                   <img
                     src={item.image}
-                    alt={item.title}
-                    className="w-6 h-6 object-contain"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-6 w-6 object-contain"
                   />
 
-                  <p className="text-gray-600 text-xl">{item.title}</p>
+                  <p className="text-xl text-gray-600 transition-colors duration-300 dark:text-slate-300">
+                    {item.title}
+                  </p>
                 </div>
               </div>
 
-              {/* Vertical Line */}
+              {/* Vertical Divider */}
               {index !== stats.length - 1 && (
-                <div className="hidden md:block h-16 w-px bg-purple-200"></div>
+                <div className="hidden h-16 w-px shrink-0 bg-purple-200 transition-colors duration-300 dark:bg-slate-700 md:block" />
               )}
             </React.Fragment>
           ))}

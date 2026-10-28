@@ -24,6 +24,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2";
 import { createPortal } from "react-dom";
 import userImage from "../../assets/SchoolLogo.png";
+import { useTheme } from "../../Context/ThemeContext";
 
 const menuItems = [
   {
@@ -142,6 +143,7 @@ const Sidebar = ({
   const sidebarRef = useRef(null);
   const submenuCloseTimeout = useRef(null);
   const location = useLocation();
+  const {darkMode} = useTheme();
 
   // Check whether the current route belongs to a menu item.
   const isMenuActive = (item) => {

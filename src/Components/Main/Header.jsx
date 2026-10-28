@@ -8,6 +8,8 @@ import {
   FiShield,
   FiUser,
   FiX,
+  FiSun,
+  FiMoon,
 } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
 import userImage from "../../assets/user1.png";
