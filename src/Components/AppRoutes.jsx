@@ -1,10 +1,10 @@
+
 import { Routes, Route } from "react-router-dom";
 
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AllStudents from "../Pages/Students/AllStudents";
 import AddStudent from "../Pages/Students/AddStudent";
-import StudentProfile from "../Pages/Students/StudentProfile";
 import AllTeachers from "../Pages/Teachers/AllTeacher";
 import ApplyLeave from "../Pages/Teachers/ApplyLeave";
 import MainPage from "./MainPage";
@@ -33,67 +33,78 @@ import Add from "../Pages/Transport/Add";
 import Rule from "../Pages/Hostel/Rule";
 import Fees from "../Pages/Hostel/Fees";
 
+import CommandPalette from "./CommandPalette";
+
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/signin" element={<SignIn2 />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/info1" element={<Info />} />
+    <>
+      {/* Global Command Palette: Ctrl + K */}
+      <CommandPalette />
 
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="students" element={<AllStudents />} />
-        <Route path="students/add" element={<AddStudent />} />
-        <Route path="students/profile" element={<StudentProfile />} />
+      <Routes>
+        {/* Main pages */}
+        <Route path="/" element={<MainPage />} />
+        <Route path="/signin" element={<SignIn2 />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/info1" element={<Info />} />
 
-        {/* Teacher */}
-        <Route path="teachers" element = {<AllTeachers />} />
-        <Route path="teachers/leave" element={<ApplyLeave />} />
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
 
-        {/* Library */}
-        <Route path = 'library' element = {<AllBooks />} />
-        <Route path="library/add" element = {<AddBooks />} />
+          {/* Students */}
+          <Route path="students" element={<AllStudents />} />
+          <Route path="students/add" element={<AddStudent />} />
 
-        {/* Account */}
-        <Route path="account" element = {<MyProfile />} />
-        <Route path = 'account/security' element = {<Security />} />
+          {/* Teachers */}
+          <Route path="teachers" element={<AllTeachers />} />
+          <Route path="teachers/leave" element={<ApplyLeave />} />
 
-        {/* Class */}
-        <Route path = 'class' element = {<ClassDetail />} />
-        <Route path="class/add" element = {<AddClass />} />
+          {/* Library */}
+          <Route path="library" element={<AllBooks />} />
+          <Route path="library/add" element={<AddBooks />} />
 
-        {/* Subject */}
-        <Route path="subject" element = {<SubjectDetails />} />
-        <Route path="subject/allocate" element={<SubjectAllocation />} />
+          {/* Account */}
+          <Route path="account" element={<MyProfile />} />
+          <Route path="account/security" element={<Security />} />
 
-        {/* Routine */}
-        <Route path="routine" element = {<Timetable />} />
-        <Route path="routine/lunch" element = {<Lunch />} />
-        
-        {/* Attendance */}
-        <Route path="atte" element = {<AttendanceDetails />} />
-        <Route path="atte/report" element = {<AttendanceReport />} />
+          {/* Class */}
+          <Route path="class" element={<ClassDetail />} />
+          <Route path="class/add" element={<AddClass />} />
 
-        {/* Exam */}
-        <Route path="exam" element = {<ExamTimetable />} />
-        <Route path="exam/grade" element= {<ExamGrade />} />
+          {/* Subjects */}
+          <Route path="subject" element={<SubjectDetails />} />
+          <Route path="subject/allocate" element={<SubjectAllocation />} />
 
-        {/* Notice */}
-        <Route path="notice" element = {<Notice1 />} />
-        <Route path="notice/2" element = {<Notice2 />} />
+          {/* Routine */}
+          <Route path="routine" element={<Timetable />} />
+          <Route path="routine/lunch" element={<Lunch />} />
 
-        {/* Transport */}
-        <Route path="trans" element = {<Details />} />
-        <Route path="trans/add" element = {<Add />} />
+          {/* Attendance */}
+          <Route path="atte" element={<AttendanceDetails />} />
+          <Route path="atte/report" element={<AttendanceReport />} />
 
-        {/* Hostel */}
-        <Route path="hostel" element = {<Rule />} />
-        <Route path="hostel/fee" element = {<Fees />} />
-      </Route>
+          {/* Exams */}
+          <Route path="exam" element={<ExamTimetable />} />
+          <Route path="exam/grade" element={<ExamGrade />} />
 
-      <Route path="*" element={<Notfound />} />
-    </Routes>
+          {/* Notices */}
+          <Route path="notice" element={<Notice1 />} />
+          <Route path="notice/2" element={<Notice2 />} />
+
+          {/* Transport */}
+          <Route path="trans" element={<Details />} />
+          <Route path="trans/add" element={<Add />} />
+
+          {/* Hostel */}
+          <Route path="hostel" element={<Rule />} />
+          <Route path="hostel/fee" element={<Fees />} />
+        </Route>
+
+        {/* 404 page */}
+        <Route path="*" element={<Notfound />} />
+      </Routes>
+    </>
   );
 };
 
