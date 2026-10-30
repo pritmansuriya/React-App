@@ -1,8 +1,12 @@
+
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../Main/Header";
 import Sidebar from "../Main/Sidebar";
 import { HiOutlineBars3 } from "react-icons/hi2";
+
+// Import Dashboard Command Palette
+import DashboardCommandPalette from "../CommandPalette/DashboardCommandPalette";
 
 const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -10,6 +14,10 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex h-dvh min-h-0 overflow-hidden bg-[#F3F6F9]">
+
+      {/* Dashboard Command Palette */}
+      <DashboardCommandPalette />
+
       {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
@@ -20,8 +28,10 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden text-[#171A1F]">
+
         {/* Header */}
         <header className="sticky top-0 z-30 flex shrink-0 items-center gap-3 border-b border-slate-200 bg-[#F3F6F9] px-3 py-3 sm:px-6 sm:py-4">
+
           {/* Mobile Menu Button */}
           <button
             type="button"
@@ -43,6 +53,7 @@ const DashboardLayout = () => {
         <div className="min-w-0 flex-1 p-3 sm:p-5 lg:p-6">
           <Outlet />
         </div>
+
       </main>
     </div>
   );

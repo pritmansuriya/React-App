@@ -389,7 +389,7 @@ const AllBooks = () => {
         {toast && (
           <div
             role="status"
-            className={`fixed right-4 top-4 z-[70] flex max-w-sm items-center gap-3 rounded-xl px-4 py-3 text-white shadow-lg ${
+            className={`fixed right-4 top-4 z-70 flex max-w-sm items-center gap-3 rounded-xl px-4 py-3 text-white shadow-lg ${
               toast.type === "error" ? "bg-red-600" : "bg-green-600"
             }`}
           >

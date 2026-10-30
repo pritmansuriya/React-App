@@ -1,55 +1,100 @@
-
 import { Routes, Route } from "react-router-dom";
 
 import DashboardLayout from "../Layouts/DashboardLayout";
+
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AllStudents from "../Pages/Students/AllStudents";
 import AddStudent from "../Pages/Students/AddStudent";
 import AllTeachers from "../Pages/Teachers/AllTeacher";
 import ApplyLeave from "../Pages/Teachers/ApplyLeave";
+
 import MainPage from "./MainPage";
 import Register from "./Register";
 import SignIn2 from "./SignIn2";
 import Info from "./Info";
 import Notfound from "./Notfound";
+
 import AllBooks from "../Pages/Library/AllBooks";
 import AddBooks from "../Pages/Library/AddBooks";
+
 import MyProfile from "../Pages/Account/MyProfile";
 import Security from "../Pages/Account/Security";
+
 import ClassDetail from "../Pages/Class/ClassDetail";
 import AddClass from "../Pages/Class/AddClass";
+
 import SubjectDetails from "../Pages/Subjects/SubjectDetails";
 import SubjectAllocation from "../Pages/Subjects/SubjectAllocation";
+
 import Timetable from "../Pages/Routine/Timetable";
 import Lunch from "../Pages/Routine/Lunch";
+
 import AttendanceDetails from "../Pages/Attendance/AttendanceDetails";
 import AttendanceReport from "../Pages/Attendance/AttendanceReport";
+
 import ExamTimetable from "../Pages/Exams/ExamTimetable";
 import ExamGrade from "../Pages/Exams/ExamGrade";
+
 import Notice1 from "../Pages/Notice/Notice1";
 import Notice2 from "../Pages/Notice/Notice2";
+
 import Details from "../Pages/Transport/Details";
 import Add from "../Pages/Transport/Add";
+
 import Rule from "../Pages/Hostel/Rule";
 import Fees from "../Pages/Hostel/Fees";
 
-import CommandPalette from "./CommandPalette";
+// Separate Command Palettes
+import PublicCommandPalette from "./CommandPalette/PublicCommandPalette";
+import DashboardCommandPalette from "./CommandPalette/DashboardCommandPalette";
 
 const AppRoutes = () => {
   return (
     <>
-      {/* Global Command Palette: Ctrl + K */}
-      <CommandPalette />
-
       <Routes>
-        {/* Main pages */}
-        <Route path="/" element={<MainPage />} />
-        <Route path="/signin" element={<SignIn2 />} />
-        <Route path="/register" element={<Register />} />
+        {/* Public Pages - Before Login */}
+        <Route
+          path="/"
+          element={
+            <>
+              <PublicCommandPalette />
+              <MainPage />
+            </>
+          }
+        />
+
+        <Route
+          path="/signin"
+          element={
+            <>
+              <PublicCommandPalette />
+              <SignIn2 />
+            </>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <>
+              <PublicCommandPalette />
+              <Register />
+            </>
+          }
+        />
+
         <Route path="/info1" element={<Info />} />
 
-        {/* Dashboard */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        {/* Dashboard Pages - After Login */}
+        <Route
+          path="/dashboard"
+          element={
+            <>
+              <DashboardCommandPalette />
+              <DashboardLayout />
+            </>
+          }
+        >
           <Route index element={<Dashboard />} />
 
           {/* Students */}
@@ -101,7 +146,7 @@ const AppRoutes = () => {
           <Route path="hostel/fee" element={<Fees />} />
         </Route>
 
-        {/* 404 page */}
+        {/* 404 */}
         <Route path="*" element={<Notfound />} />
       </Routes>
     </>
