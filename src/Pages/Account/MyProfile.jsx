@@ -793,7 +793,7 @@ const MyProfile = () => {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-gray-800">
+                  <h3 className="font-bold text-left text-gray-800">
                     Profile Completion
                   </h3>
 

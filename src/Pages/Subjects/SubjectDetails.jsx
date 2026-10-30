@@ -75,9 +75,7 @@ const subjectValidation = Yup.object({
     .min(2, "Teacher name must be at least 2 characters")
     .required("Teacher name is required"),
 
-  classes: Yup.string()
-    .trim()
-    .required("Class is required"),
+  classes: Yup.string().trim().required("Class is required"),
 
   students: Yup.number()
     .typeError("Students must be a number")
@@ -128,11 +126,8 @@ const SubjectDetails = () => {
 
   const persistSubjects = (updatedSubjects) => {
     try {
-      localStorage.setItem(
-        "schoolSubjects",
-        JSON.stringify(updatedSubjects)
-      );
-
+      localStorage.setItem("schoolSubjects", JSON.stringify(updatedSubjects));
+      
       setSubjects(updatedSubjects);
       return true;
     } catch (error) {
@@ -160,14 +155,11 @@ const SubjectDetails = () => {
       const duplicateCode = subjects.some(
         (subject) =>
           String(subject.code).trim().toLowerCase() === normalizedCode &&
-          subject.id !== selectedSubject?.id
+          subject.id !== selectedSubject?.id,
       );
 
       if (duplicateCode) {
-        formik.setFieldError(
-          "code",
-          "This subject code already exists"
-        );
+        formik.setFieldError("code", "This subject code already exists");
         showMessage("Please use a unique subject code.", "error");
         return;
       }
@@ -185,7 +177,7 @@ const SubjectDetails = () => {
         const updatedSubjects = subjects.map((subject) =>
           subject.id === selectedSubject.id
             ? { ...subject, ...cleanedValues }
-            : subject
+            : subject,
         );
 
         if (!persistSubjects(updatedSubjects)) return;
@@ -193,7 +185,7 @@ const SubjectDetails = () => {
         try {
           saveActivity(
             "Subject updated",
-            `${cleanedValues.name} was updated in the subject directory.`
+            `${cleanedValues.name} was updated in the subject directory.`,
           );
         } catch (error) {
           console.error("Unable to record activity:", error);
@@ -219,7 +211,7 @@ const SubjectDetails = () => {
       try {
         saveActivity(
           "Subject added",
-          `${newSubject.name} (${newSubject.code}) was added to the subject directory.`
+          `${newSubject.name} (${newSubject.code}) was added to the subject directory.`,
         );
       } catch (error) {
         console.error("Unable to record activity:", error);
@@ -270,21 +262,19 @@ const SubjectDetails = () => {
 
   const handleDelete = (subject) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${subject.name}"?`
+      `Are you sure you want to delete "${subject.name}"?`,
     );
 
     if (!confirmed) return;
 
-    const updatedSubjects = subjects.filter(
-      (item) => item.id !== subject.id
-    );
+    const updatedSubjects = subjects.filter((item) => item.id !== subject.id);
 
     if (!persistSubjects(updatedSubjects)) return;
 
     try {
       saveActivity(
         "Subject deleted",
-        `${subject.name} (${subject.code}) was deleted from the subject directory.`
+        `${subject.name} (${subject.code}) was deleted from the subject directory.`,
       );
     } catch (error) {
       console.error("Unable to record activity:", error);
@@ -304,7 +294,9 @@ const SubjectDetails = () => {
           subject.teacher,
           subject.classes,
         ].some((value) =>
-          String(value ?? "").toLowerCase().includes(search)
+          String(value ?? "")
+            .toLowerCase()
+            .includes(search),
         );
 
         const matchesStatus =
@@ -314,7 +306,7 @@ const SubjectDetails = () => {
       })
       .sort((a, b) => {
         const comparison = String(a.name ?? "").localeCompare(
-          String(b.name ?? "")
+          String(b.name ?? ""),
         );
 
         return sortOrder === "az" ? comparison : -comparison;
@@ -324,14 +316,14 @@ const SubjectDetails = () => {
   const totalSubjects = subjects.length;
 
   const activeSubjects = subjects.filter(
-    (subject) => subject.status === "Active"
+    (subject) => subject.status === "Active",
   ).length;
 
   const totalTeachers = new Set(
     subjects
       .map((subject) => String(subject.teacher ?? "").trim())
       .filter(Boolean)
-      .map((teacher) => teacher.toLowerCase())
+      .map((teacher) => teacher.toLowerCase()),
   ).size;
 
   const totalClasses = new Set(
@@ -340,8 +332,8 @@ const SubjectDetails = () => {
         .split(",")
         .map((item) => item.trim())
         .filter(Boolean)
-        .map((className) => className.toLowerCase())
-    )
+        .map((className) => className.toLowerCase()),
+    ),
   ).size;
 
   const exportCSV = () => {
@@ -359,8 +351,7 @@ const SubjectDetails = () => {
       "Status",
     ];
 
-    const escapeCSV = (value) =>
-      `"${String(value ?? "").replace(/"/g, '""')}"`;
+    const escapeCSV = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
 
     const rows = filteredSubjects.map((subject) => [
       subject.name,
@@ -422,7 +413,7 @@ const SubjectDetails = () => {
           id={`${isEdit ? "edit" : "add"}-subject-name`}
           type="text"
           name="name"
-          value={formik.values.name}
+          value={formik.values.name}  
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           placeholder="Enter subject name"
@@ -699,9 +690,7 @@ const SubjectDetails = () => {
             </div>
 
             <div>
-              <p className="text-2xl font-bold text-gray-800">
-                {totalClasses}
-              </p>
+              <p className="text-2xl font-bold text-gray-800">{totalClasses}</p>
               <p className="text-sm text-gray-500">Classes</p>
             </div>
           </div>
@@ -786,9 +775,7 @@ const SubjectDetails = () => {
                         {subject.name}
                       </h2>
 
-                      <p className="text-sm text-gray-400">
-                        {subject.code}
-                      </p>
+                      <p className="text-sm text-gray-400">{subject.code}</p>
                     </div>
                   </div>
 
@@ -866,9 +853,7 @@ const SubjectDetails = () => {
           <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center">
             <FaBook className="mx-auto mb-3 text-3xl text-gray-300" />
 
-            <h3 className="font-semibold text-gray-800">
-              No subjects found
-            </h3>
+            <h3 className="font-semibold text-gray-800">No subjects found</h3>
 
             <p className="mt-1 text-sm text-gray-500">
               Try changing your search or status filter.

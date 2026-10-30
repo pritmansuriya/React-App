@@ -316,7 +316,7 @@ const AddBook = () => {
           </button>
 
           <div>
-            <h1 className="text-2xl font-semibold text-gray-800">
+            <h1 className="text-2xl text-left font-semibold text-gray-800">
               Add Book
             </h1>
 
@@ -339,7 +339,7 @@ const AddBook = () => {
                 <FaBook className="text-purple-600" />
               </div>
 
-              <div>
+              <div className="text-left">
                 <h2 className="text-lg font-semibold text-gray-800">
                   Basic Information
                 </h2>
@@ -450,7 +450,7 @@ const AddBook = () => {
                 <FaLayerGroup className="text-blue-600" />
               </div>
 
-              <div>
+              <div className="text-left">
                 <h2 className="text-lg font-semibold text-gray-800">
                   Inventory Details
                 </h2>
@@ -561,7 +561,7 @@ const AddBook = () => {
                 <FaImage className="text-pink-600" />
               </div>
 
-              <div>
+              <div className="text-left">
                 <h2 className="text-lg font-semibold text-gray-800">
                   Book Cover
                 </h2>

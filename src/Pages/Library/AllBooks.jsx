@@ -932,7 +932,7 @@ const SummaryCard = ({ icon, value, label, iconClass }) => (
     </div>
 
     <div>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
+      <p className="text-2xl font-bold text-left text-gray-800">{value}</p>
       <p className="text-sm text-gray-500">{label}</p>
     </div>
   </div>

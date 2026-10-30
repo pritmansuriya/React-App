@@ -37,8 +37,8 @@ const menuItems = [
     title: "Students",
     icon: <MdPeople size={22} />,
     children: [
-      { title: "All Students", path: "/dashboard/students" },
       { title: "Add Student", path: "/dashboard/students/add" },
+      { title: "Student Certificate", path: "/dashboard/students/certificate" },
     ],
   },
   {

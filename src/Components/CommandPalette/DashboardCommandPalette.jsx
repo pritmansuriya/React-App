@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,29 +14,61 @@ import "./CommandPalette.css";
 const dashboardCommands = [
   { title: "Dashboard", category: "Dashboard", path: "/dashboard" },
 
-  { title: "All Students", category: "Students", path: "/dashboard/students" },
-  { title: "Add Student", category: "Students", path: "/dashboard/students/add" },
+  {
+    title: "Add Student",
+    category: "Students",
+    path: "/dashboard/students/add",
+  },
+  {
+    title: "Student Certificate",
+    category: "Students",
+    path: "/dashboard/students/certificate",
+  },
 
   { title: "All Teachers", category: "Teachers", path: "/dashboard/teachers" },
-  { title: "Apply Leave", category: "Teachers", path: "/dashboard/teachers/leave" },
+  {
+    title: "Apply Leave",
+    category: "Teachers",
+    path: "/dashboard/teachers/leave",
+  },
 
   { title: "All Books", category: "Library", path: "/dashboard/library" },
   { title: "Add Book", category: "Library", path: "/dashboard/library/add" },
 
   { title: "My Profile", category: "Account", path: "/dashboard/account" },
-  { title: "Security Settings", category: "Account", path: "/dashboard/account/security" },
+  {
+    title: "Security Settings",
+    category: "Account",
+    path: "/dashboard/account/security",
+  },
 
   { title: "Class Details", category: "Class", path: "/dashboard/class" },
   { title: "Add Class", category: "Class", path: "/dashboard/class/add" },
 
-  { title: "Subject Details", category: "Subjects", path: "/dashboard/subject" },
-  { title: "Subject Allocation", category: "Subjects", path: "/dashboard/subject/allocate" },
+  {
+    title: "Subject Details",
+    category: "Subjects",
+    path: "/dashboard/subject",
+  },
+  {
+    title: "Subject Allocation",
+    category: "Subjects",
+    path: "/dashboard/subject/allocate",
+  },
 
   { title: "Timetable", category: "Routine", path: "/dashboard/routine" },
-  { title: "Lunch Schedule", category: "Routine", path: "/dashboard/routine/lunch" },
+  {
+    title: "Lunch Schedule",
+    category: "Routine",
+    path: "/dashboard/routine/lunch",
+  },
 
   { title: "Attendance", category: "Attendance", path: "/dashboard/atte" },
-  { title: "Attendance Report", category: "Attendance", path: "/dashboard/atte/report" },
+  {
+    title: "Attendance Report",
+    category: "Attendance",
+    path: "/dashboard/atte/report",
+  },
 
   { title: "Exam Timetable", category: "Exams", path: "/dashboard/exam" },
   { title: "Exam Grades", category: "Exams", path: "/dashboard/exam/grade" },
@@ -45,8 +76,16 @@ const dashboardCommands = [
   { title: "Notices", category: "Notice", path: "/dashboard/notice" },
   { title: "Notice Details", category: "Notice", path: "/dashboard/notice/2" },
 
-  { title: "Transport Details", category: "Transport", path: "/dashboard/trans" },
-  { title: "Add Transport", category: "Transport", path: "/dashboard/trans/add" },
+  {
+    title: "Transport Details",
+    category: "Transport",
+    path: "/dashboard/trans",
+  },
+  {
+    title: "Add Transport",
+    category: "Transport",
+    path: "/dashboard/trans/add",
+  },
 
   { title: "Hostel Rules", category: "Hostel", path: "/dashboard/hostel" },
   { title: "Hostel Fees", category: "Hostel", path: "/dashboard/hostel/fee" },
@@ -64,7 +103,7 @@ export default function DashboardCommandPalette() {
   const filteredCommands = dashboardCommands.filter((command) =>
     `${command.title} ${command.category} ${command.path}`
       .toLowerCase()
-      .includes(search.toLowerCase().trim())
+      .includes(search.toLowerCase().trim()),
   );
 
   // Close palette and reset
@@ -91,10 +130,7 @@ export default function DashboardCommandPalette() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       // Ctrl + K or Cmd + K
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        event.key.toLowerCase() === "k"
-      ) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setIsOpen((previous) => !previous);
         return;
@@ -114,9 +150,7 @@ export default function DashboardCommandPalette() {
         event.preventDefault();
 
         setSelectedIndex((index) =>
-          filteredCommands.length
-            ? (index + 1) % filteredCommands.length
-            : 0
+          filteredCommands.length ? (index + 1) % filteredCommands.length : 0,
         );
       }
 
@@ -126,9 +160,8 @@ export default function DashboardCommandPalette() {
 
         setSelectedIndex((index) =>
           filteredCommands.length
-            ? (index - 1 + filteredCommands.length) %
-              filteredCommands.length
-            : 0
+            ? (index - 1 + filteredCommands.length) % filteredCommands.length
+            : 0,
         );
       }
 
@@ -220,9 +253,7 @@ export default function DashboardCommandPalette() {
             </div>
 
             {/* Heading */}
-            <div className="command-palette-heading">
-              DASHBOARD NAVIGATION
-            </div>
+            <div className="command-palette-heading">DASHBOARD NAVIGATION</div>
 
             {/* Results */}
             <div className="command-palette-results">

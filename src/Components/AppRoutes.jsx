@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import DashboardLayout from "../Layouts/DashboardLayout";
 
 import Dashboard from "./Pages/Dashboard/Dashboard";
-import AllStudents from "../Pages/Students/AllStudents";
+import StudentCertificate from "./Pages/Dashboard/Student/StudentCertificate";
 import AddStudent from "../Pages/Students/AddStudent";
 import AllTeachers from "../Pages/Teachers/AllTeacher";
 import ApplyLeave from "../Pages/Teachers/ApplyLeave";
@@ -98,7 +98,7 @@ const AppRoutes = () => {
           <Route index element={<Dashboard />} />
 
           {/* Students */}
-          <Route path="students" element={<AllStudents />} />
+          <Route path="students/certificate" element={<StudentCertificate />} />
           <Route path="students/add" element={<AddStudent />} />
 
           {/* Teachers */}

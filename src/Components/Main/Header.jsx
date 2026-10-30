@@ -1,61 +1,80 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   FiSearch,
   FiBell,
-  FiMessageSquare,
   FiLogOut,
   FiShield,
   FiUser,
   FiX,
-  FiSun,
-  FiMoon,
+  FiCheck,
+  FiChevronRight,
 } from "react-icons/fi";
+
 import { IoChevronDown } from "react-icons/io5";
+
 import userImage from "../../assets/user1.png";
+
 import {
   dismissMessage,
   markAllMessagesRead,
   useMessages,
 } from "../../Pages/hooks/useMessages";
 
+// Dashboard search data
 const sectionSearchItems = [
   { name: "Dashboard", group: "Overview", path: "/dashboard" },
+
   { name: "All Students", group: "Students", path: "/dashboard/students" },
   { name: "Add Student", group: "Students", path: "/dashboard/students/add" },
+  { name: "Student Certificate", group: "Students", path: "/dashboard/students/certificate" },
   { name: "Student Profile", group: "Students", path: "/dashboard/students/profile" },
+
   { name: "All Teachers", group: "Teachers", path: "/dashboard/teachers" },
   { name: "Apply to Leave", group: "Teachers", path: "/dashboard/teachers/leave" },
+
   { name: "All Books", group: "Library", path: "/dashboard/library" },
   { name: "Add Books", group: "Library", path: "/dashboard/library/add" },
+
   { name: "My Profile", group: "Account", path: "/dashboard/account" },
   { name: "Security", group: "Account", path: "/dashboard/account/security" },
+
   { name: "Class Details", group: "Class", path: "/dashboard/class" },
   { name: "Add Class", group: "Class", path: "/dashboard/class/add" },
+
   { name: "Subject Details", group: "Subject", path: "/dashboard/subject" },
   { name: "Subject Allocation", group: "Subject", path: "/dashboard/subject/allocate" },
+
   { name: "Timetable", group: "Routine", path: "/dashboard/routine" },
   { name: "Lunch Menu", group: "Routine", path: "/dashboard/routine/lunch" },
+
   { name: "Attendance Details", group: "Attendance", path: "/dashboard/atte" },
   { name: "Attendance Report", group: "Attendance", path: "/dashboard/atte/report" },
+
   { name: "Exam Timetable", group: "Exam", path: "/dashboard/exam" },
   { name: "Exam Grade", group: "Exam", path: "/dashboard/exam/grade" },
+
   { name: "Notice", group: "Notice", path: "/dashboard/notice" },
   { name: "Add Notice", group: "Notice", path: "/dashboard/notice/2" },
+
   { name: "Transport Details", group: "Transport", path: "/dashboard/trans" },
   { name: "Add Bus", group: "Transport", path: "/dashboard/trans/add" },
+
   { name: "Hostel Rules", group: "Hostel", path: "/dashboard/hostel" },
   { name: "Hostel Fees", group: "Hostel", path: "/dashboard/hostel/fee" },
 ];
 
+// Read logged-in user
 const readLoggedInUser = () => {
   try {
-    return JSON.parse(window.localStorage.getItem("loggedInUser")) ?? null;
+    return JSON.parse(localStorage.getItem("loggedInUser")) || null;
   } catch {
     return null;
   }
 };
 
+// Format notification date
 const formatMessageTime = (dateString) => {
   const date = new Date(dateString);
 
@@ -71,23 +90,28 @@ const formatMessageTime = (dateString) => {
 
 const Header = () => {
   const navigate = useNavigate();
-  const profileRef = useRef(null);
+
   const searchRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const profileRef = useRef(null);
   const messagesRef = useRef(null);
 
-  const { messages } = useMessages();
+  const { messages = [] } = useMessages();
 
   const [loggedInUser] = useState(readLoggedInUser);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeSearchIndex, setActiveSearchIndex] = useState(0);
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const displayName =
     loggedInUser?.name ||
     loggedInUser?.email?.split("@")[0] ||
-    "Luke J R";
+    "Admin";
 
   const displayEmail = loggedInUser?.email || "";
   const displayRole = loggedInUser?.role || "Admin";
@@ -96,25 +120,38 @@ const Header = () => {
     (message) => !message.read
   ).length;
 
-  const latestNotifications = messages;
+  // Search results
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  const searchResults = normalizedQuery
-    ? sectionSearchItems.filter((item) =>
-        `${item.name} ${item.group}`
-          .toLowerCase()
-          .includes(normalizedQuery)
-      )
-    : [];
+  const searchResults = useMemo(() => {
+    if (!normalizedQuery) return [];
 
+    return sectionSearchItems.filter((item) =>
+      `${item.name} ${item.group}`
+        .toLowerCase()
+        .includes(normalizedQuery)
+    );
+  }, [normalizedQuery]);
+
+  // Latest notifications
+  const latestNotifications = useMemo(() => {
+    return [...messages]
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+      )
+      .slice(0, 8);
+  }, [messages]);
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (!profileRef.current?.contains(event.target)) {
-        setIsProfileOpen(false);
-      }
-
       if (!searchRef.current?.contains(event.target)) {
         setIsSearchOpen(false);
+      }
+
+      if (!profileRef.current?.contains(event.target)) {
+        setIsProfileOpen(false);
       }
 
       if (!messagesRef.current?.contains(event.target)) {
@@ -124,123 +161,224 @@ const Header = () => {
 
     const handleEscape = (event) => {
       if (event.key === "Escape") {
+        setIsSearchOpen(false);
         setIsProfileOpen(false);
         setIsMessagesOpen(false);
         setIsLogoutDialogOpen(false);
       }
     };
 
+    // Ctrl + K or Cmd + K focuses search
+    const handleSearchShortcut = (event) => {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+        setIsSearchOpen(true);
+      }
+    };
+
     document.addEventListener("mousedown", handleOutsideClick);
     document.addEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleSearchShortcut);
 
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
       document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleSearchShortcut);
     };
   }, []);
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("loggedInUser");
-    setIsLogoutDialogOpen(false);
-    navigate("/", { replace: true });
-  };
-
+  // Open dashboard section
   const openSection = (path) => {
     navigate(path);
+
     setSearchQuery("");
     setIsSearchOpen(false);
+    setActiveSearchIndex(0);
   };
 
+  // Search keyboard navigation
   const handleSearchKeyDown = (event) => {
     if (event.key === "Escape") {
       setIsSearchOpen(false);
       return;
     }
 
+    if (event.key === "ArrowDown" && searchResults.length > 0) {
+      event.preventDefault();
+
+      setActiveSearchIndex((prev) =>
+        prev >= searchResults.length - 1 ? 0 : prev + 1
+      );
+    }
+
+    if (event.key === "ArrowUp" && searchResults.length > 0) {
+      event.preventDefault();
+
+      setActiveSearchIndex((prev) =>
+        prev <= 0 ? searchResults.length - 1 : prev - 1
+      );
+    }
+
     if (event.key === "Enter" && searchResults.length > 0) {
       event.preventDefault();
-      openSection(searchResults[0].path);
+
+      openSection(
+        searchResults[activeSearchIndex]?.path ||
+        searchResults[0].path
+      );
     }
+  };
+
+  // Toggle notifications
+  const toggleMessages = () => {
+    const willOpen = !isMessagesOpen;
+
+    setIsMessagesOpen(willOpen);
+    setIsProfileOpen(false);
+
+    if (willOpen && unreadNotificationCount > 0) {
+      markAllMessagesRead();
+    }
+  };
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("loggedInUser");
+
+    setIsLogoutDialogOpen(false);
+
+    navigate("/", { replace: true });
   };
 
   return (
     <>
-      <header className="flex min-w-0 items-center justify-between gap-2 border-r border-gray-200 px-2">
-        {/* Only changed the search bar width */}
+      <header className="relative z-40 flex min-w-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-3 py-2 sm:px-5">
+
+        {/* Search */}
         <div
           ref={searchRef}
-          className="relative min-w-0 w-full max-w-2xl flex-1"
+          className="relative min-w-0 flex-1"
         >
-          <input
-            type="search"
-            role="combobox"
-            aria-label="Search dashboard sections"
-            aria-expanded={isSearchOpen && normalizedQuery.length > 0}
-            aria-controls="section-search-results"
-            aria-autocomplete="list"
-            value={searchQuery}
-            onChange={(event) => {
-              setSearchQuery(event.target.value);
-              setIsSearchOpen(true);
-            }}
-            onFocus={() => {
-              if (normalizedQuery) setIsSearchOpen(true);
-            }}
-            onKeyDown={handleSearchKeyDown}
-            placeholder="Search sections..."
-            className="h-9 w-full rounded-md border border-gray-200 bg-white pl-4 pr-10 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
-          />
+          <div className="relative max-w-2xl">
+            <FiSearch
+              size={18}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+            />
 
-          <FiSearch
-            aria-hidden="true"
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-blue-600"
-            size={18}
-          />
+            <input
+              ref={searchInputRef}
+              type="search"
+              role="combobox"
+              aria-label="Search dashboard sections"
+              aria-expanded={isSearchOpen && normalizedQuery.length > 0}
+              aria-controls="section-search-results"
+              aria-autocomplete="list"
+              value={searchQuery}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setActiveSearchIndex(0);
+                setIsSearchOpen(true);
+              }}
+              onFocus={() => setIsSearchOpen(true)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Search sections..."
+              className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-20 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+            />
 
+            {searchQuery ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setActiveSearchIndex(0);
+                  setIsSearchOpen(true);
+                  searchInputRef.current?.focus();
+                }}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+              >
+                <FiX size={16} />
+              </button>
+            ) : (
+              <span className="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-slate-200 bg-white px-2 py-1 text-[10px] font-medium text-slate-400 sm:block">
+                Ctrl K
+              </span>
+            )}
+          </div>
+
+          {/* Search Results */}
           {isSearchOpen && normalizedQuery && (
             <div
               id="section-search-results"
               role="listbox"
-              className="absolute left-0 top-full z-50 mt-2 max-h-80 w-[min(22rem,85vw)] overflow-y-auto rounded-md border border-slate-200 bg-white py-1 text-left shadow-xl"
+              className="absolute left-0 top-full z-50 mt-2 max-h-80 w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-200 bg-white py-2 text-left shadow-xl"
             >
+              <p className="px-4 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Search Results ({searchResults.length})
+              </p>
+
               {searchResults.length > 0 ? (
-                searchResults.map((item) => (
+                searchResults.map((item, index) => (
                   <button
                     key={item.path}
                     type="button"
                     role="option"
-                    aria-selected="false"
+                    aria-selected={activeSearchIndex === index}
+                    onMouseEnter={() => setActiveSearchIndex(index)}
                     onClick={() => openSection(item.path)}
-                    className="flex w-full items-center justify-between gap-4 px-4 py-2.5 text-left transition hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
+                    className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition ${
+                      activeSearchIndex === index
+                        ? "bg-blue-50"
+                        : "hover:bg-slate-50"
+                    }`}
                   >
-                    <span className="truncate text-sm font-medium text-slate-800">
-                      {item.name}
-                    </span>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                        <FiSearch size={16} />
+                      </span>
 
-                    <span className="shrink-0 text-xs text-slate-500">
-                      {item.group}
-                    </span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-slate-800">
+                          {item.name}
+                        </p>
+
+                        <p className="text-xs text-slate-400">
+                          {item.group}
+                        </p>
+                      </div>
+                    </div>
+
+                    <FiChevronRight
+                      size={16}
+                      className="shrink-0 text-slate-400"
+                    />
                   </button>
                 ))
               ) : (
-                <p className="px-4 py-3 text-sm text-slate-500">
-                  No matching sections
-                </p>
+                <div className="px-4 py-8 text-center">
+                  <FiSearch className="mx-auto mb-2 text-2xl text-slate-300" />
+
+                  <p className="text-sm font-semibold text-slate-700">
+                    No matching sections
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-400">
+                    Try searching with another keyword.
+                  </p>
+                </div>
               )}
             </div>
           )}
         </div>
 
+        {/* Right Actions */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-          {/* <button
-            type="button"
-            aria-label="Notifications"
-            className="relative grid h-10 w-10 place-items-center rounded-full border border-gray-200 text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
-          >
-            <FiBell size={18} />
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
-          </button> */}
 
+          {/* Notifications */}
           <div ref={messagesRef} className="relative">
             <button
               type="button"
@@ -251,18 +389,13 @@ const Header = () => {
               }
               aria-haspopup="dialog"
               aria-expanded={isMessagesOpen}
-              onClick={() => {
-                const willOpen = !isMessagesOpen;
-                setIsMessagesOpen(willOpen);
-
-                if (willOpen) markAllMessagesRead();
-              }}
-              className="relative grid h-10 w-10 place-items-center rounded-full border border-gray-200 text-slate-600 transition hover:bg-blue-50 hover:text-blue-700"
+              onClick={toggleMessages}
+              className="relative grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             >
-              <FiBell size={18} />
+              <FiBell size={19} />
 
               {unreadNotificationCount > 0 && (
-                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold leading-none text-white">
+                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white ring-2 ring-white">
                   {unreadNotificationCount > 9
                     ? "9+"
                     : unreadNotificationCount}
@@ -274,20 +407,22 @@ const Header = () => {
               <section
                 role="dialog"
                 aria-label="Notifications"
-                className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,90vw)] overflow-hidden rounded-md border border-slate-200 bg-white text-left shadow-xl"
+                className="absolute right-0 top-full z-50 mt-3 w-[min(22rem,90vw)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
               >
-                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-4">
                   <div>
-                    <h2 className="text-sm font-semibold text-slate-900">
+                    <h2 className="text-sm text-left font-bold text-slate-900">
                       Notifications
                     </h2>
 
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      {messages.length} total · {unreadNotificationCount} unread
+                    <p className="mt-1 text-xs text-slate-500">
+                      {messages.length} total notifications
                     </p>
                   </div>
 
-                  <FiBell aria-hidden="true" className="text-blue-600" />
+                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                    <FiBell size={18} />
+                  </span>
                 </div>
 
                 {latestNotifications.length > 0 ? (
@@ -295,36 +430,46 @@ const Header = () => {
                     {latestNotifications.map((message) => (
                       <article
                         key={message.id}
-                        className="flex items-start gap-2 px-4 py-3"
+                        className="flex items-start gap-3 px-4 py-3 transition hover:bg-slate-50"
                       >
+                        <span className="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
+                          {message.type === "activity" ? (
+                            <FiCheck size={16} />
+                          ) : (
+                            <FiBell size={16} />
+                          )}
+                        </span>
+
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-start justify-between gap-3">
-                            <p className="truncate text-sm font-semibold text-slate-900">
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-sm font-semibold text-slate-800">
                               {message.type === "activity" ||
                               message.type === "announcement"
                                 ? message.title
                                 : message.name || "Website visitor"}
                             </p>
 
-                            <time className="shrink-0 text-[11px] text-slate-500">
+                            <time className="shrink-0 text-[10px] text-slate-400">
                               {formatMessageTime(message.createdAt)}
                             </time>
                           </div>
 
-                          {message.type === "activity" ||
-                          message.type === "announcement" ? (
-                            <p className="mt-0.5 text-xs font-medium text-blue-700">
+                          {(message.type === "activity" ||
+                            message.type === "announcement") && (
+                            <p className="mt-0.5 text-left text-[11px] font-semibold text-blue-600">
                               {message.type === "activity"
                                 ? "Activity"
                                 : "Announcement"}
                             </p>
-                          ) : message.email ? (
-                            <p className="mt-0.5 truncate text-xs text-slate-500">
+                          )}
+
+                          {message.email && (
+                            <p className="mt-1 text-left truncate text-xs text-slate-400">
                               {message.email}
                             </p>
-                          ) : null}
+                          )}
 
-                          <p className="mt-2 line-clamp-2 text-sm text-slate-600">
+                          <p className="mt-1 line-clamp-2 text-left text-xs leading-5 text-slate-600">
                             {message.message}
                           </p>
                         </div>
@@ -336,24 +481,32 @@ const Header = () => {
                               message.title || message.name || "notification"
                             }`}
                             onClick={() => dismissMessage(message.id)}
-                            className="grid h-7 w-7 shrink-0 place-items-center rounded text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                            className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
                           >
-                            <FiX aria-hidden="true" />
+                            <FiX size={16} />
                           </button>
                         )}
                       </article>
                     ))}
                   </div>
                 ) : (
-                  <p className="px-4 py-8 text-center text-sm text-slate-500">
-                    No messages received yet.
-                  </p>
+                  <div className="px-4 py-10 text-center">
+                    <FiBell className="mx-auto mb-3 text-3xl text-slate-300" />
+
+                    <p className="text-sm font-semibold text-slate-700">
+                      You're all caught up!
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                      No notifications available.
+                    </p>
+                  </div>
                 )}
 
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMessagesOpen(false)}
-                  className="block border-t border-slate-100 px-4 py-3 text-center text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+                  className="block border-t border-slate-100 px-4 py-3 text-center text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
                 >
                   View notification center
                 </Link>
@@ -361,26 +514,30 @@ const Header = () => {
             )}
           </div>
 
+          {/* Profile */}
           <div ref={profileRef} className="relative">
             <button
               type="button"
               aria-haspopup="menu"
               aria-expanded={isProfileOpen}
-              onClick={() => setIsProfileOpen((open) => !open)}
-              className="flex items-center gap-2 rounded-md px-1.5 py-1 text-left transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={() => {
+                setIsProfileOpen((open) => !open);
+                setIsMessagesOpen(false);
+              }}
+              className="flex items-center gap-2 rounded-xl px-1.5 py-1.5 text-left transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <img
                 src={userImage}
-                className="h-10 w-10 rounded-full object-cover"
                 alt={`${displayName} profile`}
+                className="h-9 w-9 rounded-full border border-slate-200 object-cover"
               />
 
               <span className="hidden min-w-0 sm:block">
-                <span className="block max-w-36 truncate text-sm font-semibold text-slate-900">
+                <span className="block max-w-36 text-left truncate text-sm font-semibold text-slate-800">
                   {displayName}
                 </span>
 
-                <span className="block text-xs text-slate-500">
+                <span className="block text-xs capitalize text-slate-500">
                   {displayRole}
                 </span>
               </span>
@@ -396,37 +553,45 @@ const Header = () => {
             {isProfileOpen && (
               <div
                 role="menu"
-                className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-md border border-slate-200 bg-white py-2 text-slate-900 shadow-xl"
+                className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white py-2 text-slate-900 shadow-xl"
               >
-                <div className="border-b border-slate-100 px-4 py-3">
-                  <p className="truncate text-sm font-semibold">
-                    {displayName}
-                  </p>
+                <div className="border-b border-slate-100 px-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={userImage}
+                      alt=""
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
 
-                  {displayEmail && (
-                    <p className="mt-0.5 truncate text-xs text-slate-500">
-                      {displayEmail}
-                    </p>
-                  )}
+                    <div className="min-w-0">
+                      <p className="truncate text-left text-sm font-bold">
+                        {displayName}
+                      </p>
+
+                      <p className="truncate text-xs text-slate-500">
+                        {displayEmail || displayRole}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <Link
                   to="/dashboard/account"
                   role="menuitem"
                   onClick={() => setIsProfileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
                 >
-                  <FiUser aria-hidden="true" />
-                  My profile
+                  <FiUser size={17} />
+                  My Profile
                 </Link>
 
                 <Link
                   to="/dashboard/account/security"
                   role="menuitem"
                   onClick={() => setIsProfileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
                 >
-                  <FiShield aria-hidden="true" />
+                  <FiShield size={17} />
                   Security
                 </Link>
 
@@ -439,10 +604,10 @@ const Header = () => {
                     setIsProfileOpen(false);
                     setIsLogoutDialogOpen(true);
                   }}
-                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
                 >
-                  <FiLogOut aria-hidden="true" />
-                  Log out
+                  <FiLogOut size={17} />
+                  Log Out
                 </button>
               </div>
             )}
@@ -450,9 +615,10 @@ const Header = () => {
         </div>
       </header>
 
+      {/* Logout Confirmation Dialog */}
       {isLogoutDialogOpen && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-slate-950/40 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-[2px]"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
               setIsLogoutDialogOpen(false);
@@ -464,32 +630,32 @@ const Header = () => {
             aria-modal="true"
             aria-labelledby="logout-dialog-title"
             aria-describedby="logout-dialog-description"
-            className="w-full max-w-sm rounded-lg bg-white p-6 text-left shadow-2xl"
+            className="w-full max-w-sm rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl"
           >
-            <div className="mb-4 grid h-11 w-11 place-items-center rounded-full bg-rose-50 text-rose-700">
-              <FiLogOut aria-hidden="true" size={20} />
+            <div className="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-rose-50 text-rose-600">
+              <FiLogOut size={22} />
             </div>
 
             <h2
               id="logout-dialog-title"
-              className="text-lg font-semibold text-slate-900"
+              className="text-lg font-bold text-slate-900"
             >
               Log out of your account?
             </h2>
 
             <p
               id="logout-dialog-description"
-              className="mt-2 text-sm text-slate-600"
+              className="mt-2 text-sm leading-6 text-slate-500"
             >
-              You’ll be returned to the main screen. You can sign in again at
-              any time.
+              Are you sure you want to log out? You will be returned to the
+              main screen.
             </p>
 
-            <div className="mt-6 flex justify-end gap-3">
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
                 onClick={() => setIsLogoutDialogOpen(false)}
-                className="h-10 rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
               >
                 Cancel
               </button>
@@ -498,9 +664,9 @@ const Header = () => {
                 type="button"
                 autoFocus
                 onClick={handleLogout}
-                className="h-10 rounded-md bg-rose-700 px-4 text-sm font-semibold text-white transition hover:bg-rose-800 focus:outline-none focus:ring-2 focus:ring-rose-700 focus:ring-offset-2"
+                className="rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700 focus:outline-none focus:ring-4 focus:ring-rose-200"
               >
-                Log out
+                Yes, Log Out
               </button>
             </div>
           </section>
