@@ -1,7 +1,20 @@
+
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaBullhorn } from "react-icons/fa";
+import {
+  FaBullhorn,
+  FaCalendarAlt,
+  FaClock,
+  FaUsers,
+  FaBookOpen,
+  FaExclamationCircle,
+  FaFutbol,
+  FaEye,
+  FaArrowLeft,
+  FaCheckCircle,
+  FaPaperPlane,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { saveActivity } from "../hooks/useMessages";
 
@@ -20,297 +33,467 @@ const Notice2 = () => {
 
     validationSchema: Yup.object({
       category: Yup.string()
-        .required("Category is required"),
+        .oneOf(["IMPORTANT", "ACADEMIC", "EVENT", "GENERAL"])
+        .required("Please select a category"),
 
       title: Yup.string()
-        .required("Notice title is required")
-        .min(3, "Title must be at least 3 characters"),
+        .trim()
+        .min(3, "Title must be at least 3 characters")
+        .max(80, "Title cannot exceed 80 characters")
+        .required("Notice title is required"),
 
       description: Yup.string()
-        .required("Description is required")
-        .min(5, "Description must be at least 5 characters"),
+        .trim()
+        .min(5, "Description must be at least 5 characters")
+        .max(500, "Description cannot exceed 500 characters")
+        .required("Description is required"),
 
       audience: Yup.string()
-        .required("Audience is required"),
+        .required("Please select an audience"),
 
       time: Yup.string()
-        .required("Time is required"),
+        .required("Please select a time"),
 
       date: Yup.string()
-        .required("Date is required"),
+        .required("Please select a date"),
     }),
 
     onSubmit: (values, { resetForm }) => {
+      try {
+        const existingNotices = JSON.parse(
+          localStorage.getItem("schoolNotices") || "[]"
+        );
 
-      // Get existing notices
-      const existingNotices =
-        JSON.parse(localStorage.getItem("schoolNotices")) || [];
+        const newNotice = {
+          id: Date.now(),
+          category: values.category,
+          title: values.title.trim(),
+          description: values.description.trim(),
+          audience: values.audience,
+          time: values.time,
+          date: new Date(`${values.date}T00:00:00`).toLocaleDateString(
+            "en-US",
+            {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            }
+          ),
+          createdAt: new Date().toISOString(),
+        };
 
-      // Create new notice
-      const newNotice = {
-        id: Date.now(),
-        category: values.category,
-        title: values.title,
-        description: values.description,
-        audience: values.audience,
-        time: values.time,
-        date: values.date,
-      };
+        const updatedNotices = [
+          ...existingNotices,
+          newNotice,
+        ];
 
-      // Add new notice AFTER existing notices
-      const updatedNotices = [
-        ...existingNotices,
-        newNotice,
-      ];
+        localStorage.setItem(
+          "schoolNotices",
+          JSON.stringify(updatedNotices)
+        );
 
-      // Save to localStorage
-      localStorage.setItem(
-        "schoolNotices",
-        JSON.stringify(updatedNotices)
-      );
-      saveActivity("Notice published", `${values.title} was published for ${values.audience}.`);
+        saveActivity(
+          "Notice published",
+          `${values.title} was published for ${values.audience}.`
+        );
 
-      resetForm();
+        resetForm();
 
-      // Go back to Notice Board
-      navigate("/dashboard/notice");
+        navigate("/dashboard/notice");
+      } catch (error) {
+        console.error("Notice publishing failed:", error);
+        alert("Unable to publish notice. Please try again.");
+      }
     },
   });
 
+  const categoryOptions = [
+    {
+      value: "IMPORTANT",
+      label: "Important",
+      icon: FaExclamationCircle,
+    },
+    {
+      value: "ACADEMIC",
+      label: "Academic",
+      icon: FaBookOpen,
+    },
+    {
+      value: "EVENT",
+      label: "Event",
+      icon: FaFutbol,
+    },
+    {
+      value: "GENERAL",
+      label: "General",
+      icon: FaBullhorn,
+    },
+  ];
+
+  const selectedCategory = categoryOptions.find(
+    (item) => item.value === formik.values.category
+  );
+
+  const inputClass = (field) =>
+    `w-full rounded-xl border bg-white px-4 py-3 text-sm text-gray-700 outline-none transition placeholder:text-gray-400 focus:ring-4 ${
+      formik.touched[field] && formik.errors[field]
+        ? "border-red-400 focus:border-red-400 focus:ring-red-100"
+        : "border-gray-200 focus:border-purple-500 focus:ring-purple-100"
+    }`;
+
+  const errorMessage = (field) =>
+    formik.touched[field] && formik.errors[field] ? (
+      <p className="mt-1.5 text-xs font-medium text-red-500">
+        {formik.errors[field]}
+      </p>
+    ) : null;
+
+  const getCategoryStyle = () => {
+    switch (formik.values.category) {
+      case "IMPORTANT":
+        return "bg-red-50 text-red-600";
+      case "ACADEMIC":
+        return "bg-purple-50 text-purple-600";
+      case "EVENT":
+        return "bg-green-50 text-green-600";
+      default:
+        return "bg-blue-50 text-blue-600";
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#EAF1FF] p-6">
+    <div className="min-h-screen bg-[#F5F6FC] px-4 py-6 sm:px-6 lg:px-8">
 
-      <div className="max-w-3xl mx-auto">
+      <div className="mx-auto max-w-6xl">
 
-        {/* Header */}
-        <div className="mb-6 text-left">
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={() => navigate("/dashboard/notice")}
+          className="mb-5 flex items-center gap-2 text-sm font-semibold text-gray-500 transition hover:text-purple-600"
+        >
+          <FaArrowLeft />
+          Back to Notice Board
+        </button>
 
-          <h1 className="text-3xl font-semibold text-gray-800">
-            Add Notice
-          </h1>
+        {/* Page Header */}
+        <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
-          <p className="text-sm text-gray-500 mt-1">
-            Create a new school announcement
-          </p>
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
+                <FaBullhorn className="text-xl text-purple-600" />
+              </div>
 
+              <div>
+                <h1 className="text-2xl text-left font-bold text-gray-800 sm:text-3xl">
+                  Create New Notice
+                </h1>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Create and publish school announcements.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+            <FaCheckCircle />
+            School Notice Board
+          </div>
         </div>
 
-        {/* Form */}
-        <form
-          onSubmit={formik.handleSubmit}
-          className="bg-white rounded-2xl p-6 shadow-sm"
-        >
+        {/* Main Layout */}
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
 
-          {/* Form Header */}
-          <div className="flex items-center gap-3 mb-6">
+          {/* Notice Form */}
+          <div className="lg:col-span-2">
 
-            <div className="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center">
-              <FaBullhorn className="text-purple-600" />
-            </div>
+            <form
+              onSubmit={formik.handleSubmit}
+              className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-7"
+            >
 
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                Notice Information
-              </h2>
+              {/* Form Header */}
+              <div className="mb-7 flex items-center gap-3 border-b border-gray-100 pb-5">
 
-              <p className="text-sm text-gray-500">
-                Enter the notice details
-              </p>
-            </div>
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50">
+                  <FaBullhorn className="text-lg text-purple-600" />
+                </div>
 
-          </div>
+                <div className="text-left">
+                  <h2 className="font-bold text-gray-800">
+                    Notice Information
+                  </h2>
 
-          {/* Category */}
-          <div className="mb-5">
-
-            <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-              Category
-            </label>
-
-            <input
-              type="text"
-              name="category"
-              placeholder="Enter Category Name"
-              value={formik.values.category}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-purple-500"
-            />
-
-            {formik.touched.title &&
-              formik.errors.title && (
-                <p className="text-sm text-red-500 mt-1">
-                  {formik.errors.title}
-                </p>
-              )}
-
-          </div>
-
-          {/* Title */}
-          <div className="mb-5">
-
-            <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-              Notice Title
-            </label>
-
-            <input
-              type="text"
-              name="title"
-              placeholder="Enter notice title"
-              value={formik.values.title}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-purple-500"
-            />
-
-            {formik.touched.title &&
-              formik.errors.title && (
-                <p className="text-sm text-red-500 mt-1">
-                  {formik.errors.title}
-                </p>
-              )}
-
-          </div>
-
-          {/* Description */}
-          <div className="mb-5">
-
-            <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-              Description
-            </label>
-
-            <textarea
-              name="description"
-              rows="4"
-              placeholder="Enter notice description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none resize-none focus:border-purple-500"
-            />
-
-            {formik.touched.description &&
-              formik.errors.description && (
-                <p className="text-sm text-red-500 mt-1">
-                  {formik.errors.description}
-                </p>
-              )}
-
-          </div>
-
-          {/* Audience + Time */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-            {/* Audience */}
-            <div>
-
-              <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-                Audience
-              </label>
-
-              <select
-                name="audience"
-                value={formik.values.audience}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-purple-500"
-              >
-                <option value="All Students">
-                  All Students
-                </option>
-
-                <option value="Students">
-                  Students
-                </option>
-
-                <option value="Parents">
-                  Parents
-                </option>
-
-                <option value="Teachers">
-                  Teachers
-                </option>
-              </select>
-
-            </div>
-
-            {/* Time */}
-            <div>
-
-              <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-                Time
-              </label>
-
-              <input
-                type="text"
-                name="time"
-                placeholder="09:00 AM"
-                value={formik.values.time}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-purple-500"
-              />
-
-              {formik.touched.time &&
-                formik.errors.time && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {formik.errors.time}
+                  <p className="text-xs text-gray-500">
+                    Fill in the details below
                   </p>
-                )}
+                </div>
+              </div>
 
+              {/* Category */}
+              <div className="mb-6">
+
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                  Notice Category <span className="text-red-500">*</span>
+                </label>
+
+                <select
+                  name="category"
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={inputClass("category")}
+                >
+                  <option value="">Select notice category</option>
+
+                  {categoryOptions.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+
+                {errorMessage("category")}
+              </div>
+
+              {/* Title */}
+              <div className="mb-6">
+
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="text-sm font-semibold text-gray-700">
+                    Notice Title <span className="text-red-500">*</span>
+                  </label>
+
+                  <span className="text-xs text-gray-400">
+                    {formik.values.title.length}/80
+                  </span>
+                </div>
+
+                <input
+                  type="text"
+                  name="title"
+                  maxLength={80}
+                  placeholder="e.g. Parent-Teacher Meeting"
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={inputClass("title")}
+                />
+
+                {errorMessage("title")}
+              </div>
+
+              {/* Description */}
+              <div className="mb-6">
+
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="text-sm font-semibold text-gray-700">
+                    Description <span className="text-red-500">*</span>
+                  </label>
+
+                  <span className="text-xs text-gray-400">
+                    {formik.values.description.length}/500
+                  </span>
+                </div>
+
+                <textarea
+                  name="description"
+                  rows={5}
+                  maxLength={500}
+                  placeholder="Write complete notice details here..."
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`${inputClass("description")} resize-none`}
+                />
+
+                {errorMessage("description")}
+              </div>
+
+              {/* Audience */}
+              <div className="mb-6">
+
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                  Target Audience <span className="text-red-500">*</span>
+                </label>
+
+                <div className="relative">
+                  <FaUsers className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                  <select
+                    name="audience"
+                    value={formik.values.audience}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className={`${inputClass("audience")} pl-11`}
+                  >
+                    <option value="All Students">All Students</option>
+                    <option value="Students">Students</option>
+                    <option value="Parents">Parents</option>
+                    <option value="Teachers">Teachers</option>
+                    <option value="All Staff">All Staff</option>
+                    <option value="Everyone">Everyone</option>
+                  </select>
+                </div>
+
+                {errorMessage("audience")}
+              </div>
+
+              {/* Date and Time */}
+              <div className="mb-7 grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                {/* Date */}
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    Notice Date <span className="text-red-500">*</span>
+                  </label>
+
+                  <div className="relative">
+                    <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                    <input
+                      type="date"
+                      name="date"
+                      value={formik.values.date}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`${inputClass("date")} pl-11`}
+                    />
+                  </div>
+
+                  {errorMessage("date")}
+                </div>
+
+                {/* Time */}
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    Notice Time <span className="text-red-500">*</span>
+                  </label>
+
+                  <div className="relative">
+                    <FaClock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+
+                    <input
+                      type="time"
+                      name="time"
+                      value={formik.values.time}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className={`${inputClass("time")} pl-11`}
+                    />
+                  </div>
+
+                  {errorMessage("time")}
+                </div>
+              </div>
+
+              {/* Form Buttons */}
+              <div className="flex flex-col-reverse justify-end gap-3 border-t border-gray-100 pt-6 sm:flex-row">
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/dashboard/notice")}
+                  className="rounded-xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <FaPaperPlane />
+                  Publish Notice
+                </button>
+
+              </div>
+            </form>
+          </div>
+
+          {/* Live Preview */}
+          <div className="lg:sticky lg:top-6">
+
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+
+              <div className="flex items-center gap-3 border-b border-gray-100 px-5 py-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+                  <FaEye className="text-blue-600" />
+                </div>
+
+                <div className="text-left">
+                  <h3 className="font-bold text-gray-800">
+                    Live Preview
+                  </h3>
+
+                  <p className="text-xs text-gray-500">
+                    Preview your notice
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5">
+
+                <div className="mb-4">
+                  <span
+                    className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${getCategoryStyle()}`}
+                  >
+                    {formik.values.category || "NOTICE CATEGORY"}
+                  </span>
+                </div>
+
+                <h3 className="break-words text-lg font-bold text-gray-800">
+                  {formik.values.title || "Your notice title will appear here"}
+                </h3>
+
+                <p className="mt-3 break-words text-sm leading-6 text-gray-500">
+                  {formik.values.description ||
+                    "Your notice description will appear here when you start typing."}
+                </p>
+
+                <div className="mt-5 space-y-3 border-t border-gray-100 pt-4">
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <FaUsers className="text-purple-500" />
+                    {formik.values.audience}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <FaCalendarAlt className="text-purple-500" />
+                    {formik.values.date || "Notice date"}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <FaClock className="text-purple-500" />
+                    {formik.values.time || "Notice time"}
+                  </div>
+                </div>
+
+                <div className="mt-5 rounded-xl bg-purple-50 p-3 text-xs leading-5 text-purple-700">
+                  This is a preview of how your notice information will appear on the Notice Board.
+                </div>
+              </div>
+            </div>
+
+            {/* Helpful Tips */}
+            <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-5">
+              <h3 className="mb-3 text-left text-sm font-bold text-blue-800">
+                Notice Writing Tips
+              </h3>
+
+              <ul className="space-y-2 text-left text-xs leading-5 text-blue-700">
+                <li>• Use a clear and meaningful title.</li>
+                <li>• Keep your description short and informative.</li>
+                <li>• Select the correct audience.</li>
+                <li>• Double-check the date and time before publishing.</li>
+              </ul>
             </div>
 
           </div>
-
-          {/* Date */}
-          <div className="mt-5">
-
-            <label className="block text-left text-lg font-medium text-gray-700 mb-2">
-              Date
-            </label>
-
-            <input
-              type="text"
-              name="date"
-              value={formik.values.date}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:border-purple-500"
-            />
-
-            {formik.touched.date &&
-              formik.errors.date && (
-                <p className="text-sm text-red-500 mt-1">
-                  {formik.errors.date}
-                </p>
-              )}
-
-          </div>
-
-          {/* Buttons */}
-          <div className="flex justify-end gap-3 mt-8 pt-5 border-t border-gray-100">
-
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard/notice")}
-              className="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-medium"
-            >
-              Publish Notice
-            </button>
-
-          </div>
-
-        </form>
-
+        </div>
       </div>
-
     </div>
   );
 };
